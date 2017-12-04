@@ -1,0 +1,9 @@
+{% extends "blogs/header.html" %}
+{% block content %}
+
+    <h1>FUCK YOU ALL</h1>
+    {% for post in posts %}
+        {% include "blogs/post.html" %}
+        <hr/>
+    {% endfor %}
+{% endblock %}

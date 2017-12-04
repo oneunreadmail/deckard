@@ -1,0 +1,7 @@
+<div class="card" style="width: 50rem;">
+  <div class="card-body">
+    <h4 class="card-title">{{ post.title }}</h4>
+    <p class="card-text">{{ post.text|linebreaks }}</p>
+    <a href="{%  url "get_post" post_id=post.id %}" class="btn btn-primary">Read moar</a>
+  </div>
+</div>
