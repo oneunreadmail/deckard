@@ -1,9 +1,0 @@
-{% extends "blogs/header.html" %}
-{% block content %}
-    <h1>CREATE</h1>
-    <form method="POST" action="">
-    {{ form.as_p }}
-    {% csrf_token %}
-    <input type="submit" value="Create">
-    </form>
-{% endblock %}
