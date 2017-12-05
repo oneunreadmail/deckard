@@ -1,10 +1,10 @@
 from django import template
 import mistune
 
-register = template.library()
+register = template.Library()
 
 
-@register.filter
+@register.filter(name="markdown")
 def markdown(value):
-    markdown = mistune.Markdown()
-    return markdown(value)
+    md = mistune.Markdown()
+    return md(value)
