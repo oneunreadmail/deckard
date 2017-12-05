@@ -8,7 +8,7 @@ from .forms import PostForm
 def list_posts(request):
     #return render(request, 'deckard/list.html')
     context = {
-        "posts": Post.objects.all().order_by("-dt_create"),
+        "posts": Post.objects.all().order_by("-created_date"),
         "title": "Well, well, well, it's famous Harry Potter",
     }
     return render(request, 'deckard/list.html', context)
