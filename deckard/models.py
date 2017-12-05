@@ -84,6 +84,8 @@ class Post(SystemInfo):
                                           null=True)
     slug = models.SlugField(blank=True,
                             null=True)
+    pinned = models.BooleanField(default=False)
+    ordering = ['pinned', '-published_date']
 
     def __str__(self):
         return self.title

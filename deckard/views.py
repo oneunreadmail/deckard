@@ -1,14 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from .models import Post
-from .forms import PostForm
+from .models import Post, Blog
+from .forms import PostForm, PostCreateForm
 
 
 def list_posts(request):
     #return render(request, 'deckard/list.html')
     context = {
-        "posts": Post.objects.all().order_by("-created_date"),
+        "posts": Post.objects.all().order_by("-pinned", "-published_date"),
         "title": "Well, well, well, it's famous Harry Potter",
     }
     return render(request, 'deckard/list.html', context)
@@ -16,6 +16,7 @@ def list_posts(request):
 
 def create_post(request):
     form = PostForm(request.POST or None)
+    # form = PostCreateForm(request.POST or None)
     if form.is_valid():
         instance = form.save(commit=False)
         instance.save()
@@ -27,6 +28,7 @@ def create_post(request):
     context = {
         "form": form,
     }
+    print(form)
     return render(request, 'deckard/create.html', context)
 
 
@@ -56,6 +58,15 @@ def get_post(request, post_id=None):
         "title": "Well, well, well, it's famous Harry Potter",
     }
     return render(request, 'deckard/get_post.html', context)
+
+
+def blog_general(request, blog_name=None):
+    get_object_or_404(Blog, name=blog_name)
+    context = {
+        "posts": Post.objects.all().filter(blog__name=blog_name).order_by("-pinned", "-published_date"),
+        "title": "Well, well, well, it's famous Harry Potter",
+    }
+    return render(request, 'deckard/list.html', context)
 
 
 def delete_post(request, post_id=None):
