@@ -1,5 +1,10 @@
-{% extends "deckard/header.html" %}
+{% extends "deckard/base.html" %}
 {% block content %}
-    {{ post.title }}<br/>
-    {{ post.text|linebreaks }}<br/>
+<div class="card" style="width: 50rem;">
+  <div class="card-body">
+    <h4 class="card-title">{{ post.title }}</h4>
+    <p class="card-text">{{ post.text|linebreaks }}</p>
+    <a href="{%  url "edit_post" post_id=post.id %}" class="btn btn-primary">Edit</a>
+  </div>
+</div>
 {% endblock %}

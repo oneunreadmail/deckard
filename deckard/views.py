@@ -6,12 +6,12 @@ from .forms import PostForm
 
 
 def list_posts(request):
-    #return render(request, 'deckard/index.html')
+    #return render(request, 'deckard/list.html')
     context = {
         "posts": Post.objects.all().order_by("-created_date"),
         "title": "Well, well, well, it's famous Harry Potter",
     }
-    return render(request, 'deckard/index.html', context)
+    return render(request, 'deckard/list.html', context)
 
 
 def create_post(request):
@@ -50,7 +50,7 @@ def edit_post(request, post_id=None):
 
 
 def get_post(request, post_id=None):
-    #return render(request, 'deckard/index.html')
+    #return render(request, 'deckard/list.html')
     context = {
         "post": get_object_or_404(Post, id=post_id),
         "title": "Well, well, well, it's famous Harry Potter",

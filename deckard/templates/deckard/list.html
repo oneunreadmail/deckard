@@ -1,9 +1,10 @@
-{% extends "deckard/header.html" %}
+{% extends "deckard/base.html" %}
 {% block content %}
 
-    <h1>FUCK YOU ALL</h1>
+    <h3>Blogfeed</h3>
     {% for post in posts %}
         {% include "deckard/post.html" %}
-        <hr/>
+        <br/>
     {% endfor %}
+
 {% endblock %}

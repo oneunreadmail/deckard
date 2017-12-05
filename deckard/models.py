@@ -1,5 +1,7 @@
-from django.db import models
+import random
+
 from django import VERSION
+from django.db import models
 from django.utils import timezone
 from django.contrib import auth
 from django.db.models.signals import post_save
