@@ -28,7 +28,6 @@ def create_post(request):
     context = {
         "form": form,
     }
-    print(form)
     return render(request, 'deckard/create.html', context)
 
 
