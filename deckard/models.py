@@ -1,5 +1,3 @@
-import random
-
 from django import VERSION
 from django.db import models
 from django.utils import timezone
@@ -10,6 +8,7 @@ if VERSION[0] == 2:  # Starting from Django 2.0 reverse is located in django.url
     from django.urls import reverse
 else:
     from django.core.urlresolvers import reverse
+
 
 class SystemInfo(models.Model):
     """Abstract base class for storing system information about a record."""
@@ -80,10 +79,12 @@ class Post(SystemInfo):
     title = models.CharField(max_length=140)
     text = models.TextField()
     published_date = models.DateTimeField(verbose_name='publication date',
+                                          db_index=True,  # For ordering by publication date + searching
                                           blank=True,
                                           null=True)
     slug = models.SlugField(blank=True,
                             null=True)
+    pinned = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
