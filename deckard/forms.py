@@ -9,9 +9,7 @@ class PostForm(forms.ModelForm):
             "title",
             "text",
             "author",
-            "published_date",
             "slug",
-            "pinned",
         ]
 
 

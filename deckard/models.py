@@ -78,13 +78,15 @@ class Post(SystemInfo):
     """A text entry which belongs to a number of blogs."""
     title = models.CharField(max_length=140)
     text = models.TextField()
-    published_date = models.DateTimeField(verbose_name='publication date',
-                                          db_index=True,  # For ordering by publication date + searching
-                                          blank=True,
-                                          null=True)
     slug = models.SlugField(blank=True,
                             null=True)
-    pinned = models.BooleanField(default=False)
+    source_blog = models.ForeignKey('Blog',
+                                    verbose_name='source blog',
+                                    db_index=True,  # Indexed
+                                    related_name='initial_%(class)ss',
+                                    on_delete=models.CASCADE,
+                                    null=True,
+                                    blank=True)
 
     def __str__(self):
         return self.title
@@ -122,12 +124,27 @@ class Blog(models.Model):
     name = models.CharField(verbose_name='name',
                             max_length=140)
     posts = models.ManyToManyField(Post,
-                                   blank=True)
+                                   blank=True,
+                                   through='BlogPost',
+                                   through_fields=('blog', 'post'))
     contributors = models.ManyToManyField(Person,
                                           blank=True)
 
     def __str__(self):
         return self.name
+
+
+class BlogPost(models.Model):
+    """An intersection model for M:M Blogs to Posts relationship."""
+    post = models.ForeignKey(Post,
+                             on_delete=models.CASCADE)
+    blog = models.ForeignKey(Blog,
+                             on_delete=models.CASCADE)
+    published_date = models.DateTimeField(verbose_name='publication date',
+                                          db_index=True,  # For ordering by publication date + searching
+                                          blank=True,
+                                          null=True)
+    pinned = models.BooleanField(default=False)
 
 
 class Like(SystemInfo):
