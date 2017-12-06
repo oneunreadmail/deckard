@@ -1,21 +1,20 @@
-0. A user is a human being (hopefully) registered in the system, authenticated by their login and password.
+**0. Users**  
+A user is a human being (hopefully) registered in the system, authenticated by their login and password.
+An administrator is a user with special privileges.
 
-1. The platform consists of blogs, which are logical groups of posts. A blog can have many authors among users, which are called blog contributors.  
->Q:  
-a - Can any user create a blog?  
-b - Can any user (or any contributor) update a blog (e.g., change its name)?  
-c - Can any user (or any contributor) delete a blog?  
+**1. Blogs**  
+The platform consists of blogs, which are logical groups of posts. Only an administrator can create or delete blogs.
 
-2. A user can create a post in a blog if he is this blog's contributor. As an author, he can modify the post's title, text, upload or delete images, or delete the whole post. Posts can contain images.
+**2. Contributors**  
+A blog can have many authors among users, which are called blog contributors. Any contributor can update a blog (e.g., change its name). Any contributor can edit all blog posts which had been initially created in this blog (the blog is the source blog for them). Thus any contributor can edit all excluding reposts.
+As a contibutor, he/she can modify the post's title, text, upload or delete images, or hide the whole post. Hidden posts do not appear in the blog.
 
-3. Any user can leave a comment to a post. As an author, he can modify or delete his comment. When a post is deleted, all its comments are deleted. Comments can not contain images.
+**3. Posts and reposts**  
+A user can create a post in a blog if he is this blog's contributor. Posts can contain images.
+A contributor to a blog can do reposts from other blogs to this blog. If blog S contains post 1, any contributor of blog D can make a repost of post 1 to blog D. After that post 1 appears in both blogs S and D. Source blog (blog S) is indicated as the source when post 1 is seen in blog D feed.
 
-4. Any user can leave a comment to another comment. When a parent comment is deleted, it's marked as deleted and it's content is not displayed, but all child comments are visible.
+**4. Comments**  
+Any user can leave a comment to a post. Comments cannot be modified or deleted by users. When a post is hidden, all its comments become hidden as well. Comments can not contain images. Any user can leave a comment to another comment.
 
-5. Any user can 'like' a post or a comment. Likes can be removed.
-
-6. A contributor to a blog can do reposts from other blogs to this blog. If blog A contains post 1, any contributor of post B can make a repost of post 1 to blog 2. Post 2 is created, which is a copy of post 1. The additional information about repost author id is stored in post 2.  
->Q:  
-  a - Are likes and comments copied?  
-  b - Who can edit post 2?  
-  c - What happens with post 1 if someone comments or likes post 2?  
+**5. Likes**  
+Any user can 'like' a post or a comment. Likes can be removed.
