@@ -1,12 +1,16 @@
 {% load markdownify %}
-<div class="card {% if post.pinned %}border border-primary{% endif %}" style="width: 50rem;">
+{% load static %}
+<script src="{% static "deckard/js/post.js" %}"></script>
+
+<div class="card {% if blogpost.pinned %}border border-primary{% endif %}" style="width: 50rem;">
   <div class="card-body">
-    <h4 class="card-title">{{ post.title }}</h4>
-      <h6>{{ post.published_date }}</h6>
-    <p class="card-text">{{ post.text | markdown | safe }}</p>
-    {% if post.source_blog != blog.id %}
-        <p><i>Stolen from blog {{ post.source_blog }}!</i></p>
+    <h4 class="card-title">{{ blogpost.post.title }}</h4>
+      <h6>{{ blogpost.published_date }}</h6>
+    <p class="card-text">{{ blogpost.post.text | markdown | safe }}</p>
+    {% if blogpost.post.source_blog.name != blog.name %}
+        <p><i>Stolen from blog {{ blogpost.post.source_blog.name }}</i></p>
     {% endif %}
-    <a href="{%  url "get_post" post_id=post.id %}" class="btn btn-primary">Read moar</a>
+    <a href="{%  url "get_post" post_id=blogpost.post.id %}" class="btn btn-primary">Read moar</a>
+    <a href="#" data-target="#myModal" role="button" class="btn btn-primary" data-toggle="modal" data-link="{% url 'repost' post_id=blogpost.post.id %}">Repost</a>
   </div>
 </div>
