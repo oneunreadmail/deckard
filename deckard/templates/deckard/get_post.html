@@ -6,6 +6,7 @@
     <h4 class="card-title">{{ post.title }}</h4>
     <p class="card-text">{{ post.text | markdown | safe }}</p>
     <a href="{%  url "edit_post" post_id=post.id %}" class="btn btn-primary">Edit</a>
+    <a href="{%  url "delete_post" post_id=post.id %}" class="btn btn-primary">Delete</a>
   </div>
 </div>
 {% endblock %}

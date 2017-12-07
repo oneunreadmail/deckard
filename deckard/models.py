@@ -94,6 +94,14 @@ class Post(SystemInfo):
     def get_abs_url(self):
         return reverse("get_post", kwargs={"post_id": self.id})
 
+    def repost_to_blog(self, blog, publisher):
+        if self.source_blog == blog:
+            raise Exception("Cannot repost to the source blog of the post")
+        else:
+            repost = BlogPost(post=self, blog=blog, publisher=publisher)
+            repost.save()
+
+
 
 class Comment(SystemInfo):
     """A comment to a post, can have child comments."""
@@ -144,6 +152,13 @@ class BlogPost(models.Model):
                                           db_index=True,  # For ordering by publication date + searching
                                           blank=True,
                                           null=True)
+    # A user who made a repost
+    publisher = models.ForeignKey('auth.User',
+                                  verbose_name='publisher',
+                                  db_index=True,  # Indexed
+                                  related_name='reposted_%(class)ss',
+                                  on_delete=models.SET_NULL,
+                                  null=True)
     pinned = models.BooleanField(default=False)
 
 

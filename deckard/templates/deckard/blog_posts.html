@@ -1,0 +1,14 @@
+{% extends "deckard/base.html" %}
+{% block content %}
+
+    <h3>{{ blog.name }}</h3>
+    <div>
+        <a href="{%  url 'add_new_post' blog_name=blog.name %}" class="btn btn-primary">New post</a>
+    </div>
+    <br/>
+    {% for blogpost in blogposts %}
+        {% include "deckard/post.html" %}
+        <br/>
+    {% endfor %}
+    {% include "deckard/repost_modal.html" %}
+{% endblock %}
