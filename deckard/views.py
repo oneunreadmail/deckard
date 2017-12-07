@@ -6,9 +6,9 @@ from .forms import PostForm, PostCreateForm
 
 
 def list_posts(request):
-    #return render(request, 'deckard/list.html')
     context = {
-        "posts": Post.objects.all().order_by("-pinned", "-published_date"),
+        #"posts": Post.objects.all().order_by("-pinned", "-published_date"),
+        "posts": Post.objects.all(),
         "title": "Well, well, well, it's famous Harry Potter",
     }
     return render(request, 'deckard/list.html', context)
@@ -60,9 +60,10 @@ def get_post(request, post_id=None):
 
 
 def blog_general(request, blog_name=None):
-    get_object_or_404(Blog, name=blog_name)
+    blog = get_object_or_404(Blog, name=blog_name)
     context = {
-        "posts": Post.objects.all().filter(blog__name=blog_name).order_by("-pinned", "-published_date"),
+        "blog": blog,
+        "posts": Post.objects.all().filter(blog__name=blog_name).order_by("-blogpost__pinned", "-blogpost__published_date"),
         "title": "Well, well, well, it's famous Harry Potter",
     }
     return render(request, 'deckard/list.html', context)

@@ -4,6 +4,9 @@
     <h4 class="card-title">{{ post.title }}</h4>
       <h6>{{ post.published_date }}</h6>
     <p class="card-text">{{ post.text | markdown | safe }}</p>
+    {% if post.source_blog != blog.id %}
+        <p><i>Stolen from blog {{ post.source_blog }}!</i></p>
+    {% endif %}
     <a href="{%  url "get_post" post_id=post.id %}" class="btn btn-primary">Read moar</a>
   </div>
 </div>
