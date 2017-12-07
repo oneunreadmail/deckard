@@ -63,7 +63,7 @@ def blog_general(request, blog_name=None):
     blog = get_object_or_404(Blog, name=blog_name)
     context = {
         "blog": blog,
-        "posts": Post.objects.all().filter(blog__name=blog_name).order_by("-blogpost__pinned", "-blogpost__published_date"),
+        "posts": Post.objects.all().filter(source_blog__name=blog_name).order_by("-blogpost__pinned", "-blogpost__published_date"),
         "title": "Well, well, well, it's famous Harry Potter",
     }
     return render(request, 'deckard/list.html', context)
