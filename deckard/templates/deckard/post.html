@@ -10,7 +10,7 @@
     {% if blogpost.post.source_blog.name != blog.name %}
         <p><i>Stolen from blog {{ blogpost.post.source_blog.name }}</i></p>
     {% endif %}
-    <a href="{%  url "get_post" post_id=blogpost.post.id %}" class="btn btn-primary">Read moar</a>
+    <a href="{%  url "get_post" post_id=blogpost.post.id blog_name=blog.name %}" class="btn btn-primary">Read moar</a>
     <a href="#" data-target="#myModal" role="button" class="btn btn-primary" data-toggle="modal" data-link="{% url 'repost' post_id=blogpost.post.id %}">Repost</a>
   </div>
 </div>

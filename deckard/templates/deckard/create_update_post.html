@@ -1,6 +1,6 @@
 {% extends "deckard/base.html" %}
 {% block content %}
-    <h2>Create/update a post in {{ blog_name }}</h2>
+    <h2>Create/update a post in {{ blog.name }}</h2>
     <form method="POST" action="">
         {{ form.as_p }}
         {% csrf_token %}

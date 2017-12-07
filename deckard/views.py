@@ -1,7 +1,8 @@
 import datetime
+from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from .models import Post, Blog, BlogPost
 from .forms import PostForm
 
@@ -30,13 +31,13 @@ def blog_list(request):
 def add_new_post(request, blog_name):
     """Create a new post in a blog."""
     form = PostForm(request.POST or None)
+    blog = get_object_or_404(Blog, name=blog_name)
     if form.is_valid():
         post = form.save(commit=False)
-        source_blog = Blog.objects.get(name=blog_name)
-        post.source_blog = source_blog
+        post.source_blog = blog
         post.author = request.user
         post.save()
-        blogpost = BlogPost(blog=source_blog,
+        blogpost = BlogPost(blog=blog,
                             post=post,
                             published_date=datetime.datetime.now())
         blogpost.save()
@@ -47,14 +48,18 @@ def add_new_post(request, blog_name):
 
     context = {
         "form": form,
-        "blog_name": blog_name,
+        "blog": blog,
     }
     return render(request, 'deckard/create_update_post.html', context)
 
 
-def edit_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    form = PostForm(request.POST or None, instance=post)
+def edit_post(request, post_id, blog_name):
+    blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
+    if blogpost.post.source_blog.name != blogpost.blog.name:
+        return HttpResponseRedirect(
+            reverse("edit_post", kwargs={"post_id": post_id, "blog_name": blogpost.post.source_blog.name})
+        )
+    form = PostForm(request.POST or None, instance=blogpost.post)
     if form.is_valid():
         post = form.save(commit=False)
         post.save()
@@ -65,31 +70,27 @@ def edit_post(request, post_id):
 
     context = {
         "form": form,
-        "blog_name": post.source_blog.name,
+        "blog": blogpost.blog,
     }
     return render(request, 'deckard/create_update_post.html', context)
 
 
-def get_post(request, post_id):
+def get_post(request, post_id, blog_name):
+    blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     context = {
-        "post": get_object_or_404(Post, id=post_id),
+        "post": blogpost.post,
+        "blog": blogpost.blog,
     }
     return render(request, 'deckard/get_post.html', context)
 
-
-def blog_general(request, blog_name=None):
-    blog = get_object_or_404(Blog, name=blog_name)
-    context = {
-        "blog": blog,
-        "posts": Post.objects.all().filter(source_blog__name=blog_name).order_by("-blogpost__pinned", "-blogpost__published_date"),
-        "title": "Well, well, well, it's famous Harry Potter",
-    }
-    return render(request, 'deckard/list.html', context)
-
   
-def delete_post(request, post_id=None):
-    post = get_object_or_404(Post, id=post_id)
-    post.delete()
+def delete_post(request, post_id, blog_name):
+    blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
+    if blogpost.post.source_blog.name != blogpost.blog.name:
+        return HttpResponseRedirect(
+            reverse("delete_post", kwargs={"post_id": post_id, "blog_name": blogpost.post.source_blog.name})
+        )
+    blogpost.post.delete()
     messages.success(request, "Post successfully deleted!")
     return redirect("blog_list")
 

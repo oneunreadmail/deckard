@@ -92,7 +92,8 @@ class Post(SystemInfo):
         return self.title
 
     def get_abs_url(self):
-        return reverse("get_post", kwargs={"post_id": self.id})
+        print(1)
+        return reverse("get_post", kwargs={"post_id": self.id, "blog_name": self.source_blog.name})
 
     def repost_to_blog(self, blog, publisher):
         if self.source_blog == blog:
