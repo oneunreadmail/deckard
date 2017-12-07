@@ -163,7 +163,7 @@ class BlogPost(models.Model):
 
 
 class Like(SystemInfo):
-    """A like is a sign of approval issued by a user. Post and comments both can be liked."""
+    """A like is a sign of approval issued by a user. Posts and comments both can be liked."""
     post_id = models.ForeignKey('Post',
                                 verbose_name='post',
                                 db_index=True,

@@ -77,7 +77,17 @@ def get_post(request, post_id):
     return render(request, 'deckard/get_post.html', context)
 
 
-def delete_post(request, post_id):
+def blog_general(request, blog_name=None):
+    blog = get_object_or_404(Blog, name=blog_name)
+    context = {
+        "blog": blog,
+        "posts": Post.objects.all().filter(source_blog__name=blog_name).order_by("-blogpost__pinned", "-blogpost__published_date"),
+        "title": "Well, well, well, it's famous Harry Potter",
+    }
+    return render(request, 'deckard/list.html', context)
+
+  
+def delete_post(request, post_id=None):
     post = get_object_or_404(Post, id=post_id)
     post.delete()
     messages.success(request, "Post successfully deleted!")
