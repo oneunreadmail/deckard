@@ -4,7 +4,6 @@ from django.shortcuts import get_object_or_404
 from .models import Post, BlogPost, Blog
 
 
-
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -20,12 +19,26 @@ class PostCreateForm(forms.Form):
     text = forms.CharField(label="text", widget=forms.Textarea)
     slug = forms.CharField(label="slug", max_length=100)
     pinned = forms.BooleanField()
-    #source_blog = forms.ChoiceField(choices=(("one", "1"), ("two", "2")))
 
     def __init__(self, *args, **kwargs):
         blog_names = kwargs.pop("blog_names", (("", "------"), ))
+        blogpost = kwargs.pop("blogpost", None)
+        if blogpost:
+            repost_names = tuple(bp.blog.name for bp in BlogPost.objects.all().filter(post_id=blogpost.post.id)
+                                 if bp.blog.name != blogpost.post.source_blog.name)
+            print(repost_names)
+            initial = {
+                "title": blogpost.post.title,
+                "text": blogpost.post.text,
+                "slug": blogpost.post.slug,
+                "pinned": blogpost.pinned,
+                "source_blog": blogpost.post.source_blog.name,
+                "repost_blogs": repost_names,
+            }
+            kwargs["initial"] = initial
         self.user = kwargs.pop("user")
-
+        if args:
+            print(args[0])
         super(PostCreateForm, self).__init__(*args, **kwargs)
         self.fields["source_blog"] = forms.ChoiceField(choices=blog_names)
         self.fields["repost_blogs"] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
@@ -48,9 +61,10 @@ class PostCreateForm(forms.Form):
         blogpost.save()
 
         for blogname in self.cleaned_data["repost_blogs"]:
-            print(blogname)
-            repost_blog = get_object_or_404(Blog, name=blogname)
-            BlogPost(blog=repost_blog,
-                     post=post,
-                     published_date=datetime.datetime.now()).save()
+            if blogname != blogpost.blog.name:
+                print(blogname)
+                repost_blog = get_object_or_404(Blog, name=blogname)
+                BlogPost(blog=repost_blog,
+                         post=post,
+                         published_date=datetime.datetime.now()).save()
         return post
