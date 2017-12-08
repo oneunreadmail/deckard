@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect, Http404
 from .models import Post, Blog, BlogPost
-from .forms import PostForm
+from .forms import PostForm, PostCreateForm
 
 
 def blog_posts(request, blog_name):
@@ -30,17 +30,13 @@ def blog_list(request):
 
 def add_new_post(request, blog_name):
     """Create a new post in a blog."""
-    form = PostForm(request.POST or None)
-    blog = get_object_or_404(Blog, name=blog_name)
+    blog_names = tuple((blog.name, blog.name) for blog in Blog.objects.all())
+    form = PostCreateForm(request.POST or None,
+                          blog_names=blog_names,
+                          user=request.user,
+                          )
     if form.is_valid():
-        post = form.save(commit=False)
-        post.source_blog = blog
-        post.author = request.user
-        post.save()
-        blogpost = BlogPost(blog=blog,
-                            post=post,
-                            published_date=datetime.datetime.now())
-        blogpost.save()
+        post = form.save()
         messages.success(request, "Success!")
         return HttpResponseRedirect(post.get_abs_url())
     elif request.POST:
@@ -48,7 +44,7 @@ def add_new_post(request, blog_name):
 
     context = {
         "form": form,
-        "blog": blog,
+        "blog": get_object_or_404(Blog, name=blog_name),
     }
     return render(request, 'deckard/create_update_post.html', context)
 
@@ -59,10 +55,14 @@ def edit_post(request, post_id, blog_name):
         return HttpResponseRedirect(
             reverse("edit_post", kwargs={"post_id": post_id, "blog_name": blogpost.post.source_blog.name})
         )
-    form = PostForm(request.POST or None, instance=blogpost.post)
+    blog_names = tuple((blog.name, blog.name) for blog in Blog.objects.all())
+    form = PostCreateForm(request.POST or None,
+                          blog_names=blog_names,
+                          user=request.user,
+                          blogpost=blogpost,
+                          )
     if form.is_valid():
-        post = form.save(commit=False)
-        post.save()
+        post = form.save()
         messages.success(request, "Success!")
         return HttpResponseRedirect(post.get_abs_url())
     elif request.POST:
@@ -70,7 +70,7 @@ def edit_post(request, post_id, blog_name):
 
     context = {
         "form": form,
-        "blog": blogpost.blog,
+        "blog": get_object_or_404(Blog, name=blog_name),
     }
     return render(request, 'deckard/create_update_post.html', context)
 
