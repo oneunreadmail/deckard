@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
-{% load markdownify %}
+{% load filters %}
 <html lang="en">
 <head>
     <title>Deckard</title>
@@ -26,8 +26,7 @@
     </div>
     <main role="main" class="container">
         <div>
-            {% block content %}
-            {% endblock %}
+            {% block content %}{% endblock %}
         </div>
     </main>
 </body>

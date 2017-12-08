@@ -1,10 +1,15 @@
-import datetime
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect, Http404
-from .models import Post, Blog, BlogPost
+from django.utils import timezone
+from .models import Post, Blog, BlogPost, Comment
 from .forms import PostForm, PostCreateForm
+
+
+def check(request):  # function for current testing
+    context = {"comments": [Comment(text=str(i)) for i in range(10)]}
+    return render(request, 'deckard/comments.html', context)
 
 
 def blog_posts(request, blog_name):
@@ -77,9 +82,11 @@ def edit_post(request, post_id, blog_name):
 
 def get_post(request, post_id, blog_name):
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
+    comments = Comment.objects.filter(post_id=post_id).order_by("created_date")
     context = {
         "post": blogpost.post,
         "blog": blogpost.blog,
+        "comments": arrange_comments(comments),
     }
     return render(request, 'deckard/get_post.html', context)
 
@@ -97,3 +104,28 @@ def delete_post(request, post_id, blog_name):
 
 def repost_to_blog(request, post_id=None):
     pass
+
+
+def arrange_comments(comments,
+                     gpid=lambda x: x.parent_comment.id if x.parent_comment else -1,  # get parent id
+                     gid=lambda x: x.id,  # get id
+                     sort_by=lambda x: x.created_date if x else timezone.now(),  # key for sorting
+                     # some hack for date here, not sure why it doesn't work without
+                     max_shift=10):
+    tree = {gid(comment): [gpid(comment), [], comment, 0] for comment in comments}  # parent, children, self, shift
+    tree.update({-1: [-1, [], None, 0]})
+    for node in tree:
+        tree[tree[node][0]][1].append(node)
+
+    def expand_node(node, shift=-1):
+        tree[node][3] = min(shift, max_shift)
+        return [node] + sum([expand_node(child_node, shift + 1)
+                             for child_node in sorted(tree[node][1], key=lambda x: sort_by(tree[x][2]))
+                             if child_node != -1], [])
+
+    result = []
+    for id_ in expand_node(-1)[1:]:
+        comment = tree[id_][2]
+        setattr(comment, "shift", tree[id_][3])
+        result.append(comment)
+    return result

@@ -1,0 +1,8 @@
+{% load filters %}
+{% for comment in comments %}
+    {% for i in comment.shift|times %}↘{% endfor %}
+    {% include "deckard/comment.html" %}
+{% endfor %}
+
+
+

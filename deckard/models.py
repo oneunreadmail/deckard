@@ -103,7 +103,6 @@ class Post(SystemInfo):
             repost.save()
 
 
-
 class Comment(SystemInfo):
     """A comment to a post, can have child comments."""
     COMMENT_STATUS = (
@@ -123,6 +122,9 @@ class Comment(SystemInfo):
                               max_length=60,
                               choices=COMMENT_STATUS,
                               default='Pending')
+    post = models.ForeignKey(Post,
+                             on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.text[:50] + ' (' + self.status + ')'

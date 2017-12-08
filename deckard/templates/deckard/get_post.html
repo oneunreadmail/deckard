@@ -1,12 +1,13 @@
 {% extends "deckard/base.html" %}
-{% load markdownify %}
+{% load filters %}
 {% block content %}
-<div class="card" style="width: 50rem;">
-  <div class="card-body">
-    <h4 class="card-title">{{ post.title }}</h4>
-    <p class="card-text">{{ post.text | markdown | safe }}</p>
-    <a href="{%  url "edit_post" post_id=post.id blog_name=blog.name %}" class="btn btn-primary">Edit</a>
-    <a href="{%  url "delete_post" post_id=post.id blog_name=blog.name %}" class="btn btn-primary">Delete</a>
-  </div>
-</div>
+    <div class="card" style="width: 50rem;">
+      <div class="card-body">
+        <h4 class="card-title">{{ post.title }}</h4>
+        <p class="card-text">{{ post.text | markdown | safe }}</p>
+        <a href="{%  url "edit_post" post_id=post.id blog_name=blog.name %}" class="btn btn-primary">Edit</a>
+        <a href="{%  url "delete_post" post_id=post.id blog_name=blog.name %}" class="btn btn-primary">Delete</a>
+      </div>
+    </div>
+    {% include "deckard/comments.html" %}
 {% endblock %}
