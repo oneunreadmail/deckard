@@ -8,7 +8,7 @@ urlpatterns = [
     url(r'^(?P<blog_name>[a-zA-Z_]+)/(?P<post_id>\d+)(-([a-zA-Z_-]+))?/$', views.get_post, name="get_post"),
     url(r'^(?P<blog_name>[a-zA-Z_]+)/(?P<post_id>\d+)(-([a-zA-Z_-]+))?/edit/$', views.edit_post, name="edit_post"),
     url(r'^(?P<blog_name>[a-zA-Z_]+)/(?P<post_id>\d+)(-([a-zA-Z_-]+))?/delete/$', views.delete_post, name="delete_post"),
-
     url(r'^(?P<post_id>\d+)/repost/$', views.repost_to_blog, name="repost"),
+    url(r'^(?P<post_id>\d+)/like/$', views.like_post, name="like_post"),
 ]
 

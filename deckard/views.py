@@ -2,9 +2,10 @@ import datetime
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.http import HttpResponseRedirect, Http404
-from .models import Post, Blog, BlogPost
+from django.http import HttpResponseRedirect, Http404, HttpResponse
+from .models import Post, Blog, BlogPost, Like
 from .forms import PostForm, PostCreateForm
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def blog_posts(request, blog_name):
@@ -97,3 +98,14 @@ def delete_post(request, post_id, blog_name):
 
 def repost_to_blog(request, post_id=None):
     pass
+
+
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    try:
+        old_like = Like.objects.get(post_id=post_id, author=request.user)
+        old_like.delete()
+    except ObjectDoesNotExist:
+        post.become_liked(request.user)
+    # The following line of code should be replaced with some error message indicating that AJAX is not working.
+    return HttpResponse('Liked/unliked!')

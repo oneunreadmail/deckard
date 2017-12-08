@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.contrib import auth
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
 if VERSION[0] == 2:  # Starting from Django 2.0 reverse is located in django.urls
     from django.urls import reverse
 else:
@@ -102,6 +103,9 @@ class Post(SystemInfo):
             repost = BlogPost(post=self, blog=blog, publisher=publisher)
             repost.save()
 
+    def become_liked(self, author):
+        like = Like(post=self, author=author)
+        like.save()
 
 
 class Comment(SystemInfo):
@@ -165,20 +169,20 @@ class BlogPost(models.Model):
 
 class Like(SystemInfo):
     """A like is a sign of approval issued by a user. Posts and comments both can be liked."""
-    post_id = models.ForeignKey('Post',
-                                verbose_name='post',
+    post = models.ForeignKey('Post',
+                             verbose_name='post',
+                             db_index=True,
+                             related_name='posts_%(class)ss',
+                             on_delete=models.CASCADE,
+                             null=True,
+                             blank=True)
+    comment = models.ForeignKey('Comment',
+                                verbose_name='comment',
                                 db_index=True,
-                                related_name='liked_%(class)ss',
+                                related_name='comments_%(class)ss',
                                 on_delete=models.CASCADE,
                                 null=True,
                                 blank=True)
-    comment_id = models.ForeignKey('Comment',
-                                   verbose_name='comment',
-                                   db_index=True,
-                                   related_name='liked_%(class)ss',
-                                   on_delete=models.CASCADE,
-                                   null=True,
-                                   blank=True)
 
 
 class Image(models.Model):
