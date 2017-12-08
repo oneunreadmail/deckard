@@ -11,12 +11,12 @@
         {% endif %}
         <a href="{%  url 'get_post' post_id=blogpost.post.id blog_name=blog.name %}" class="btn btn-primary">Read
             moar</a>
-        <div>
-            <div align="right">
-                <font color="blue" class="like_count">{{ blogpost.post.posts_likes.count }}</font>
-                <a href="#"><span data-link="{%  url 'like_post' post_id=blogpost.post.id %}" class="fa fa-heart like"></span></a>
-                <a href="#" data-target="#myModal" class="fa fa-share-alt" data-toggle="modal"
-                   data-link="{% url 'repost' post_id=blogpost.post.id %}"></a>
-            </div>
+        <div align="right">
+            <font color="blue" class="like_count">{{ blogpost.post.posts_likes.count }}</font>
+            <a href="#"><span data-link="{%  url 'like_post' post_id=blogpost.post.id %}"
+                              class="fa fa-heart like"></span></a>
+            <a href="#" data-target="#myModal" class="fa fa-share-alt" data-toggle="modal"
+               data-link="{% url 'repost' post_id=blogpost.post.id %}"></a>
         </div>
     </div>
+</div>
