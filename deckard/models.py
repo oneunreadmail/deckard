@@ -104,6 +104,10 @@ class Post(SystemInfo):
             repost = BlogPost(post=self, blog=blog, publisher=publisher)
             repost.save()
 
+    def become_liked(self, author):
+        like = Like(post=self, author=author)
+        like.save()
+
 
 class Comment(SystemInfo):
     """A comment to a post, can have child comments."""
@@ -188,20 +192,20 @@ class BlogPost(models.Model):
 
 class Like(SystemInfo):
     """A like is a sign of approval issued by a user. Posts and comments both can be liked."""
-    post_id = models.ForeignKey('Post',
-                                verbose_name='post',
+    post = models.ForeignKey('Post',
+                             verbose_name='post',
+                             db_index=True,
+                             related_name='posts_%(class)ss',
+                             on_delete=models.CASCADE,
+                             null=True,
+                             blank=True)
+    comment = models.ForeignKey('Comment',
+                                verbose_name='comment',
                                 db_index=True,
-                                related_name='liked_%(class)ss',
+                                related_name='comments_%(class)ss',
                                 on_delete=models.CASCADE,
                                 null=True,
                                 blank=True)
-    comment_id = models.ForeignKey('Comment',
-                                   verbose_name='comment',
-                                   db_index=True,
-                                   related_name='liked_%(class)ss',
-                                   on_delete=models.CASCADE,
-                                   null=True,
-                                   blank=True)
 
 
 class Image(models.Model):

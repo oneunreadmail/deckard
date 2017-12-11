@@ -1,10 +1,10 @@
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.http import HttpResponseRedirect, Http404
-from django.utils import timezone
-from .models import Post, Blog, BlogPost, Comment
-from .forms import PostForm, PostCreateForm
+from django.http import HttpResponseRedirect, HttpResponse
+from .models import Post, Blog, BlogPost, Comment, Like
+from .forms import PostCreateForm
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def check(request):  # function for current testing
@@ -16,11 +16,12 @@ def blog_posts(request, blog_name):
     """List of all posts in the current blog."""
     blog = get_object_or_404(Blog, name=blog_name)
     blogs = Blog.objects.all()
+
     context = {
         "blog": blog,
         "blogs": blogs,
-        "posts": Post.objects.filter(blog__name=blog_name).order_by("-blogpost__pinned", "-blogpost__published_date"),
         "blogposts": BlogPost.objects.filter(blog__name=blog_name).order_by("-pinned", "-published_date"),
+        "user": request.user,
     }
     return render(request, 'deckard/blog_posts.html', context)
 
@@ -84,11 +85,12 @@ def get_post(request, post_id, blog_name):
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     comments = Comment.objects.filter(post_id=post_id).order_by("position")
     context = {
-        "post": blogpost.post,
+        "blogpost": blogpost,
         "blog": blogpost.blog,
         "comments": comments,
+        "user": request.user,
     }
-    return render(request, 'deckard/get_post.html', context)
+    return render(request, 'deckard/post_detail.html', context)
 
   
 def delete_post(request, post_id, blog_name):
@@ -104,3 +106,14 @@ def delete_post(request, post_id, blog_name):
 
 def repost_to_blog(request, post_id=None):
     pass
+
+
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    try:
+        old_like = Like.objects.get(post_id=post_id, author=request.user)
+        old_like.delete()
+    except ObjectDoesNotExist:
+        post.become_liked(request.user)
+    # The following line of code should be replaced with some error message indicating that AJAX is not working.
+    return HttpResponse('Liked/unliked!')
