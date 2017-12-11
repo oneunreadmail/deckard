@@ -4,6 +4,8 @@ from django.utils import timezone
 from django.contrib import auth
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.postgres.fields import ArrayField
+from django.db.models import Max
 if VERSION[0] == 2:  # Starting from Django 2.0 reverse is located in django.urls
     from django.urls import reverse
 else:
@@ -103,7 +105,6 @@ class Post(SystemInfo):
             repost.save()
 
 
-
 class Comment(SystemInfo):
     """A comment to a post, can have child comments."""
     COMMENT_STATUS = (
@@ -123,9 +124,31 @@ class Comment(SystemInfo):
                               max_length=60,
                               choices=COMMENT_STATUS,
                               default='Pending')
+    post = models.ForeignKey(Post,
+                             on_delete=models.CASCADE)
+    # List of indexes of all comments from the root to the leaf
+    # Example: [2, 3, 13, 3, 0]
+    position = ArrayField(models.IntegerField(),
+                          default=[-1])
 
     def __str__(self):
         return self.text[:50] + ' (' + self.status + ')'
+
+    def save(self, *args, **kwargs):
+        if self.position == [-1]:  # Position not calculated
+            new_position = [0]
+            if self.parent_comment:
+                max_sibling = Comment.objects.filter(parent_comment=self.parent_comment).aggregate(Max('position'))
+            else:
+                max_sibling = Comment.objects.filter(post=self.post, parent_comment__isnull=True).aggregate(Max('position'))
+            if max_sibling['position__max']:  # None if there are no siblings
+                new_position = max_sibling['position__max']
+                new_position[-1] += 1
+            elif self.parent_comment:
+                new_position = self.parent_comment.position
+                new_position.append(0)  # Add new level
+            self.position = new_position
+        super(Comment, self).save(*args, **kwargs)
 
 
 class Blog(models.Model):

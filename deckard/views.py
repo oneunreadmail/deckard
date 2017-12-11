@@ -1,10 +1,15 @@
-import datetime
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect, Http404
-from .models import Post, Blog, BlogPost
+from django.utils import timezone
+from .models import Post, Blog, BlogPost, Comment
 from .forms import PostForm, PostCreateForm
+
+
+def check(request):  # function for current testing
+    context = {"comments": [Comment(text=str(i)) for i in range(10)]}
+    return render(request, 'deckard/comments.html', context)
 
 
 def blog_posts(request, blog_name):
@@ -77,9 +82,11 @@ def edit_post(request, post_id, blog_name):
 
 def get_post(request, post_id, blog_name):
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
+    comments = Comment.objects.filter(post_id=post_id).order_by("position")
     context = {
         "post": blogpost.post,
         "blog": blogpost.blog,
+        "comments": comments,
     }
     return render(request, 'deckard/get_post.html', context)
 
