@@ -18,7 +18,7 @@ class PostCreateForm(forms.Form):
     title = forms.CharField(label="title", max_length=100)
     text = forms.CharField(label="text", widget=forms.Textarea)
     slug = forms.CharField(label="slug", max_length=100)
-    pinned = forms.BooleanField()
+    pinned = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         blog_names = kwargs.pop("blog_names", (("", "------"), ))
@@ -42,7 +42,8 @@ class PostCreateForm(forms.Form):
         super(PostCreateForm, self).__init__(*args, **kwargs)
         self.fields["source_blog"] = forms.ChoiceField(choices=blog_names)
         self.fields["repost_blogs"] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                                                choices=blog_names)
+                                                                choices=blog_names,
+                                                                required=False)
 
     def save(self):
         print(self.cleaned_data)
