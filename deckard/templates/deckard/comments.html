@@ -1,6 +1,6 @@
 {% load filters %}
 {% for comment in comments %}
-    {% for i in comment.shift|times %}↘{% endfor %}
+    {% for i in comment.position %}↘{% endfor %}
     {% include "deckard/comment.html" %}
 {% endfor %}
 
