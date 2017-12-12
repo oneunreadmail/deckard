@@ -115,5 +115,4 @@ def like_post(request, post_id):
         old_like.delete()
     except ObjectDoesNotExist:
         post.become_liked(request.user)
-    # The following line of code should be replaced with some error message indicating that AJAX is not working.
-    return HttpResponse('Liked/unliked!')
+    return HttpResponse(post.posts_likes.count())
