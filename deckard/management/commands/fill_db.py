@@ -26,8 +26,9 @@ class Command(BaseCommand):
                 person.last_name = last_name
                 person.save()
                 print("Person {} {} successfully created.".format(first_name, last_name))
+
             except:
-                print("There was a problem creating the user: {}.  Error: {}.".format(username, sys.exc_info()[1]))
+                print("There was a problem creating the user: {}. Error: {}.".format(username, sys.exc_info()[1]))
 
     def _create_blogs(self, blogs):
         for name, authors in blogs:
@@ -43,7 +44,7 @@ class Command(BaseCommand):
                 print("Blog {} successfully created.".format(name))
 
             except:
-                print("There was a problem creating the blog: {}.  Error: {}.".format(name, sys.exc_info()[1]))
+                print("There was a problem creating the blog: {}. Error: {}.".format(name, sys.exc_info()[1]))
 
     def _create_posts(self, posts):
         for blogname, title, text in posts:
@@ -56,7 +57,7 @@ class Command(BaseCommand):
                 print("Post {} successfully created.".format(title))
 
             except:
-                print("There was a problem creating the post: {}.  Error: {}.".format(title, sys.exc_info()[1]))
+                print("There was a problem creating the post: {}. Error: {}.".format(title, sys.exc_info()[1]))
 
     def handle(self, *args, **options):
 
