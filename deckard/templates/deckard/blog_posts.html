@@ -3,7 +3,7 @@
 
     <h3>{{ blog.name }}</h3>
     <div>
-        <a href="{%  url 'add_new_post' blog_name=blog.name %}" class="btn btn-primary">New post</a>
+        <a href="{{ url('add_new_post', blog_name=blog.name) }}" class="btn btn-primary">New post</a>
     </div>
     <br/>
     {% for blogpost in blogposts %}
