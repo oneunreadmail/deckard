@@ -1,25 +1,24 @@
-{% load filters %}
-{% load static %}
-
-<div class="card {% if blogpost.pinned %}border border-primary{% endif %}" style="width: 50rem;">
+<div class="card {% if blogpost.pinned %}border border-primary{% endif %}">
     <div class="card-body dkr-post" data-post-id="{{ blogpost.post.id }}">
         <h4 class="card-title">{{ blogpost.post.title }}</h4>
         <h6>{{ blogpost.published_date }}</h6>
-        <p class="card-text">{{ blogpost.post.text | markdown | safe }}</p>
+        <p class="card-text">{{ blogpost.post.text | safe }}</p>
         {% if blogpost.post.source_blog.name != blog.name %}
         <p><i>Stolen from blog {{ blogpost.post.source_blog.name }}</i></p>
         {% endif %}
-        <a href="{%  url 'get_post' post_id=blogpost.post.id blog_name=blog.name %}" class="btn btn-primary">Read
+        <a href="{{ url('get_post', post_id=blogpost.post.id, blog_name=blog.name) }}" class="btn btn-primary">Read
             moar</a>
-        <a href="{%  url 'edit_post' post_id=blogpost.post.id blog_name=blog.name %}" class="btn btn-primary">Edit</a>
-        <a href="{%  url 'delete_post' post_id=blogpost.post.id blog_name=blog.name %}"
+        <a href="{{ url('edit_post', post_id=blogpost.post.id, blog_name=blog.name) }}" class="btn btn-primary">Edit</a>
+        <a href="{{ url('delete_post', post_id=blogpost.post.id, blog_name=blog.name) }}"
            class="btn btn-primary">Delete</a>
         <div align="right">
-            <font color="blue" class="dkr-like-count">{{ blogpost.post.posts_likes.count }}</font>
-            <a href="#"><span data-link="{%  url 'like_post' post_id=blogpost.post.id %}"
+            <font color="blue" class="dkr-like-count">{{ blogpost.post.posts_likes.count() }}</font>
+            <a href="#"><span data-link="{{ url('like_post', post_id=blogpost.post.id) }}"
                               class="fa fa-heart like"></span></a>
             <a href="#" data-target="#myModal" class="fa fa-share-alt" data-toggle="modal"
-               data-link="{% url 'repost' post_id=blogpost.post.id %}"></a>
+               data-link="{{ url('repost', post_id=blogpost.post.id) }}"></a>
         </div>
     </div>
 </div>
+
+<!--kwargs={"post_id": blogpost.post.id, "blog_name": blog.name})-->

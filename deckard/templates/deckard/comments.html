@@ -1,12 +1,16 @@
+<div class="container">
 {% for comment in comments %}
-    {% for item in comment.position %}
-        <div class="ml-4 mb-3 mt-3">
-    {% endfor %}
-    {% include "deckard/comment.html" %}
-    {% for item in comment.position %}
+    {% set maxshift = 2 %}
+    {% set shift = comment.position|length - 1 %}
+    {% if shift > maxshift %}{% set shift = maxshift %}{% endif %}
+    {% set rshift = 12 - shift %}
+    <div class="row">
+        <div class="col-{{ shift }}"></div>
+        <div class="col-{{ rshift }}">
+            {% include "deckard/comment.html" %}
         </div>
-    {% endfor %}
+    </div>
 {% endfor %}
-
+</div>
 
 

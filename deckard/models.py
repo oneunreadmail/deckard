@@ -158,7 +158,12 @@ class Comment(SystemInfo):
 class Blog(models.Model):
     """Blog is a logical group of posts written by the same or different authors."""
     name = models.CharField(verbose_name='name',
-                            max_length=140)
+                            max_length=140,
+                            unique=True)
+    description = models.CharField(verbose_name='description',
+                                   max_length=2000,
+                                   null=True,
+                                   blank=True)
     posts = models.ManyToManyField(Post,
                                    blank=True,
                                    through='BlogPost',
