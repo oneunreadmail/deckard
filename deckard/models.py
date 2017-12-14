@@ -192,7 +192,8 @@ class BlogPost(models.Model):
                                   related_name='reposted_%(class)ss',
                                   on_delete=models.SET_NULL,
                                   null=True)
-    pinned = models.BooleanField(default=False)
+    pinned = models.BooleanField(default=False,
+                                 blank=True)
 
 
 class Like(SystemInfo):
