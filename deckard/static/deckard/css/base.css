@@ -10,6 +10,7 @@
 
 .dkr-post-footer-link {
     margin: 0px 15px;
+    vertical-align: middle;
     display: inline-block;
 }
 

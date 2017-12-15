@@ -27,7 +27,7 @@ def blog_posts(request, blog_name):
 
     ratings = {}
     for blogpost in blogposts:
-        ratings[blogpost.post] = get_rating(blogpost.post, request.user)
+        ratings[blogpost.post.id] = get_rating(blogpost.post, request.user)
 
     context = {
         "user": request.user,
