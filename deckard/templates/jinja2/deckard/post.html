@@ -11,14 +11,14 @@
             <div class="dkr-vertical-rating dkr-post-footer-icon">
                 <div class="dkr-vertical-rating-element">
                     <a href="#"><span data-link="{{ url('rate_post', post_id=blogpost.post.id, rating_sign='plus') }}"
-                                      class="fa fa-chevron-up dkr-plus"></span></a>
+                                      class="fa fa-chevron-up dkr-plus {% if ratings[blogpost.post.id][1] > 0 %}dkr-active{% endif %}"></span></a>
                 </div>
                 <div class="dkr-vertical-rating-element">
-                    <font class="dkr-rating">{{ ratings[blogpost.post.id] }}</font>
+                    <font class="dkr-rating">{{ ratings[blogpost.post.id][0] }}</font>
                 </div>
                 <div class="dkr-vertical-rating-element">
                     <a href="#"><span data-link="{{ url('rate_post', post_id=blogpost.post.id, rating_sign='minus') }}"
-                                      class="fa fa-chevron-down dkr-minus"></span></a>
+                                      class="fa fa-chevron-down dkr-minus {% if ratings[blogpost.post.id][1] < 0 %}dkr-active{% endif %}"></span></a>
                 </div>
             </div>
             <div class="dkr-post-footer-link">
