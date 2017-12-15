@@ -58,7 +58,7 @@ def get_post(request, post_id, blog_name):
 
 def get_rating(post, user):
     """Get post sum rating and post user rating as a tuple (SUM_RT, USER_RT)."""
-    sum_rating = post.posts_ratings.aggregate(Sum('points'))['points__sum']
+    sum_rating = post.posts_ratings.aggregate(Sum('points'))['points__sum'] or 0
     post_user_rating = Rating.objects.filter(post=post, author=user)
     if post_user_rating:
         user_points = post_user_rating.first().points

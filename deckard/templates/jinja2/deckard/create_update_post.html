@@ -2,8 +2,8 @@
 {% block content %}
     <h2>Create/update a post in {{ blog.name }}</h2>
     <form method="POST" action="">
-        {{ form.as_p }}
-        {% csrf_token %}
+        {{ form.as_p() }}
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
     <input type="submit" value="Commit">
     </form>
 {% endblock %}
