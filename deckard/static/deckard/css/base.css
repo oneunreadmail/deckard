@@ -1,4 +1,28 @@
-.like.red
-{
-    color: red;
+.dkr-post-footer {
+    //border: 1px solid black;
+}
+
+.dkr-post-footer-icon {
+    display: inline-block;
+    margin: 0px 15px;
+    vertical-align: middle;
+}
+
+.dkr-post-footer-link {
+    margin: 0px 15px;
+    display: inline-block;
+}
+
+.dkr-vertical-rating {
+    //border: 1px solid black;
+}
+
+.dkr-vertical-rating-element {
+    display: block;
+    text-align: center;
+}
+
+.dkr-rating {
+    margin: auto;
+    color: blue;
 }

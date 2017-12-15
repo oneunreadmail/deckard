@@ -6,6 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import Max
+from django.core.exceptions import ObjectDoesNotExist
 if VERSION[0] == 2:  # Starting from Django 2.0 reverse is located in django.urls
     from django.urls import reverse
 else:
@@ -94,7 +95,6 @@ class Post(SystemInfo):
         return self.title
 
     def get_abs_url(self):
-        print(1)
         return reverse("get_post", kwargs={"post_id": self.id, "blog_name": self.source_blog.name})
 
     def repost_to_blog(self, blog, publisher):
@@ -104,9 +104,15 @@ class Post(SystemInfo):
             repost = BlogPost(post=self, blog=blog, publisher=publisher)
             repost.save()
 
-    def become_liked(self, author):
-        like = Like(post=self, author=author)
-        like.save()
+    def become_rated(self, author, delta):
+        try:
+            old_rating = Rating.objects.get(post=self, author=author)
+            if not abs(old_rating.points + delta) > 1:  # Check boundary conditions
+                old_rating.points += delta;
+                old_rating.save()
+        except ObjectDoesNotExist:
+            rating = Rating(post=self, author=author, points=delta)
+            rating.save()
 
 
 class Comment(SystemInfo):
@@ -125,7 +131,7 @@ class Comment(SystemInfo):
                                        blank=True)
     text = models.TextField(verbose_name='text')
     status = models.CharField(verbose_name='status',
-                              max_length=60,
+                              max_length=50,
                               choices=COMMENT_STATUS,
                               default='Pending')
     post = models.ForeignKey(Post,
@@ -157,13 +163,18 @@ class Comment(SystemInfo):
 
 class Blog(models.Model):
     """Blog is a logical group of posts written by the same or different authors."""
+    avatar = models.ImageField(upload_to='uploads/blogs_avatars/',
+                               null=True,
+                               blank=True)
     name = models.CharField(verbose_name='name',
-                            max_length=140,
+                            max_length=50,
                             unique=True)
-    description = models.CharField(verbose_name='description',
-                                   max_length=2000,
-                                   null=True,
-                                   blank=True)
+    title = models.CharField(verbose_name='title',
+                             max_length=140)
+    subtitle = models.CharField(verbose_name='subtitle',
+                                max_length=280,
+                                null=True,
+                                blank=True)
     posts = models.ManyToManyField(Post,
                                    blank=True,
                                    through='BlogPost',
@@ -189,15 +200,15 @@ class BlogPost(models.Model):
     publisher = models.ForeignKey('auth.User',
                                   verbose_name='publisher',
                                   db_index=True,  # Indexed
-                                  related_name='reposted_%(class)ss',
+                                  related_name='published_%(class)ss',
                                   on_delete=models.SET_NULL,
                                   null=True)
     pinned = models.BooleanField(default=False,
                                  blank=True)
 
 
-class Like(SystemInfo):
-    """A like is a sign of approval issued by a user. Posts and comments both can be liked."""
+class Rating(SystemInfo):
+    """Posts and comments both can be rated. Each user can give a post or a comment +1, 0 or -1 points."""
     post = models.ForeignKey('Post',
                              verbose_name='post',
                              db_index=True,
@@ -212,6 +223,7 @@ class Like(SystemInfo):
                                 on_delete=models.CASCADE,
                                 null=True,
                                 blank=True)
+    points = models.IntegerField(default=0)
 
 
 class Image(models.Model):
@@ -219,12 +231,10 @@ class Image(models.Model):
     post_id = models.ForeignKey('Post',
                                 verbose_name='post',
                                 db_index=True,
-                                related_name='images_in_a_%(class)ss',
+                                related_name='posts_%(class)ss',
                                 on_delete=models.CASCADE,
                                 null=False)
-    position = models.IntegerField(verbose_name='position',
+    sequence = models.IntegerField(verbose_name='sequence',
                                    default=0,
                                    null=False)
-    link = models.CharField(verbose_name='image link',
-                            max_length=100,
-                            null=False)
+    image = models.ImageField(upload_to='uploads/posts_images/')

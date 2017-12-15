@@ -2,9 +2,9 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
-from .models import Post, Blog, BlogPost, Comment, Like
+from .models import Post, Blog, BlogPost, Comment
 from .forms import PostCreateForm
-from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Sum
 
 
 def check(request):  # function for current testing
@@ -16,11 +16,17 @@ def blog_posts(request, blog_name):
     """List of all posts in the current blog."""
     blog = get_object_or_404(Blog, name=blog_name)
     blogs = Blog.objects.all()
+    blogposts = BlogPost.objects.filter(blog__name=blog_name).order_by("-pinned", "-published_date")
+    ratings = {}
+    for blogpost in blogposts:
+        sum_rating = blogpost.post.posts_ratings.aggregate(Sum('points'))['points__sum']
+        ratings[blogpost.post.id] = sum_rating
 
     context = {
         "blog": blog,
         "blogs": blogs,
-        "blogposts": BlogPost.objects.filter(blog__name=blog_name).order_by("-pinned", "-published_date"),
+        "blogposts": blogposts,
+        "ratings": ratings,
         "user": request.user,
     }
     return render(request, 'deckard/blog_posts.html', context)
@@ -108,11 +114,8 @@ def repost_to_blog(request, post_id=None):
     pass
 
 
-def like_post(request, post_id):
+def rate_post(request, post_id, rating_sign):
+    delta = 1 if rating_sign == 'plus' else -1;
     post = get_object_or_404(Post, id=post_id)
-    try:
-        old_like = Like.objects.get(post_id=post_id, author=request.user)
-        old_like.delete()
-    except ObjectDoesNotExist:
-        post.become_liked(request.user)
-    return HttpResponse(post.posts_likes.count())
+    post.become_rated(request.user, delta)
+    return HttpResponse(post.posts_ratings.aggregate(Sum('points'))['points__sum'])
