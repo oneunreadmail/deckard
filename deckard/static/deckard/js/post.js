@@ -1,12 +1,16 @@
 $(function(){
-    $('.like').on('click', function(e){
+    $('.dkr-plus, .dkr-minus').on('click', function(e){
          e.preventDefault();
          $.ajax({
              url: $(this).attr('data-link'),
-             success: $.proxy(function(newLikeCount){
-                var oldLikeCount =  $(this).parents('div').eq(0).children('.dkr-like-count').eq(0).text();
-                $(this).toggleClass("red", newLikeCount > oldLikeCount);
-                $(this).parents('div').eq(0).children('.dkr-like-count').eq(0).text(newLikeCount);
+             success: $.proxy(function(newRating){
+             var parent = $(this).parents('.dkr-vertical-rating').eq(0);
+                oldRating = parent.find('.dkr-rating').eq(0).text();
+                if (newRating != oldRating) {
+                    parent.find('.dkr-active').eq(0).removeClass('dkr-active');
+                    $(this).toggleClass('dkr-active', (newRating != oldRating) && (newRating != 0));
+                    parent.find('.dkr-rating').eq(0).text(newRating);
+                }
              }, this)
          })
       });

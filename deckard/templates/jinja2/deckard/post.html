@@ -1,0 +1,42 @@
+<div class="card {% if blogpost.pinned %}border border-primary{% endif %}">
+    <div class="card-body dkr-post" data-post-id="{{ blogpost.post.id }}">
+        <h4 class="card-title">{{ blogpost.post.title }}</h4>
+        <h6>{{ blogpost.published_date }}</h6>
+        <p class="card-text">{{ blogpost.post.text | safe }}</p>
+        {% if blogpost.post.source_blog.name != blog.name %}
+        <p><i>Stolen from blog {{ blogpost.post.source_blog.name }}</i></p>
+        {% endif %}
+
+        <div class="dkr-post-footer">
+            <div class="dkr-vertical-rating dkr-post-footer-icon">
+                <div class="dkr-vertical-rating-element">
+                    <a href="#"><span data-link="{{ url('rate_post', post_id=blogpost.post.id, rating_sign='plus') }}"
+                                      class="fa fa-chevron-up dkr-plus {% if ratings[blogpost.post.id][1] > 0 %}dkr-active{% endif %}"></span></a>
+                </div>
+                <div class="dkr-vertical-rating-element">
+                    <font class="dkr-rating">{{ ratings[blogpost.post.id][0] }}</font>
+                </div>
+                <div class="dkr-vertical-rating-element">
+                    <a href="#"><span data-link="{{ url('rate_post', post_id=blogpost.post.id, rating_sign='minus') }}"
+                                      class="fa fa-chevron-down dkr-minus {% if ratings[blogpost.post.id][1] < 0 %}dkr-active{% endif %}"></span></a>
+                </div>
+            </div>
+            <div class="dkr-post-footer-link">
+                <a href="{{ url('get_post', post_id=blogpost.post.id, blog_name=blog.name) }}">Read
+                    moar</a>
+            </div>
+            <div class="dkr-post-footer-link">
+                <a href="{{ url('edit_post', post_id=blogpost.post.id, blog_name=blog.name) }}">Edit</a>
+            </div>
+            <div class="dkr-post-footer-link">
+                <a href="{{ url('delete_post', post_id=blogpost.post.id, blog_name=blog.name) }}">Delete</a>
+            </div>
+            <div class="dkr-post-footer-icon">
+                <a href="#" data-target="#myModal" class="fa fa-share-alt" data-toggle="modal"
+                   data-link="{{ url('repost', post_id=blogpost.post.id) }}"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--kwargs={"post_id": blogpost.post.id, "blog_name": blog.name})-->
