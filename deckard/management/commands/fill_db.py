@@ -1,4 +1,5 @@
 import sys
+from django.utils import timezone
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model, authenticate
 from ...models import Post, Blog, BlogPost, Person
@@ -53,7 +54,7 @@ class Command(BaseCommand):
                 blog = Blog.objects.get(name=blogname)
                 post = Post(title=title, text=text, source_blog=blog)
                 post.save()
-                BlogPost(blog=blog, post=post).save()
+                BlogPost(blog=blog, post=post, published_date=timezone.now()).save()
                 print("Post {} successfully created.".format(title))
 
             except:

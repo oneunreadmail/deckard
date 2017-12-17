@@ -101,7 +101,10 @@ class Post(SystemInfo):
         try:
             BlogPost.objects.get(post=self, blog=blog)
         except ObjectDoesNotExist:
-            repost = BlogPost(post=self, blog=blog, publisher=publisher)
+            repost = BlogPost(post=self,
+                              blog=blog,
+                              publisher=publisher,
+                              published_date=timezone.now())
             repost.save()
 
 

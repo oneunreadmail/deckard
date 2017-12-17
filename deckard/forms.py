@@ -1,4 +1,4 @@
-import datetime
+from django.utils import timezone
 from django import forms
 from django.shortcuts import get_object_or_404
 from .models import Post, BlogPost, Blog
@@ -57,7 +57,7 @@ class PostCreateForm(forms.Form):
 
         blogpost = BlogPost(blog=source_blog,
                             post=post,
-                            published_date=datetime.datetime.now(),
+                            published_date=timezone.now(),
                             pinned=self.cleaned_data["pinned"])
         blogpost.save()
 
@@ -67,5 +67,5 @@ class PostCreateForm(forms.Form):
                 repost_blog = get_object_or_404(Blog, name=blogname)
                 BlogPost(blog=repost_blog,
                          post=post,
-                         published_date=datetime.datetime.now()).save()
+                         published_date=timezone.now()).save()
         return post
