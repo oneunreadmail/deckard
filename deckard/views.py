@@ -2,6 +2,7 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Blog, BlogPost, Comment, Rating
 from .forms import PostCreateForm
 from django.db.models import Sum
@@ -24,7 +25,10 @@ def blog_list(request):
 def blog_posts(request, blog_name):
     """List of all posts in the current blog."""
     blog = get_object_or_404(Blog, name=blog_name)
-    blogposts = BlogPost.objects.filter(blog=blog).order_by("-pinned", "-published_date")
+    blogposts_all = BlogPost.objects.filter(blog=blog).order_by("-pinned", "-published_date")
+    paginator = Paginator(blogposts_all, 2)
+    page = request.GET.get('page')
+    blogposts = paginator.get_page(page)
     blogs = Blog.objects.all()
 
     ratings = {}
