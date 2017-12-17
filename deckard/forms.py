@@ -14,6 +14,41 @@ class PostForm(forms.ModelForm):
         ]
 
 
+class BlogRepostForm(forms.ModelForm):
+    pinned = forms.BooleanField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        blog_names = kwargs.pop("blog_names", (("", "------"), ))
+        blogpost = kwargs.pop("blogpost", None)
+        if blogpost:
+            repost_names = tuple(blog.name for blog in Blog.objects.all())
+            print(repost_names)
+            initial = {
+                "pinned": blogpost.pinned,
+                "repost_blogs": repost_names,
+            }
+            kwargs["initial"] = initial
+        self.user = kwargs.pop("user")
+        if args:
+            print(args[0])
+        super(BlogRepostForm, self).__init__(*args, **kwargs)
+        self.fields["repost_blogs"] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                                                choices=blog_names,
+                                                                required=False)
+
+    def save(self):
+        print(self.cleaned_data)
+        for blogname in self.cleaned_data["repost_blogs"]:
+            if blogname != blogpost.blog.name:
+                print(blogname)
+                repost_blog = get_object_or_404(Blog, name=blogname)
+                blogpost = BlogPost(blog=repost_blog,
+                           post=post,
+                           published_date=datetime.datetime.now()).save()
+        return post
+
+
+
 class PostCreateForm(forms.Form):
     title = forms.CharField(label="title", max_length=100)
     text = forms.CharField(label="text", widget=forms.Textarea)

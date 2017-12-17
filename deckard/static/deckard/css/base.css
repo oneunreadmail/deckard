@@ -25,7 +25,7 @@
 
 .dkr-rating {
     margin: auto;
-    color: blue;
+    color: black;
 }
 
 .dkr-plus.dkr-active {
@@ -34,4 +34,10 @@
 
 .dkr-minus.dkr-active {
     color: red;
+}
+
+.dkr-disabled {
+    color: lightgrey;
+    pointer-events: none;
+    cursor: default;
 }

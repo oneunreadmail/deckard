@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from .models import Post, Blog, BlogPost, Comment, Rating
 from .forms import PostCreateForm
 from django.db.models import Sum
+from django.contrib.auth.decorators import login_required
 
 
 def check(request):  # function for current testing
@@ -24,6 +25,7 @@ def blog_posts(request, blog_name):
     """List of all posts in the current blog."""
     blog = get_object_or_404(Blog, name=blog_name)
     blogposts = BlogPost.objects.filter(blog=blog).order_by("-pinned", "-published_date")
+    blogs = Blog.objects.all()
 
     ratings = {}
     for blogpost in blogposts:
@@ -34,6 +36,7 @@ def blog_posts(request, blog_name):
         "blog": blog,
         "blogposts": blogposts,
         "ratings": ratings,
+        "blogs": blogs,  # For reposting
     }
     return render(request, 'deckard/blog_posts.html', context)
 
@@ -42,6 +45,7 @@ def get_post(request, post_id, blog_name):
     """List of all posts in the current blog."""
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     comments = Comment.objects.filter(post_id=post_id).order_by("position")
+    blogs = Blog.objects.all()
 
     ratings = {}
     ratings[blogpost.post.id] = get_rating(blogpost.post, request.user)
@@ -52,6 +56,7 @@ def get_post(request, post_id, blog_name):
         "blogpost": blogpost,
         "ratings": ratings,
         "comments": comments,
+        "blogs": blogs,  # For reposting
     }
     return render(request, 'deckard/post_detail.html', context)
 
@@ -59,15 +64,16 @@ def get_post(request, post_id, blog_name):
 def get_rating(post, user):
     """Get post sum rating and post user rating as a tuple (SUM_RT, USER_RT)."""
     sum_rating = post.posts_ratings.aggregate(Sum('points'))['points__sum'] or 0
-    post_user_rating = Rating.objects.filter(post=post, author=user)
-    if post_user_rating:
-        user_points = post_user_rating.first().points
-    else:
-        user_points = 0
+    user_points = 0
+    if user.is_authenticated:
+        post_user_rating = Rating.objects.filter(post=post, author=user)
+        if post_user_rating:
+            user_points = post_user_rating.first().points
     rating = (sum_rating, user_points)
     return rating
 
 
+@login_required
 def add_new_post(request, blog_name):
     """Create a new post in a blog."""
     blog_names = tuple((blog.name, blog.name) for blog in Blog.objects.all())
@@ -89,6 +95,7 @@ def add_new_post(request, blog_name):
     return render(request, 'deckard/create_update_post.html', context)
 
 
+@login_required
 def edit_post(request, post_id, blog_name):
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     if blogpost.post.source_blog.name != blogpost.blog.name:
@@ -114,7 +121,8 @@ def edit_post(request, post_id, blog_name):
     }
     return render(request, 'deckard/create_update_post.html', context)
 
-  
+
+@login_required
 def delete_post(request, post_id, blog_name):
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     if blogpost.post.source_blog.name != blogpost.blog.name:
@@ -126,10 +134,12 @@ def delete_post(request, post_id, blog_name):
     return redirect("blog_list")
 
 
+@login_required
 def repost_to_blog(request, post_id=None):
     pass
 
 
+@login_required
 def rate_post(request, post_id, rating_sign):
     delta = 1 if rating_sign == 'plus' else -1;
     post = get_object_or_404(Post, id=post_id)
