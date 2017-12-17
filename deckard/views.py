@@ -135,8 +135,14 @@ def delete_post(request, post_id, blog_name):
 
 
 @login_required
-def repost_to_blog(request, post_id=None):
-    pass
+def repost(request, post_id):
+    if request.method == "POST":
+        post = get_object_or_404(Post, id=post_id)
+        repost_blogs = request.POST.getlist("repost_blogs[]")
+        for blog_name in repost_blogs:
+            blog = get_object_or_404(Blog, name=blog_name)
+            post.repost_to_blog(blog=blog, publisher=request.user)
+        return HttpResponse("OK")
 
 
 @login_required

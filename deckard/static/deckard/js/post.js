@@ -1,4 +1,5 @@
 $(function(){
+    // Post rating AJAX functionality - plus/minus
     $('.dkr-plus, .dkr-minus').on('click', function(e){
          e.preventDefault();
          $.ajax({
@@ -16,20 +17,37 @@ $(function(){
       });
 });
 
-$('#myModal').on('show.bs.modal', function (e) {
-    console.log('asdsa');
-    //get data-id attribute of the clicked element
-    var bookId = $(e.relatedTarget).data('toggle');
+$(document).on('show.bs.modal','#repostModal', function (e) {
+    // Pass info about the post to the repost modal window
+    var modal = $(this);
+    var postId = $(e.relatedTarget).data('post-id');
+    var blogName = $(e.relatedTarget).data('blog-name');
+    var link = $(e.relatedTarget).data('link');
+    console.log('Post id: ' + postId);
+    console.log('From blog name: ' + blogName);
+    console.log('Link: ' + link);
+    $(e.currentTarget).find('#modalRepostButton').data('link', link);
+})
 
-    //populate the textbox
-    $(e.currentTarget).find('input[id="recipient-name"]').val('dd');
-    console.log('asdsa');
-
-    var button = $(event.relatedTarget) // Button that triggered the modal
-    var recipient = button.data('whatever') // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-    var modal = $(this)
-    modal.find('.modal-title').text('New message to ' + recipient)
-    modal.find('.modal-body input').val(recipient)
+$(function(){
+    // Repost functionality
+    $('#modalRepostButton').on('click', function(e){
+        var repostBlogs = {"repost_blogs":[]}
+        $("#formControlSelectBlogs>option:checked").each(function()
+        {
+            repostBlogs["repost_blogs"].push($(this).val());
+        });
+        repostBlogs["csrfmiddlewaretoken"] = $('#csrf').val();
+        var link = $('#modalRepostButton').data('link');
+        var goto = $(this).data('go-to');
+        $.ajax({
+            type: "POST",
+            url: link,
+            data: repostBlogs,
+            success: function(response) {
+                console.log('Success: ' + response);
+                window.location = goto;
+            }
+        });
+    });
 });

@@ -98,11 +98,12 @@ class Post(SystemInfo):
         return reverse("get_post", kwargs={"post_id": self.id, "blog_name": self.source_blog.name})
 
     def repost_to_blog(self, blog, publisher):
-        if self.source_blog == blog:
-            raise Exception("Cannot repost to the source blog of the post")
-        else:
+        try:
+            BlogPost.objects.get(post=self, blog=blog)
+        except ObjectDoesNotExist:
             repost = BlogPost(post=self, blog=blog, publisher=publisher)
             repost.save()
+
 
     def become_rated(self, author, delta):
         try:

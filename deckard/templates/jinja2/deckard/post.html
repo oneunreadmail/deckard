@@ -6,21 +6,21 @@
         <p class="card-text">{{ blogpost.post.text | safe }}</p>
 
         {% if blogpost.post.source_blog.name != blog.name %}
-            <p><i>Stolen from blog {{ blogpost.post.source_blog.name }}</i></p>
+        <p><i>Stolen from blog {{ blogpost.post.source_blog.name }}</i></p>
         {% endif %}
 
         <div class="dkr-post-footer">
             <div class="dkr-vertical-rating dkr-post-footer-icon">
                 {% if not user.is_authenticated %}
-                    {% set plus_class = 'dkr-disabled' %}
-                    {% set minus_class = 'dkr-disabled' %}
+                {% set plus_class = 'dkr-disabled' %}
+                {% set minus_class = 'dkr-disabled' %}
                 {% else %}
-                    {% if ratings[blogpost.post.id][1] > 0 %}
-                        {% set plus_class = 'dkr-active' %}
-                    {% endif %}
-                    {% if ratings[blogpost.post.id][1] < 0 %}
-                        {% set minus_class = 'dkr-active' %}
-                    {% endif %}
+                {% if ratings[blogpost.post.id][1] > 0 %}
+                {% set plus_class = 'dkr-active' %}
+                {% endif %}
+                {% if ratings[blogpost.post.id][1] < 0 %}
+                {% set minus_class = 'dkr-active' %}
+                {% endif %}
                 {% endif %}
                 <div class="dkr-vertical-rating-element">
                     <a href="#">
@@ -50,8 +50,10 @@
                 <a href="{{ url('delete_post', post_id=blogpost.post.id, blog_name=blog.name) }}">Delete</a>
             </div>
             <div class="dkr-post-footer-icon">
-                <a href="#repostModal" data-toggle="modal">
-                    <span class="fa fa-share-alt" data-link="{{ url('repost', post_id=blogpost.post.id) }}"></span>
+                <a href="#repostModal" data-toggle="modal" data-blog-name="{{ blog.name }}"
+                   data-post-id="{{ blogpost.post.id }}"
+                   data-link="{{ url('repost', post_id=blogpost.post.id) }}">
+                    <span class=" fa fa-share-alt"></span>
                 </a>
             </div>
             {% endif %}
