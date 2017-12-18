@@ -107,7 +107,6 @@ class Post(SystemInfo):
                               published_date=timezone.now())
             repost.save()
 
-
     def become_rated(self, author, delta):
         try:
             old_rating = Rating.objects.get(post=self, author=author)
@@ -138,7 +137,9 @@ class Comment(SystemInfo):
                               max_length=50,
                               choices=COMMENT_STATUS,
                               default='Pending')
-    post = models.ForeignKey(Post,
+    post = models.ForeignKey('Post',
+                             verbose_name='post',
+                             related_name='posts_%(class)ss',
                              on_delete=models.CASCADE)
     # List of indexes of all comments from the root to the leaf
     # Example: [2, 3, 13, 3, 0]
@@ -163,6 +164,16 @@ class Comment(SystemInfo):
                 new_position.append(0)  # Add new level
             self.position = new_position
         super(Comment, self).save(*args, **kwargs)
+
+    def become_rated(self, author, delta):
+        try:
+            old_rating = Rating.objects.get(comment=self, author=author)
+            if not abs(old_rating.points + delta) > 1:  # Check boundary conditions
+                old_rating.points += delta;
+                old_rating.save()
+        except ObjectDoesNotExist:
+            rating = Rating(comment=self, author=author, points=delta)
+            rating.save()
 
 
 class Blog(models.Model):

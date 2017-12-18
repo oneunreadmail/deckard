@@ -31,49 +31,66 @@ def blog_posts(request, blog_name):
     blogposts = paginator.get_page(page)
     blogs = Blog.objects.all()
 
-    ratings = {}
+    post_ratings = {}
+    comment_ratings = {}
     for blogpost in blogposts:
-        ratings[blogpost.post.id] = get_rating(blogpost.post, request.user)
+        post_ratings[blogpost.post.id] = get_rating(blogpost.post, request.user)  # Get rating of the post
+        for comment in blogpost.post.posts_comments.all():  # Get ratings of all post's comments
+            comment_ratings[comment.id] = get_rating(comment, request.user)
 
     context = {
         "user": request.user,
         "blog": blog,
         "blogposts": blogposts,
-        "ratings": ratings,
+        "post_ratings": post_ratings,
+        "comment_ratings": comment_ratings,
         "blogs": blogs,  # For reposting
     }
     return render(request, 'deckard/blog_posts.html', context)
 
 
 def get_post(request, post_id, blog_name):
-    """List of all posts in the current blog."""
+    """Get a post and all its comments."""
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     comments = Comment.objects.filter(post_id=post_id).order_by("position")
     blogs = Blog.objects.all()
 
-    ratings = {}
-    ratings[blogpost.post.id] = get_rating(blogpost.post, request.user)
+    post_ratings = {}
+    comment_ratings = {}
+    post_ratings[blogpost.post.id] = get_rating(blogpost.post, request.user)  # Get rating of the post
+    for comment in blogpost.post.posts_comments.all():  # Get ratings of all post's comments
+        comment_ratings[comment.id] = get_rating(comment, request.user)
 
     context = {
         "user": request.user,
         "blog": blogpost.blog,
         "blogpost": blogpost,
-        "ratings": ratings,
+        "post_ratings": post_ratings,
         "comments": comments,
+        "comment_ratings": comment_ratings,
         "blogs": blogs,  # For reposting
     }
     return render(request, 'deckard/post_detail.html', context)
 
 
-def get_rating(post, user):
-    """Get post sum rating and post user rating as a tuple (SUM_RT, USER_RT)."""
-    sum_rating = post.posts_ratings.aggregate(Sum('points'))['points__sum'] or 0
+def get_rating(rated_object, user):
+    """Get the post's or comment's total rating and the user rating as a tuple (TOTAL_RT, USER_RT)."""
+
     user_points = 0
+    if isinstance(rated_object, Comment):
+        total_rating = rated_object.comments_ratings.aggregate(Sum('points'))['points__sum'] or 0
+    else:
+        total_rating = rated_object.posts_ratings.aggregate(Sum('points'))['points__sum'] or 0
+
     if user.is_authenticated:
-        post_user_rating = Rating.objects.filter(post=post, author=user)
-        if post_user_rating:
-            user_points = post_user_rating.first().points
-    rating = (sum_rating, user_points)
+        if isinstance(rated_object, Comment):
+            user_rating = Rating.objects.filter(comment=rated_object, author=user)
+        else:
+            user_rating = Rating.objects.filter(post=rated_object, author=user)
+        if user_rating:
+            user_points = user_rating.first().points
+
+    rating = (total_rating, user_points)
     return rating
 
 
@@ -155,3 +172,11 @@ def rate_post(request, post_id, rating_sign):
     post = get_object_or_404(Post, id=post_id)
     post.become_rated(request.user, delta)
     return HttpResponse(post.posts_ratings.aggregate(Sum('points'))['points__sum'])
+
+
+@login_required
+def rate_comment(request, comment_id, rating_sign):
+    delta = 1 if rating_sign == 'plus' else -1;
+    comment = get_object_or_404(Comment, id=comment_id)
+    comment.become_rated(request.user, delta)
+    return HttpResponse(comment.comments_ratings.aggregate(Sum('points'))['points__sum'])

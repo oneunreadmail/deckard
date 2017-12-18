@@ -1,6 +1,37 @@
 <div class="card bg-light">
-  <div class="card-body">
-    <p class="card-text">{{ comment.text }}</p>
-    <p class="card-text text-info">{{ comment.position }}</p>
-  </div>
+    <div class="card-body">
+        <div class="dkr-comment-rating">
+            <div class="dkr-vertical-rating dkr-comment-footer-icon">
+                {% if not user.is_authenticated %}
+                {% set plus_class = 'dkr-disabled' %}
+                {% set minus_class = 'dkr-disabled' %}
+                {% else %}
+                {% if comment_ratings[comment.id][1] > 0 %}
+                {% set plus_class = 'dkr-active' %}
+                {% endif %}
+                {% if comment_ratings[comment.id][1] < 0 %}
+                {% set minus_class = 'dkr-active' %}
+                {% endif %}
+                {% endif %}
+                <div class="dkr-vertical-rating-element">
+                    <a href="#">
+                        <span data-link="{{ url('rate_comment', comment_id=comment.id, rating_sign='plus') }}"
+                              class="fa fa-chevron-up dkr-plus {{ plus_class }}"></span>
+                    </a>
+                </div>
+                <div class="dkr-vertical-rating-element">
+                    <font class="dkr-rating">{{ comment_ratings[comment.id][0] }}</font>
+                </div>
+                <div class="dkr-vertical-rating-element">
+                    <a href="#">
+                        <span data-link="{{ url('rate_comment', comment_id=comment.id, rating_sign='minus') }}"
+                              class="fa fa-chevron-down dkr-minus {{ minus_class }}"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="dkr-comment-body">
+            <p class="card-text">{{ comment.text }}</p>
+        </div>
+    </div>
 </div>
