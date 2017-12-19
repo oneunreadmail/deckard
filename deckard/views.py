@@ -25,7 +25,7 @@ def blog_list(request):
 def blog_posts(request, blog_name):
     """List of all posts in the current blog."""
     blog = get_object_or_404(Blog, name=blog_name)
-    blogposts_all = BlogPost.objects.filter(blog=blog, published_date__isnull=False).order_by("-pinned", "-published_date")
+    blogposts_all = BlogPost.objects.filter(blog=blog).order_by("-pinned", "-published_date")
     paginator = Paginator(blogposts_all, 2)
     page = request.GET.get('page')
     blogposts = paginator.get_page(page)

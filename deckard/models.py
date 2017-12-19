@@ -211,15 +211,16 @@ class BlogPost(models.Model):
                              on_delete=models.CASCADE)
     published_date = models.DateTimeField(verbose_name='publication date',
                                           db_index=True,  # For ordering by publication date + searching
-                                          blank=True,
-                                          null=True)
+                                          null=True,
+                                          blank=True)
     # A user who made a repost
     publisher = models.ForeignKey(auth.models.User,
                                   verbose_name='publisher',
                                   db_index=True,  # Indexed
                                   related_name='published_%(class)ss',
                                   on_delete=models.SET_NULL,
-                                  null=True)
+                                  null=True,
+                                  blank=True)
     pinned = models.BooleanField(default=False,
                                  blank=True)
 

@@ -1,37 +1,40 @@
-<div class="card bg-light">
+<div class="card">
     <div class="card-body">
-        <div class="dkr-comment-rating">
-            <div class="dkr-vertical-rating dkr-comment-footer-icon">
-                {% if not user.is_authenticated %}
-                {% set plus_class = 'dkr-disabled' %}
-                {% set minus_class = 'dkr-disabled' %}
-                {% else %}
-                {% if comment_ratings[comment.id][1] > 0 %}
-                {% set plus_class = 'dkr-active' %}
-                {% endif %}
-                {% if comment_ratings[comment.id][1] < 0 %}
-                {% set minus_class = 'dkr-active' %}
-                {% endif %}
-                {% endif %}
-                <div class="dkr-vertical-rating-element">
-                    <a href="#">
-                        <span data-link="{{ url('rate_comment', comment_id=comment.id, rating_sign='plus') }}"
-                              class="fa fa-chevron-up dkr-plus {{ plus_class }}"></span>
-                    </a>
-                </div>
-                <div class="dkr-vertical-rating-element">
-                    <font class="dkr-rating">{{ comment_ratings[comment.id][0] }}</font>
-                </div>
-                <div class="dkr-vertical-rating-element">
-                    <a href="#">
-                        <span data-link="{{ url('rate_comment', comment_id=comment.id, rating_sign='minus') }}"
-                              class="fa fa-chevron-down dkr-minus {{ minus_class }}"></span>
-                    </a>
-                </div>
-            </div>
-        </div>
         <div class="dkr-comment-body">
             <p class="card-text">{{ comment.text }}</p>
+        </div>
+
+    </div>
+    <div class="card-footer bg-white border-0 text-muted">
+        <div class="dkr-comment-footer">
+            <span>Wrote {{ comment.author }} at {{ comment.created_date.strftime('%H:%M %d.%m.%Y') }}</span>
+            <div class="dkr-vertical-rating dkr-comment-footer-icon">
+                {% if not user.is_authenticated %}
+                    {% set plus_class = 'dkr-disabled' %}
+                    {% set minus_class = 'dkr-disabled' %}
+                    {% else %}
+                        {% set user_rating = comment_ratings[comment.id][0] %}
+                        {% if user_rating > 0 %}
+                            {% set plus_class = 'dkr-active' %}
+                            {% set total_rating_class = 'dkr-positive' %}
+                        {% endif %}
+                        {% if user_rating < 0 %}
+                            {% set minus_class = 'dkr-active' %}
+                            {% set total_rating_class = 'dkr-negative' %}
+                        {% endif %}
+                {% endif %}
+                <div class="dkr-vertical-rating-element">
+                    <span data-link="{{ url('rate_comment', comment_id=comment.id, rating_sign='plus') }}"
+                          class="fa fa-chevron-up dkr-plus {{ plus_class }}"></span>
+                </div>
+                <div class="dkr-vertical-rating-element">
+                    <font class="dkr-rating {{ total_rating_class }}">{{ comment_ratings[comment.id][0] }}</font>
+                </div>
+                <div class="dkr-vertical-rating-element">
+                    <span data-link="{{ url('rate_comment', comment_id=comment.id, rating_sign='minus') }}"
+                          class="fa fa-chevron-down dkr-minus {{ minus_class }}"></span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

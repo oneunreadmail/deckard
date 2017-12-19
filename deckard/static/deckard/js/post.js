@@ -11,6 +11,8 @@ $(function(){
                     parent.find('.dkr-active').eq(0).removeClass('dkr-active');
                     $(this).toggleClass('dkr-active', (newRating != oldRating) && (newRating != 0));
                     parent.find('.dkr-rating').eq(0).text(newRating);
+                    parent.find('.dkr-rating').toggleClass('dkr-positive', (newRating > oldRating) && (newRating != 0));
+                    parent.find('.dkr-rating').toggleClass('dkr-negative', (newRating < oldRating) && (newRating != 0));
                 }
              }, this)
          })
