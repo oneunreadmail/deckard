@@ -23,16 +23,18 @@
 }
 
 .dkr-comment-footer {
-    text-align: right;
+    //text-align: right;
 }
 
 .dkr-comment-footer > span{
     vertical-align: middle;
+    align: right;
     margin: 0px 10px;
 }
 
 .dkr-vertical-rating.dkr-comment-footer-icon
 {
+    align: left;
     //border: 1px solid black;
 }
 

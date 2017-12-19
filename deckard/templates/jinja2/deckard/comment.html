@@ -7,7 +7,6 @@
     </div>
     <div class="card-footer bg-white border-0 text-muted">
         <div class="dkr-comment-footer">
-            <span>Wrote {{ comment.author }} at {{ comment.created_date.strftime('%H:%M %d.%m.%Y') }}</span>
             <div class="dkr-vertical-rating dkr-comment-footer-icon">
                 {% if not user.is_authenticated %}
                     {% set plus_class = 'dkr-disabled' %}
@@ -35,6 +34,7 @@
                           class="fa fa-chevron-down dkr-minus {{ minus_class }}"></span>
                 </div>
             </div>
+            <span>Wrote {{ comment.author }} at {{ comment.created_date.strftime('%H:%M %d.%m.%Y') }}</span>
         </div>
     </div>
 </div>
