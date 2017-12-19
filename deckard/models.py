@@ -16,14 +16,14 @@ else:
 class SystemInfo(models.Model):
     """Abstract base class for storing system information about a record."""
     # Created by author (indexed)
-    author = models.ForeignKey('auth.User',
+    author = models.ForeignKey(auth.models.User,
                                verbose_name='author',
                                db_index=True,  # Indexed
                                related_name='created_%(class)ss',
                                on_delete=models.SET_NULL,
                                null=True)
     # Modified by
-    modified_by = models.ForeignKey('auth.User',
+    modified_by = models.ForeignKey(auth.models.User,
                                     verbose_name='modified by',
                                     db_index=False,  # Index not needed
                                     related_name='modified_%(class)ss',
@@ -90,6 +90,8 @@ class Post(SystemInfo):
                                     on_delete=models.CASCADE,
                                     null=True,
                                     blank=True)
+    hidden = models.BooleanField(verbose_name='hidden',
+                                 default=False)
 
     def __str__(self):
         return self.title
@@ -111,7 +113,7 @@ class Post(SystemInfo):
         try:
             old_rating = Rating.objects.get(post=self, author=author)
             if not abs(old_rating.points + delta) > 1:  # Check boundary conditions
-                old_rating.points += delta;
+                old_rating.points += delta
                 old_rating.save()
         except ObjectDoesNotExist:
             rating = Rating(post=self, author=author, points=delta)
@@ -169,7 +171,7 @@ class Comment(SystemInfo):
         try:
             old_rating = Rating.objects.get(comment=self, author=author)
             if not abs(old_rating.points + delta) > 1:  # Check boundary conditions
-                old_rating.points += delta;
+                old_rating.points += delta
                 old_rating.save()
         except ObjectDoesNotExist:
             rating = Rating(comment=self, author=author, points=delta)
@@ -194,7 +196,7 @@ class Blog(models.Model):
                                    blank=True,
                                    through='BlogPost',
                                    through_fields=('blog', 'post'))
-    contributors = models.ManyToManyField(Person,
+    contributors = models.ManyToManyField(auth.models.User,
                                           blank=True)
 
     def __str__(self):
@@ -203,16 +205,16 @@ class Blog(models.Model):
 
 class BlogPost(models.Model):
     """An intersection model for M:M Blogs to Posts relationship."""
-    post = models.ForeignKey(Post,
+    post = models.ForeignKey('Post',
                              on_delete=models.CASCADE)
-    blog = models.ForeignKey(Blog,
+    blog = models.ForeignKey('Blog',
                              on_delete=models.CASCADE)
     published_date = models.DateTimeField(verbose_name='publication date',
                                           db_index=True,  # For ordering by publication date + searching
                                           blank=True,
                                           null=True)
     # A user who made a repost
-    publisher = models.ForeignKey('auth.User',
+    publisher = models.ForeignKey(auth.models.User,
                                   verbose_name='publisher',
                                   db_index=True,  # Indexed
                                   related_name='published_%(class)ss',

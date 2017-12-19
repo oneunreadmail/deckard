@@ -168,7 +168,7 @@ def repost(request, post_id):
 
 @login_required
 def rate_post(request, post_id, rating_sign):
-    delta = 1 if rating_sign == 'plus' else -1;
+    delta = 1 if rating_sign == 'plus' else -1
     post = get_object_or_404(Post, id=post_id)
     post.become_rated(request.user, delta)
     return HttpResponse(post.posts_ratings.aggregate(Sum('points'))['points__sum'])
@@ -176,7 +176,7 @@ def rate_post(request, post_id, rating_sign):
 
 @login_required
 def rate_comment(request, comment_id, rating_sign):
-    delta = 1 if rating_sign == 'plus' else -1;
+    delta = 1 if rating_sign == 'plus' else -1
     comment = get_object_or_404(Comment, id=comment_id)
     comment.become_rated(request.user, delta)
     return HttpResponse(comment.comments_ratings.aggregate(Sum('points'))['points__sum'])
