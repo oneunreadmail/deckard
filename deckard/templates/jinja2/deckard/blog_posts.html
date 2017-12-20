@@ -3,7 +3,9 @@
 
     <h3>{{ blog.name }}</h3>
     <div>
-        <a href="{{ url('add_new_post', blog_name=blog.name) }}" class="btn btn-primary">New post</a>
+        {% if user_is_contributor %}
+            <a href="{{ url('add_new_post', blog_name=blog.name) }}" class="btn btn-primary">New post</a>
+        {% endif %}
     </div>
     <br/>
     {% for blogpost in blogposts %}

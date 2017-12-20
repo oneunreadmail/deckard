@@ -45,7 +45,7 @@
                 <a href="{{ url('get_post', post_id=blogpost.post.id, blog_name=blog.name) }}">Read
                     moar</a>
             </div>
-            {% if user.is_authenticated %}
+            {% if user_is_contributor %}
             <div class="dkr-post-footer-link">
                 <a href="{{ url('edit_post', post_id=blogpost.post.id, blog_name=blog.name) }}">Edit</a>
             </div>

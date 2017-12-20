@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.blog_list, name="blog_list"),
+    url(r'^(?P<blog_name>[a-zA-Z_]+)/add_contributor/$', views.blog_add_contributor, name="blog_add_contributor"),
+    url(r'^(?P<blog_name>[a-zA-Z_]+)/remove_contributor/$', views.blog_remove_contributor, name="blog_remove_contributor"),
     url(r'^check/$', views.check, name="test"),
     url(r'^(?P<blog_name>[a-zA-Z_]+)/$', views.blog_posts, name="blog_posts"),
     url(r'^(?P<blog_name>[a-zA-Z_]+)/post/add/$', views.add_new_post, name="add_new_post"),
