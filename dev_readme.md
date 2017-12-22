@@ -3,9 +3,9 @@
 ```
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
-GRANT ALL ON SCHEMA public TO djangoadmin; --Your Django user
+GRANT ALL ON SCHEMA public TO djangoadmin; -- Your Django user
 GRANT ALL ON SCHEMA public TO public;
-COMMENT ON SCHEMA public IS 'standard public schema'; -- (Not important)`
+COMMENT ON SCHEMA public IS 'standard public schema'; -- (Not important)
 ```
 After that run makemigrations and migrate commands.
 
@@ -54,3 +54,7 @@ from django.contrib.staticfiles.urls import static
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 ```
 
+4. Running tests in Django requires some DB privileges for Django user.
+ In PostgreSQL run the following logged as postgres (superuser):
+ 
+ ```alter user djangoadmin with createdb; -- Your Django user```
