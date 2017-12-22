@@ -1,12 +1,15 @@
 from django import VERSION
 from django.db import models
+from django.db.models import Max
+from django.db.models.signals import post_save
 from django.utils import timezone
 from django.contrib import auth
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.contrib.postgres.fields import ArrayField
-from django.db.models import Max
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.base import ContentFile
+from django.dispatch import receiver
+from .custom.image_process import polygonize
+import random
 if VERSION[0] == 2:  # Starting from Django 2.0 reverse is located in django.urls
     from django.urls import reverse
 else:
@@ -215,6 +218,22 @@ class Blog(models.Model):
         """Remove a blog contributor."""
         if self.contributors.filter(id=user.id):
             self.contributors.remove(user)
+
+    def save(self, *args, **kwargs):
+        if self.id:
+            old_avatar = Blog.objects.get(id=self.id).avatar
+            if old_avatar != self.avatar:
+                cropped_image_io = polygonize(self.avatar,
+                                              vertex_count=random.choice((5, 6, 7)),
+                                              bbox_side_px=100)
+                temp_name = self.avatar.name
+                self.avatar.delete(save=False)
+                self.avatar.save(temp_name,
+                                 content=ContentFile(cropped_image_io.getvalue()),
+                                 save=False)
+
+        super(Blog, self).save(*args, **kwargs)
+
 
 
 class BlogPost(models.Model):

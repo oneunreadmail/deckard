@@ -1,4 +1,4 @@
-1. How to drop all public tables in PosgreSQL:
+1. How to drop all public tables in PostgreSQL:
 
 ```
 DROP SCHEMA public CASCADE;
@@ -38,3 +38,19 @@ After that run makemigrations and migrate commands.
     }
 ]
 ```
+
+3. Media settings for development.  
+Add to settings.py:
+```
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+```
+
+Add to urls.py:
+```
+from . import settings
+from django.contrib.staticfiles.urls import static
+...
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
