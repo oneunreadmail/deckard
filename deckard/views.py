@@ -18,8 +18,25 @@ def blog_list(request):
     """List of all created blogs."""
     context = {
         "blogs": Blog.objects.all(),
+        "user_blog_names": request.user.blog_set.all().values_list("name", flat=True),
     }
     return render(request, 'deckard/blog_list.html', context)
+
+
+@login_required
+def blog_add_contributor(request, blog_name):
+    """Add the contributor to the blog."""
+    blog = get_object_or_404(Blog, name=blog_name)
+    blog.add_contributor(request.user)
+    return redirect('blog_list')
+
+
+@login_required
+def blog_remove_contributor(request, blog_name):
+    """Remove the contributor from the blog."""
+    blog = get_object_or_404(Blog, name=blog_name)
+    blog.remove_contributor(request.user)
+    return redirect('blog_list')
 
 
 def blog_posts(request, blog_name):
@@ -39,6 +56,7 @@ def blog_posts(request, blog_name):
             comment_ratings[comment.id] = get_rating(comment, request.user)
 
     context = {
+        "user_is_contributor": bool(blog.contributors.filter(id=request.user.id)),
         "user": request.user,
         "blog": blog,
         "blogposts": blogposts,
@@ -62,6 +80,7 @@ def get_post(request, post_id, blog_name):
         comment_ratings[comment.id] = get_rating(comment, request.user)
 
     context = {
+        "user_is_contributor": bool(blogpost.blog.contributors.filter(id=request.user.id)),
         "user": request.user,
         "blog": blogpost.blog,
         "blogpost": blogpost,

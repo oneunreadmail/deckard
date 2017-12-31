@@ -3,12 +3,16 @@
 
     <h3>{{ blog.name }}</h3>
     <div>
-        <a href="{{ url('add_new_post', blog_name=blog.name) }}" class="btn btn-primary">New post</a>
+        {% if user_is_contributor %}
+            <a href="{{ url('add_new_post', blog_name=blog.name) }}" class="btn btn-primary">New post</a>
+        {% endif %}
     </div>
     <br/>
     {% for blogpost in blogposts %}
-        {% include "deckard/post.html" %}
-        <br/>
+        {% if blogpost.published_date or user_is_contributor %}
+            {% include "deckard/post.html" %}
+            <br/>
+        {% endif %}
     {% endfor %}
 
     <ul class="pagination">

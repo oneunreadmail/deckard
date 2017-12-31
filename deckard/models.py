@@ -69,9 +69,9 @@ class Person(models.Model):
     def __str__(self):
         return 'Person ' + str(self.id) + ' ' + self.first_name + ' ' + self.last_name
 
-    # The next part should be reviewed. Is this really necessary?
     @receiver(post_save, sender=auth.models.User)
     def create_or_update_user_profile(sender, instance, created, **kwargs):
+        # Synchronize models auth.User and Person
         if created:
             Person.objects.create(user=instance)
         instance.person.save()
@@ -100,6 +100,7 @@ class Post(SystemInfo):
         return reverse("get_post", kwargs={"post_id": self.id, "blog_name": self.source_blog.name})
 
     def repost_to_blog(self, blog, publisher):
+        """Repost to another blog - create a new BlogPost instance referencing the post and the new blog."""
         try:
             BlogPost.objects.get(post=self, blog=blog)
         except ObjectDoesNotExist:
@@ -110,6 +111,7 @@ class Post(SystemInfo):
             repost.save()
 
     def become_rated(self, author, delta):
+        """Get a +1 or -1 rating point from a user."""
         try:
             old_rating = Rating.objects.get(post=self, author=author)
             if not abs(old_rating.points + delta) > 1:  # Check boundary conditions
@@ -152,6 +154,7 @@ class Comment(SystemInfo):
         return self.text[:50] + ' (' + self.status + ')'
 
     def save(self, *args, **kwargs):
+        """Calculate Comment.position used for sorting comments tree."""
         if self.position == [-1]:  # Position not calculated
             new_position = [0]
             if self.parent_comment:
@@ -168,6 +171,7 @@ class Comment(SystemInfo):
         super(Comment, self).save(*args, **kwargs)
 
     def become_rated(self, author, delta):
+        """Get a +1 or -1 rating point from a user."""
         try:
             old_rating = Rating.objects.get(comment=self, author=author)
             if not abs(old_rating.points + delta) > 1:  # Check boundary conditions
@@ -192,7 +196,7 @@ class Blog(models.Model):
                                 max_length=280,
                                 null=True,
                                 blank=True)
-    posts = models.ManyToManyField(Post,
+    posts = models.ManyToManyField('Post',
                                    blank=True,
                                    through='BlogPost',
                                    through_fields=('blog', 'post'))
@@ -201,6 +205,16 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.name
+
+    def add_contributor(self, user):
+        """Add a new blog contributor."""
+        if not self.contributors.filter(id=user.id):
+            self.contributors.add(user)
+
+    def remove_contributor(self, user):
+        """Remove a blog contributor."""
+        if self.contributors.filter(id=user.id):
+            self.contributors.remove(user)
 
 
 class BlogPost(models.Model):
