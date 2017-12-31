@@ -70,3 +70,8 @@
     pointer-events: none;
     cursor: default;
 }
+
+.dkr-avatar {
+    max-width: 200px;
+    height: auto;
+}

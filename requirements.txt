@@ -1,6 +1,8 @@
 Django==2.0
-Jinja2==2.10
-MarkupSafe==1.0
+Jinja2>=2.0
+MarkupSafe>=0.9
 mistune==0.8.3
 psycopg2==2.7.3.2
 pytz==2017.3
+Pillow>=3.3.1
+numpy>=1.11.1

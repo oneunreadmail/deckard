@@ -1,5 +1,8 @@
 <div class="card" style="width: 50rem;">
     <div class="card-body">
+        {% if blog.avatar %}
+            <img class="dkr-avatar" src="{{ blog.avatar.url }}">
+        {% endif %}
         <h4 class="card-title"><a href="{{ url('blog_posts', blog_name=blog.name) }}">{{ blog.name }}</a></h4>
         {% if blog.name in user_blog_names %}
             <h6 class="card-text">You are a contributor</h6>
