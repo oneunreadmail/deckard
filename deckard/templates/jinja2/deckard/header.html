@@ -1,14 +1,22 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="{{ url('blog_list') }}">d3ckrd</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="{{ url('blog_list') }}">d3ckrd</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="{{ url('blog_list') }}">View blogs</a>
-      </li>
-    </ul>
-  </div>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+            <a class="nav-link" href="{{ url('blog_list') }}">View blogs</a>
+            </li>
+        </ul>
+    </div>
+    <div class="collapse navbar-collapse">
+        {% if user.is_authenticated %}
+            Logged in as {{ user.username }}&nbsp;|&nbsp;<a href="/accounts/logout">Logout</a>
+        {% else %}
+            Not logged in&nbsp;|&nbsp;<a href="/accounts/login">Login</a>
+        {% endif %}
+    </div>
+
 </nav>
 <br/>

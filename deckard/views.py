@@ -19,6 +19,7 @@ def blog_list(request):
     context = {
         "blogs": Blog.objects.all(),
         "user_blog_names": request.user.blog_set.all().values_list("name", flat=True),
+        "user": request.user,
     }
     return render(request, 'deckard/blog_list.html', context)
 
