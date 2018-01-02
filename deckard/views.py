@@ -159,6 +159,7 @@ def edit_post(request, post_id, blog_name):
     context = {
         "form": form,
         "blog": get_object_or_404(Blog, name=blog_name),
+        "user": request.user,
     }
     return render(request, 'deckard/create_update_post.html', context)
 

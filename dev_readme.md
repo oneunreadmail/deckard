@@ -66,3 +66,7 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
  * add social applications in /admin -> Social applications using keys and tokens provided
  * only enter site as http://localhost:8000 (127.0.0.1 won't work with fb authenification)
  * should be it
+
+6. Youtube embedding
+ * In settings.py in TEMPLATES section replace `environment` to ```"environment": "deckard.jinja2.environment"```
+ * Delete root jinja2.py, not needed anymore
