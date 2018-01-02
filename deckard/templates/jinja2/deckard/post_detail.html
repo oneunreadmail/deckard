@@ -1,7 +1,9 @@
 {% extends "deckard/base.html" %}
 
 {% block content %}
-    {% include "deckard/post.html" %}
+    {% with post_type = "expanded" %}
+        {% include "deckard/post.html" %}
+    {% endwith %}
     {% include "deckard/comments.html" %}
     {% include "deckard/repost_modal.html" %}
 {% endblock %}

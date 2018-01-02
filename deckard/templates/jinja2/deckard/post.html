@@ -7,7 +7,13 @@
         <h6>DRAFT</h6>
         {% endif %}
 
-        <p class="card-text">{{ blogpost.post.text | youtube | safe}}</p>
+        {% if post_type == "expanded" %}
+            <p class="card-text">{{ blogpost.post.text | youtube | expanded | safe }}</p>
+        {% elif post_type == "collapsed" %}
+            <p class="card-text">{{ blogpost.post.text | youtube | collapsed(url('get_post', post_id=blogpost.post.id, blog_name=blog.name)) | safe }}</p>
+        {% else %}
+            error: post_type should be either collapsed or expanded
+        {% endif %}
 
         {% if blogpost.post.source_blog.name != blog.name %}
         <p><i>Stolen from blog {{ blogpost.post.source_blog.name }}</i></p>
