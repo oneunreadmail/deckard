@@ -53,3 +53,11 @@ $(function(){
         });
     });
 });
+
+$(function(){
+    // Show reply to comment form
+    $('.dkr-show-comment-reply-form').on('click', function(e){
+        e.preventDefault();
+        $(this).parents('.dkr-comment-block').eq(0).find('form').eq(0).toggle();
+    });
+});

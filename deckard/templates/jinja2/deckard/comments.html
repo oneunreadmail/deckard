@@ -6,15 +6,11 @@
     {% set shift = comment.position|length - 1 %}
     {% if shift > maxshift %}{% set shift = maxshift %}{% endif %}
     {% set rshift = 12 - shift %}
-    <div class="row">
+    <div class="row dkr-comment-block">
         <div class="col-{{ shift }}"></div>
         <div class="col-{{ rshift }}">
             {% include "deckard/comment.html" %}
-            <form method="POST" action="{{ url('add_comment', blog_name=blog.name, post_id=blogpost.post.id) }}">
-                {{ form.as_p() }}
-                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                <input type="submit" value="Commit" class="btn btn-primary">
-            </form>
+            {% include "deckard/comment_reply_form.html" %}
         </div>
     </div>
 {% endfor %}
