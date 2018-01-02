@@ -104,7 +104,6 @@ class CommentCreateForm(forms.Form):
         else:  # this is the first comment
             current_position = [0]
 
-
         print("pcd:", parent_comment_id)
         print("post_id:", self.post_id)
         print("text:", self.cleaned_data["text"])
