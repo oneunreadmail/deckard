@@ -58,3 +58,11 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
  In PostgreSQL run the following logged as postgres (superuser):
  
  ```alter user djangoadmin with createdb; -- Your Django user```
+
+5. Social auth.
+ * follow django-allauth.readthedocs.io/en/latest/installation.html instruction
+ * edit python3.6/site-packages/allauth/socialaccount/fields.py as described here: https://github.com/python-social-auth/social-app-django/pull/102/files
+ * change domain name in /admin -> Sites to `localhost:8000`
+ * add social applications in /admin -> Social applications using keys and tokens provided
+ * only enter site as http://localhost:8000 (127.0.0.1 won't work with fb authenification)
+ * should be it

@@ -18,7 +18,8 @@ def blog_list(request):
     """List of all created blogs."""
     context = {
         "blogs": Blog.objects.all(),
-        "user_blog_names": request.user.blog_set.all().values_list("name", flat=True),
+        "user_blog_names": request.user.blog_set.all().values_list("name", flat=True) if request.user.is_authenticated else [],
+        "user": request.user,
     }
     return render(request, 'deckard/blog_list.html', context)
 
