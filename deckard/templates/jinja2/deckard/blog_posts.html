@@ -10,7 +10,9 @@
     <br/>
     {% for blogpost in blogposts %}
         {% if blogpost.published_date or user_is_contributor %}
-            {% include "deckard/post.html" %}
+            {% with post_type = "collapsed"%}
+                {% include "deckard/post.html" %}
+            {% endwith %}
             <br/>
         {% endif %}
     {% endfor %}

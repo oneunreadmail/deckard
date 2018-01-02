@@ -5,6 +5,10 @@ import mistune
 
 register = template.Library()
 
+CUT_PATTERNS = [
+    r'{cut ([^\}]*)}',
+]
+
 
 @register.filter(name="markdown")
 def markdown(value):
@@ -38,3 +42,19 @@ def youtube(text):
         return embed.format(get_youtube_id(url))
 
     return re.sub(pattern, replace_with_embed, text)
+
+
+def collapsed(text, link):
+    for pattern in CUT_PATTERNS:
+        match = re.search(pattern, text)
+        if match:
+            return text[:match.start()] + '<a href="{}">{}</a>'.format(link, match.group(1))
+    return text
+
+
+def expanded(text):
+    for pattern in CUT_PATTERNS:
+        match = re.search(pattern, text)
+        if match:
+            return text[:match.start()] + text[match.end():]
+    return text
