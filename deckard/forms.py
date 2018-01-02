@@ -73,66 +73,31 @@ class PostCreateForm(forms.Form):
 
 class CommentCreateForm(forms.Form):
     text = forms.CharField(label="text", widget=forms.Textarea(attrs={"class": "form-control", "rows": "2"}))
+    parent_comment_id = forms.CharField(
+        label="parent_comment_id",
+        widget=forms.HiddenInput(),
+    )
 
     def __init__(self, *args, **kwargs):
-        #print(kwargs)
-        self.parent_comment_id = kwargs.pop("parent_comment_id", -1)
+        self.pc_id = kwargs.pop("parent_comment_id", -1)
         self.post_id = kwargs.pop("post_id", None)
         self.blog_name = kwargs.pop("blog_name", None)
         self.user = kwargs.pop("user", None)
 
-        kwargs["initial"] = {"parent_comment_id": self.parent_comment_id}
+        kwargs["initial"] = {"parent_comment_id": self.pc_id}
         super(CommentCreateForm, self).__init__(*args, **kwargs)
-        self.fields["parent_comment_id"] = forms.CharField(
-            label="parent_comment_id",
-            widget=forms.HiddenInput(),
-            #initial=self.parent_comment_id,
-        )
 
     def save(self):
         parent_comment_id = self.cleaned_data["parent_comment_id"]
-        print("so pcid = ", parent_comment_id)
-        parent_comment = get_object_or_404(Comment, id=parent_comment_id) if parent_comment_id != "-1" else None
-        print("right?")
-        all_same_level_comments = Comment.objects.filter(parent_comment=parent_comment, post__id=self.post_id)
-        if all_same_level_comments:  # there are some other comments at this level
-            all_same_level_comments_positions = [comment.position for comment in all_same_level_comments]
-            current_position = max(all_same_level_comments_positions)[:]
-            current_position[-1] += 1
-        elif parent_comment:  # no comments at this level, but it's not root level
-            current_position = parent_comment.position + [0]
-        else:  # this is the first comment
-            current_position = [0]
 
-        print("pcd:", parent_comment_id)
-        print("post_id:", self.post_id)
-        print("text:", self.cleaned_data["text"])
-        #print("all_positions:", all_same_level_comments_positions)
-        print("current_position:", current_position)
+
+        parent_comment = get_object_or_404(Comment, id=parent_comment_id) if parent_comment_id != "-1" else None
 
         comment = Comment(
             text=self.cleaned_data["text"],
-            position=current_position,
             post=get_object_or_404(Post, id=self.post_id),
             status="Pending",
             parent_comment=parent_comment,
             author=self.user,
         )
         comment.save()
-        """
-              
-        parent_comment = -1
-        text = models.TextField(verbose_name='text')
-        status = models.CharField(verbose_name='status',
-                                  max_length=50,
-                                  choices=COMMENT_STATUS,
-                                  default='Pending')
-        post = models.ForeignKey('Post',
-                                 verbose_name='post',
-                                 related_name='posts_%(class)ss',
-                                 on_delete=models.CASCADE)
-        # List of indexes of all comments from the root to the leaf
-        # Example: [2, 3, 13, 3, 0]
-        position = ArrayField(models.IntegerField(),
-                              default=[-1])
-        """

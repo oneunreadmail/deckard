@@ -225,6 +225,7 @@ def rate_comment(request, comment_id, rating_sign):
     return HttpResponse(comment.comments_ratings.aggregate(Sum('points'))['points__sum'])
 
 
+@login_required
 def add_comment(request, post_id, blog_name):
     form = CommentCreateForm(request.POST or None,
                              post_id=post_id,
