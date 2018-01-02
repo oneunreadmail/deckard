@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Blog, BlogPost, Comment, Rating
-from .forms import PostCreateForm
+from .forms import PostCreateForm, CommentCreateForm
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 
@@ -72,6 +72,18 @@ def get_post(request, post_id, blog_name):
     """Get a post and all its comments."""
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     comments = Comment.objects.filter(post_id=post_id).order_by("position")
+    comments_and_forms = [
+        (
+            comment,
+            CommentCreateForm(
+                request.POST or None,
+                post_id=post_id,
+                user=request.user,
+                parent_comment_id=comment.id,
+            ),
+        ) for comment in comments
+    ]
+
     blogs = Blog.objects.all()
 
     post_ratings = {}
@@ -80,15 +92,24 @@ def get_post(request, post_id, blog_name):
     for comment in blogpost.post.posts_comments.all():  # Get ratings of all post's comments
         comment_ratings[comment.id] = get_rating(comment, request.user)
 
+    # for root-level comments
+    form = CommentCreateForm(request.POST or None,
+                             post_id=post_id,
+                             user=request.user,
+                             parent_comment_id=-1,
+                             )
+
     context = {
         "user_is_contributor": bool(blogpost.blog.contributors.filter(id=request.user.id)),
         "user": request.user,
         "blog": blogpost.blog,
         "blogpost": blogpost,
         "post_ratings": post_ratings,
-        "comments": comments,
+        #"comments": comments,  # should be removed if not needed
         "comment_ratings": comment_ratings,
-        "blogs": blogs,  # For reposting
+        "blogs": blogs,  # For reposting,
+        "form": form,
+        "comments_and_forms": comments_and_forms,
     }
     return render(request, 'deckard/post_detail.html', context)
 
@@ -202,3 +223,18 @@ def rate_comment(request, comment_id, rating_sign):
     comment = get_object_or_404(Comment, id=comment_id)
     comment.become_rated(request.user, delta)
     return HttpResponse(comment.comments_ratings.aggregate(Sum('points'))['points__sum'])
+
+
+def add_comment(request, post_id, blog_name):
+    form = CommentCreateForm(request.POST or None,
+                             post_id=post_id,
+                             user=request.user,
+                             )
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Success!")
+    else:
+        print("FAILURE")
+    return HttpResponseRedirect(
+        reverse("get_post", kwargs={"post_id": post_id, "blog_name": blog_name})
+    )
