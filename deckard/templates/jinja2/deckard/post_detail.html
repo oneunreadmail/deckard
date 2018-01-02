@@ -4,6 +4,11 @@
     {% with post_type = "expanded" %}
         {% include "deckard/post.html" %}
     {% endwith %}
+    <form method="POST" action="{{ url('add_comment', blog_name=blog.name, post_id=blogpost.post.id) }}">
+        {{ form.as_p() }}
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        <input type="submit" value="Commit" class="btn btn-primary">
+    </form>
     {% include "deckard/comments.html" %}
     {% include "deckard/repost_modal.html" %}
 {% endblock %}
