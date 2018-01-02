@@ -1,0 +1,18 @@
+<div class="card" style="width: 50rem;">
+    <div class="card-body">
+        {% if blog.avatar %}
+            <img class="dkr-avatar" src="{{ blog.avatar.url }}">
+        {% endif %}
+        <h4 class="card-title"><a href="{{ url('blog_posts', blog_name=blog.name) }}">{{ blog.name }}</a></h4>
+        {% if blog.name in user_blog_names %}
+            <h6 class="card-text">You are a contributor</h6>
+            <p class="card-text small">
+                <a href="{{ url('blog_remove_contributor', blog_name=blog.name) }}">I don't want to contribute any more</a>
+            </p>
+        {% else %}
+            <h6 class=" card-title">
+                <a href="{{ url('blog_add_contributor', blog_name=blog.name) }}">Become a contributor</a>
+            </h6>
+            {% endif %}
+    </div>
+</div>

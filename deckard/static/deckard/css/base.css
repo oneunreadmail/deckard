@@ -1,0 +1,77 @@
+.dkr-post-footer {
+    //border: 1px solid black;
+}
+
+.dkr-post-footer-icon, .dkr-comment-footer-icon {
+    display: inline-block;
+    margin: 0px 5px;
+    vertical-align: middle;
+    //border: 1px solid black;
+}
+
+.dkr-post-footer-link {
+    margin: 0px 15px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.dkr-comment-body {
+    margin: 10px;
+    max-width: 80%;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.dkr-comment-footer {
+    //text-align: right;
+}
+
+.dkr-comment-footer > span{
+    vertical-align: middle;
+    align: right;
+    margin: 0px 10px;
+}
+
+.dkr-vertical-rating.dkr-comment-footer-icon
+{
+    align: left;
+    //border: 1px solid black;
+}
+
+.dkr-vertical-rating {
+    //border: 1px solid black;
+}
+
+.dkr-vertical-rating-element {
+    display: block;
+    text-align: center;
+}
+
+.dkr-rating {
+    margin: auto;
+    color: black;
+}
+
+.dkr-plus.dkr-active, .dkr-plus:active, .dkr-rating.dkr-positive {
+    color: Green;
+}
+
+.dkr-minus.dkr-active, .dkr-minus:active, .dkr-rating.dkr-negative {
+    color: Red;
+}
+
+.dkr-plus:hover, .dkr-minus:hover {
+    color: DimGray;
+    cursor: pointer;
+}
+
+.dkr-disabled {
+    color: LightGray;
+    pointer-events: none;
+    cursor: default;
+}
+
+.dkr-avatar {
+    max-width: 200px;
+    height: auto;
+}

@@ -1,0 +1,54 @@
+{% extends "deckard/base.html" %}
+{% block content %}
+
+    <h3>{{ blog.name }}</h3>
+    <div>
+        {% if user_is_contributor %}
+            <a href="{{ url('add_new_post', blog_name=blog.name) }}" class="btn btn-primary">New post</a>
+        {% endif %}
+    </div>
+    <br/>
+    {% for blogpost in blogposts %}
+        {% if blogpost.published_date or user_is_contributor %}
+            {% include "deckard/post.html" %}
+            <br/>
+        {% endif %}
+    {% endfor %}
+
+    <ul class="pagination">
+
+        {% if blogposts.has_previous() %}
+        <li class="page-item"><a class="page-link" href="?page={{ blogposts.previous_page_number() }}">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+        {% else %}
+        <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+        {% endif %}
+
+        {% if blogposts.number > 3 %}
+        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+        {% endif %}
+
+        {% if blogposts.number > 2 %}
+        <li class="page-item"><a class="page-link" href="?page={{ blogposts.previous_page_number() }}">{{ blogposts.previous_page_number() }}</a></li>
+        {% endif %}
+
+        <li class="page-item active"><a class="page-link" href="#">{{ blogposts.number }}</a></li>
+
+        {% if blogposts.number < blogposts.paginator.num_pages - 1 %}
+        <li class="page-item"><a class="page-link" href="?page={{ blogposts.next_page_number() }}">{{ blogposts.next_page_number() }}</a></li>
+        {% endif %}
+
+        {% if blogposts.number < blogposts.paginator.num_pages - 2 %}
+        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+        {% endif %}
+
+        {% if blogposts.has_next() %}
+        <li class="page-item"><a class="page-link" href="?page={{ blogposts.paginator.num_pages }}">{{ blogposts.paginator.num_pages }}</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ blogposts.next_page_number() }}">Next</a></li>
+        {% else %}
+        <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+        {% endif %}
+    </ul>
+
+    {% include "deckard/repost_modal.html" %}
+{% endblock %}

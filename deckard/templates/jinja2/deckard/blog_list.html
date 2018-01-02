@@ -1,0 +1,8 @@
+{% extends "deckard/base.html" %}
+{% block content %}
+    <h3>Blogs</h3>
+    {% for blog in blogs %}
+        {% include "deckard/blog.html" %}
+        <br/>
+    {% endfor %}
+{% endblock %}
