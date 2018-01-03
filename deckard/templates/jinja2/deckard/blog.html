@@ -1,18 +1,33 @@
+{% set blog = blog_and_names[0] %}
+{% set contributors = blog_and_names[1] %}
+
+{% set url_blog = url('blog_posts', blog_name=blog.name) %}
+{% set url_became_contrib = url('blog_add_contributor', blog_name=blog.name) %}
+{% set url_stop_contrib = url('blog_remove_contributor', blog_name=blog.name) %}
+
 <div class="card" style="width: 50rem;">
-    <div class="card-body">
-        {% if blog.avatar %}
-            <img class="dkr-avatar" src="{{ blog.avatar.url }}">
-        {% endif %}
-        <h4 class="card-title"><a href="{{ url('blog_posts', blog_name=blog.name) }}">{{ blog.name }}</a></h4>
-        {% if blog.name in user_blog_names %}
-            <h6 class="card-text">You are a contributor</h6>
-            <p class="card-text small">
-                <a href="{{ url('blog_remove_contributor', blog_name=blog.name) }}">I don't want to contribute any more</a>
-            </p>
-        {% else %}
-            <h6 class=" card-title">
-                <a href="{{ url('blog_add_contributor', blog_name=blog.name) }}">Become a contributor</a>
-            </h6>
+    <div class="card-body containter">
+        <div class="row">
+        <div class="col-2">
+            {% if blog.avatar %}
+                <img class="dkr-avatar" src="{{ blog.avatar.url }}">
             {% endif %}
+        </div>
+        <div class="col-10">
+            <h4 class="card-title"><a href="{{ url_blog }}">{{ blog.title }}</a></h4>
+            <h6 class="text-muted">{{ blog.subtitle }}</h6>
+            Блог ведут: {{ contributors | join(', ') }}.<br><br>
+            {% if blog.name in user_blog_names %}
+                <h6 class="card-text">You are a contributor</h6>
+                <p class="card-text small">
+                    <a href="{{ url_stop_contrib }}">I don't want to contribute any more</a>
+                </p>
+            {% else %}
+                <h6 class=" card-title">
+                    <a href="{{ url_became_contrib  }}">Become a contributor</a>
+                </h6>
+            {% endif %}
+        </div>
+        </div>
     </div>
 </div>

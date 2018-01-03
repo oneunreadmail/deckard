@@ -16,8 +16,18 @@ def check(request):  # function for current testing
 
 def blog_list(request):
     """List of all created blogs."""
+
+    def get_displayed_names_from_contributors(contributors):
+        result = []
+        for user in contributors:
+            person = user.person
+            result.append(person.first_name + " " + person.last_name)
+        return result
+
+    blogs = Blog.objects.all()
+    names_lists = [get_displayed_names_from_contributors(blog.contributors.all()) for blog in blogs]
     context = {
-        "blogs": Blog.objects.all(),
+        "blogs_and_names_lists": zip(blogs, names_lists),
         "user_blog_names": request.user.blog_set.all().values_list("name", flat=True) if request.user.is_authenticated else [],
         "user": request.user,
     }
