@@ -1,3 +1,5 @@
+{% set url_post = url('get_post', post_id=blogpost.post.id, blog_name=blog.name) %}
+
 <div class="card {% if blogpost.pinned %}border border-primary{% endif %}">
     <div class="card-body dkr-post" data-post-id="{{ blogpost.post.id }}">
         <h4 class="card-title">{{ blogpost.post.title }}</h4>
@@ -18,7 +20,13 @@
         {% if blogpost.post.source_blog.name != blog.name %}
         <p><i>Stolen from blog {{ blogpost.post.source_blog.name }}</i></p>
         {% endif %}
-
+        {% if post_type == "expanded" %}
+        <div class="row">
+            <div class="col align-self-center">
+                {% include "deckard/sharing/panel.html" %}
+            </div>
+        </div>
+        {% endif %}
         <div class="dkr-post-footer text-muted">
             <div class="dkr-vertical-rating dkr-post-footer-icon">
                 {% if not user.is_authenticated %}
@@ -48,8 +56,7 @@
                 </div>
             </div>
             <div class="dkr-post-footer-link">
-                <a href="{{ url('get_post', post_id=blogpost.post.id, blog_name=blog.name) }}">Read
-                    moar</a>
+                <a href="{{ url_post }}">Read moar</a>
             </div>
             {% if user_is_contributor %}
             <div class="dkr-post-footer-link">
