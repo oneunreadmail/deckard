@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^(?P<blog_name>[a-zA-Z_]+)/post/(?P<post_id>\d+)(-([a-zA-Z_-]+))?/$', views.get_post, name="get_post"),
     url(r'^(?P<blog_name>[a-zA-Z_]+)/post/(?P<post_id>\d+)(-([a-zA-Z_-]+))?/edit/$', views.edit_post, name="edit_post"),
     url(r'^(?P<blog_name>[a-zA-Z_]+)/post/(?P<post_id>\d+)(-([a-zA-Z_-]+))?/delete/$', views.delete_post, name="delete_post"),
+    url(r'^(?P<blog_name>[a-zA-Z_]+)/post/(?P<post_id>\d+)(-([a-zA-Z_-]+))?/change/$', views.change_post, name="change_post"),
     url(r'^post/(?P<post_id>\d+)/repost/$', views.repost, name="repost"),
     url(r'^post/(?P<post_id>\d+)/rate/(?P<rating_sign>plus|minus)/$', views.rate_post, name="rate_post"),
     url(r'^comment/(?P<comment_id>\d+)/rate/(?P<rating_sign>plus|minus)/$', views.rate_comment, name="rate_comment"),

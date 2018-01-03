@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Blog, BlogPost, Comment, Rating
 from .forms import PostCreateForm, CommentCreateForm
@@ -239,3 +239,20 @@ def add_comment(request, post_id, blog_name):
     return HttpResponseRedirect(
         reverse("get_post", kwargs={"post_id": post_id, "blog_name": blog_name})
     )
+
+
+def change_post(request, post_id, blog_name):
+    blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
+    post = blogpost.post
+    action = request.GET.get("action")
+    if action == "publish" and post.hidden:
+        post.hidden = False
+        post.save()
+    elif action == "delete" and not post.hidden:
+        post.hidden = True
+        post.save()
+    else:
+        raise Http404("Incorrect change action")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), post.get_abs_url())
+
+
