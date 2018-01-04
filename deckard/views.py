@@ -9,11 +9,6 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 
 
-def check(request):  # function for current testing
-    context = {"comments": [Comment(text=str(i)) for i in range(10)]}
-    return render(request, 'deckard/comments.html', context)
-
-
 def blog_list(request):
     """List of all created blogs."""
 
@@ -78,7 +73,7 @@ def blog_posts(request, blog_name):
     return render(request, 'deckard/blog_posts.html', context)
 
 
-def get_post(request, post_id, blog_name):
+def get_post(request, post_id, slug, blog_name):
     """Get a post and all its comments."""
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     comments = Comment.objects.filter(post_id=post_id).order_by("position")
@@ -115,9 +110,8 @@ def get_post(request, post_id, blog_name):
         "blog": blogpost.blog,
         "blogpost": blogpost,
         "post_ratings": post_ratings,
-        #"comments": comments,  # should be removed if not needed
         "comment_ratings": comment_ratings,
-        "blogs": blogs,  # For reposting,
+        "blogs": blogs,  # For reposting
         "form": form,
         "comments_and_forms": comments_and_forms,
     }
@@ -169,11 +163,11 @@ def add_new_post(request, blog_name):
 
 
 @login_required
-def edit_post(request, post_id, blog_name):
+def edit_post(request, post_id, slug, blog_name):
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     if blogpost.post.source_blog.name != blogpost.blog.name:
         return HttpResponseRedirect(
-            reverse("edit_post", kwargs={"post_id": post_id, "blog_name": blogpost.post.source_blog.name})
+            reverse("edit_post", kwargs={"post_id": post_id, "slug": slug, "blog_name": blogpost.post.source_blog.name})
         )
     blog_names = tuple((blog.name, blog.name) for blog in Blog.objects.all())
     form = PostCreateForm(request.POST or None,
@@ -197,7 +191,7 @@ def edit_post(request, post_id, blog_name):
 
 
 @login_required
-def delete_post(request, post_id, blog_name):
+def delete_post(request, post_id, slug, blog_name):
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     if blogpost.post.source_blog.name != blogpost.blog.name:
         return HttpResponseRedirect(
@@ -209,7 +203,7 @@ def delete_post(request, post_id, blog_name):
 
 
 @login_required
-def repost(request, post_id):
+def repost(request, post_id, slug):
     if request.method == "POST":
         post = get_object_or_404(Post, id=post_id)
         repost_blogs = request.POST.getlist("repost_blogs[]")
@@ -220,7 +214,7 @@ def repost(request, post_id):
 
 
 @login_required
-def rate_post(request, post_id, rating_sign):
+def rate_post(request, post_id, slug, rating_sign):
     delta = 1 if rating_sign == 'plus' else -1
     post = get_object_or_404(Post, id=post_id)
     post.become_rated(request.user, delta)
@@ -236,7 +230,7 @@ def rate_comment(request, comment_id, rating_sign):
 
 
 @login_required
-def add_comment(request, post_id, blog_name):
+def add_comment(request, post_id, slug, blog_name):
     form = CommentCreateForm(request.POST or None,
                              post_id=post_id,
                              user=request.user,
@@ -247,5 +241,5 @@ def add_comment(request, post_id, blog_name):
     else:
         print("FAILURE")
     return HttpResponseRedirect(
-        reverse("get_post", kwargs={"post_id": post_id, "blog_name": blog_name})
+        reverse("get_post", kwargs={"post_id": post_id, "slug": slug, "blog_name": blog_name})
     )

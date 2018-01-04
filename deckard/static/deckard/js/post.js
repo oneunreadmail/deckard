@@ -22,12 +22,7 @@ $(function(){
 $(document).on('show.bs.modal','#repostModal', function (e) {
     // Pass info about the post to the repost modal window
     var modal = $(this);
-    var postId = $(e.relatedTarget).data('post-id');
-    var blogName = $(e.relatedTarget).data('blog-name');
     var link = $(e.relatedTarget).data('link');
-    console.log('Post id: ' + postId);
-    console.log('From blog name: ' + blogName);
-    console.log('Link: ' + link);
     $(e.currentTarget).find('#modalRepostButton').data('link', link);
 })
 
