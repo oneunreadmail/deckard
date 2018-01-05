@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Blog, BlogPost, Comment, Rating
 from .forms import PostCreateForm, CommentCreateForm
@@ -73,9 +73,14 @@ def blog_posts(request, blog_name):
     return render(request, 'deckard/blog_posts.html', context)
 
 
-def get_post(request, post_id, slug, blog_name):
+def get_post(request, post_id, blog_name, **kwargs):
     """Get a post and all its comments."""
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
+
+    post_url = blogpost.post.get_abs_url()
+    if request.path != post_url:
+        return HttpResponsePermanentRedirect(post_url)  # Redirect to URL which includes post_id AND slug
+
     comments = Comment.objects.filter(post_id=post_id).order_by("position")
     comments_and_forms = [
         (
