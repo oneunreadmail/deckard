@@ -48,16 +48,18 @@
             </div>
             <span>Wrote {{ comment.author }} at {{ comment.created_date.strftime('%H:%M %d.%m.%Y') }}</span>
             <span><a href="#" class="dkr-show-comment-reply-form">Ответить</a></span>
-            <span>Status: {{ comment.status }}</span>
-            {% if comment.status == "Pending" %}
-                <span><a href="{{ url_approve }}">Approve</a></span>
-                <span><a href="{{ url_reject }}">Reject</a></span>
-            {% elif comment.status == "Approved" %}
-                <span><a href="{{ url_hide }}">Hide</a></span>
-            {% elif comment.status == "Hidden" %}
-                <span><a href="{{ url_approve }}">Reveal</a></span>
-            {% elif comment.status == "Rejected" %}
-                <span><a href="{{ url_approve }}">Reapprove</a></span>
+            {% if request.user.is_contributor %}
+                <span>Status: {{ comment.status }}</span>
+                {% if comment.status == "Pending" %}
+                    <span><a href="{{ url_approve }}">Approve</a></span>
+                    <span><a href="{{ url_reject }}">Reject</a></span>
+                {% elif comment.status == "Approved" %}
+                    <span><a href="{{ url_hide }}">Hide</a></span>
+                {% elif comment.status == "Hidden" %}
+                    <span><a href="{{ url_approve }}">Reveal</a></span>
+                {% elif comment.status == "Rejected" %}
+                    <span><a href="{{ url_approve }}">Reapprove</a></span>
+                {% endif %}
             {% endif %}
         </div>
     </div>

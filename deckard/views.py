@@ -9,6 +9,16 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 
 
+def contrib_required(view):
+
+    def internal(request, *args, **kwargs):
+        if request.user.is_contributor:
+            return view(request, *args, **kwargs)
+        else:
+            raise Http404("You need to be contributor for that")
+    return internal
+
+
 def blog_list(request):
     """List of all created blogs."""
 
@@ -29,7 +39,7 @@ def blog_list(request):
     return render(request, 'deckard/blog_list.html', context)
 
 
-@login_required
+@contrib_required
 def blog_add_contributor(request, blog_name):
     """Add the contributor to the blog."""
     blog = get_object_or_404(Blog, name=blog_name)
@@ -37,7 +47,7 @@ def blog_add_contributor(request, blog_name):
     return redirect('blog_list')
 
 
-@login_required
+@contrib_required
 def blog_remove_contributor(request, blog_name):
     """Remove the contributor from the blog."""
     blog = get_object_or_404(Blog, name=blog_name)
@@ -47,6 +57,7 @@ def blog_remove_contributor(request, blog_name):
 
 def blog_posts(request, blog_name):
     """List of all posts in the current blog."""
+    print(request.user.is_contributor)
     blog = get_object_or_404(Blog, name=blog_name)
     blogposts_all = BlogPost.objects.filter(blog=blog).order_by("-pinned", "-published_date")
     paginator = Paginator(blogposts_all, 2)
@@ -144,7 +155,7 @@ def get_rating(rated_object, user):
     return rating
 
 
-@login_required
+@contrib_required
 def add_new_post(request, blog_name):
     """Create a new post in a blog."""
     blog_names = tuple((blog.name, blog.name) for blog in Blog.objects.all())
@@ -168,7 +179,7 @@ def add_new_post(request, blog_name):
     return render(request, 'deckard/create_update_post.html', context)
 
 
-@login_required
+@contrib_required
 def edit_post(request, post_id, slug, blog_name):
 
     # first we redirect to source blog in case someone tries to edit repost
@@ -204,7 +215,7 @@ def edit_post(request, post_id, slug, blog_name):
     return render(request, 'deckard/create_update_post.html', context)
 
 
-@login_required
+@contrib_required
 def delete_post(request, post_id, slug, blog_name):
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     if blogpost.post.source_blog.name != blogpost.blog.name:
@@ -259,7 +270,7 @@ def add_comment(request, post_id, slug, blog_name):
     )
 
 
-@login_required
+@contrib_required
 def toggle_comment(request, post_id, slug, blog_name):
     comment_id = request.GET.get("id")
     action = request.GET.get("action")
