@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^' + BLOG_RE + r'/' + POST_SLUG_RE + r'/edit/$', views.edit_post, name='edit_post'),
     url(r'^' + BLOG_RE + r'/' + POST_SLUG_RE + r'/delete/$', views.delete_post, name='delete_post'),
     url(r'^' + BLOG_RE + r'/' + POST_SLUG_RE + r'/add_comment/$', views.add_comment, name='add_comment'),
+    url(r'^' + BLOG_RE + r'/' + POST_SLUG_RE + r'/toggle_comment/$', views.toggle_comment, name='toggle_comment'),
     url(r'^post/' + POST_SLUG_RE + r'/repost/$', views.repost, name='repost'),
     url(r'^post/' + POST_SLUG_RE + r'/rate/(?P<rating_sign>plus|minus)/$', views.rate_post, name='rate_post'),
     url(r'^comment/' + COMMENT_RE + r'/rate/(?P<rating_sign>plus|minus)/$', views.rate_comment, name='rate_comment'),

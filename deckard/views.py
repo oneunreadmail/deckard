@@ -257,3 +257,16 @@ def add_comment(request, post_id, slug, blog_name):
     return HttpResponseRedirect(
         reverse("get_post", kwargs={"post_id": post_id, "slug": slug, "blog_name": blog_name})
     )
+
+
+@login_required
+def toggle_comment(request, post_id, slug, blog_name):
+    comment_id = request.GET.get("id")
+    action = request.GET.get("action")
+    comment = get_object_or_404(Comment, id=comment_id)
+    comment.status = action
+    comment.save()
+
+    return HttpResponseRedirect(
+        reverse("get_post", kwargs={"post_id": post_id, "slug": slug, "blog_name": blog_name})
+    )
