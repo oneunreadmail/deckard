@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, Http404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Blog, BlogPost, Comment, Rating
 from .forms import PostCreateForm, CommentCreateForm
@@ -150,6 +150,7 @@ def add_new_post(request, blog_name):
     blog_names = tuple((blog.name, blog.name) for blog in Blog.objects.all())
     form = PostCreateForm(request.POST or None,
                           blog_names=blog_names,
+                          blog_name=blog_name,
                           user=request.user,
                           )
     if form.is_valid():
@@ -169,11 +170,19 @@ def add_new_post(request, blog_name):
 
 @login_required
 def edit_post(request, post_id, slug, blog_name):
+
+    # first we redirect to source blog in case someone tries to edit repost
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     if blogpost.post.source_blog.name != blogpost.blog.name:
         return HttpResponseRedirect(
             reverse("edit_post", kwargs={"post_id": post_id, "slug": slug, "blog_name": blogpost.post.source_blog.name})
         )
+
+    # second we check if user is contributor
+    if request.user not in blogpost.blog.contributors.all():
+        raise Http404("Not enough rights")
+
+    # ok let's proceed
     blog_names = tuple((blog.name, blog.name) for blog in Blog.objects.all())
     form = PostCreateForm(request.POST or None,
                           blog_names=blog_names,

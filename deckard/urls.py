@@ -5,7 +5,7 @@ from . import views
 # Regular expression masks for entities in URLs
 BLOG_RE = r'(?P<blog_name>[a-zA-Z_]+)'
 POST_RE = r'(?P<post_id>\d+)'
-POST_SLUG_RE = r'(?P<post_id>\d+)-(?P<slug>[-\d\w]+)'
+POST_SLUG_RE = r'(?P<post_id>\d+)-(?P<slug>[-\w]+)'
 COMMENT_RE = r'(?P<comment_id>\d+)'
 
 urlpatterns = [
