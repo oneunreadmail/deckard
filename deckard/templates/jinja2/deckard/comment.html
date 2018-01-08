@@ -1,7 +1,7 @@
 {% set url_toggle = url("toggle_comment", post_id=blogpost.post.id, slug=blogpost.post.slug, blog_name=blogpost.blog.name) + "?id=" + comment.id | string %}
-{% set url_approve = url_toggle + "&action=Approved" %}
-{% set url_reject = url_toggle + "&action=Rejected" %}
-{% set url_hide = url_toggle + "&action=Hidden" %}
+{% set url_approve = url_toggle + "&action=approve" %}
+{% set url_reject = url_toggle + "&action=reject" %}
+{% set url_hide = url_toggle + "&action=hide" %}
 {% set hidden_text = "<i>Нло прилетело и написало это здесь</i>" | safe %}
 
 <div class="card" id="c{{ comment.id }}">
@@ -50,14 +50,14 @@
             <span><a href="#" class="dkr-show-comment-reply-form">Ответить</a></span>
             {% if request.user.is_contributor %}
                 <span>Status: {{ comment.status }}</span>
-                {% if comment.status == "Pending" %}
+                {% if comment.status == "PN" %}
                     <span><a href="{{ url_approve }}">Approve</a></span>
                     <span><a href="{{ url_reject }}">Reject</a></span>
-                {% elif comment.status == "Approved" %}
+                {% elif comment.status == "AP" %}
                     <span><a href="{{ url_hide }}">Hide</a></span>
-                {% elif comment.status == "Hidden" %}
+                {% elif comment.status == "HD" %}
                     <span><a href="{{ url_approve }}">Reveal</a></span>
-                {% elif comment.status == "Rejected" %}
+                {% elif comment.status == "RJ" %}
                     <span><a href="{{ url_approve }}">Reapprove</a></span>
                 {% endif %}
             {% endif %}

@@ -275,7 +275,15 @@ def toggle_comment(request, post_id, slug, blog_name):
     comment_id = request.GET.get("id")
     action = request.GET.get("action")
     comment = get_object_or_404(Comment, id=comment_id)
-    comment.status = action
+    status_from_action = {
+        "hide": "HD",
+        "approve": "AP",
+        "reject": "RJ",
+    }
+    try:
+        comment.status = status_from_action[action]
+    except KeyError:
+        raise Http404("Invalid action")
     comment.save()
 
     url = reverse("get_post", kwargs={
