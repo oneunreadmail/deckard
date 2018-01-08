@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^' + BLOG_RE + r'/new/$', views.add_new_post, name='add_new_post'),
     url(r'^' + BLOG_RE + r'/' + POST_RE + r'/$', views.get_post, name='get_post'),  # Accepts raw post_id
     url(r'^' + BLOG_RE + r'/' + POST_SLUG_RE + r'/$', views.get_post, name='get_post'),  # and any slug sequence (redirects to canonical)
+    url(r'^' + BLOG_RE + r'/' + POST_SLUG_RE + r'/\#' + COMMENT_RE + r'$', views.get_post, name='get_post_on_comment'),
     url(r'^' + BLOG_RE + r'/' + POST_SLUG_RE + r'/edit/$', views.edit_post, name='edit_post'),
     url(r'^' + BLOG_RE + r'/' + POST_SLUG_RE + r'/delete/$', views.delete_post, name='delete_post'),
     url(r'^' + BLOG_RE + r'/' + POST_SLUG_RE + r'/add_comment/$', views.add_comment, name='add_comment'),

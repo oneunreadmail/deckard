@@ -4,7 +4,7 @@
 {% set url_hide = url_toggle + "&action=Hidden" %}
 {% set hidden_text = "<i>Нло прилетело и написало это здесь</i>" | safe %}
 
-<div class="card">
+<div class="card" id="c{{ comment.id }}">
     <div class="card-body">
         <div class="dkr-comment-body">
             <p class="card-text">

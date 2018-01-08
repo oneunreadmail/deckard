@@ -89,7 +89,7 @@ def get_post(request, post_id, blog_name, **kwargs):
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
 
     post_url = blogpost.post.get_abs_url()
-    if request.path != post_url:
+    if request.path.split("#")[0] != post_url:
         return HttpResponsePermanentRedirect(post_url)  # Redirect to URL which includes post_id AND slug
 
     comments = Comment.objects.filter(post_id=post_id).order_by("position")
@@ -278,6 +278,10 @@ def toggle_comment(request, post_id, slug, blog_name):
     comment.status = action
     comment.save()
 
-    return HttpResponseRedirect(
-        reverse("get_post", kwargs={"post_id": post_id, "slug": slug, "blog_name": blog_name})
-    )
+    url = reverse("get_post", kwargs={
+            "post_id": post_id,
+            "slug": slug,
+            "blog_name": blog_name,
+        })
+
+    return HttpResponseRedirect("{}#c{}".format(url, comment_id))
