@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.dispatch import receiver
 from .custom.image_process import polygonize
+from slugify import slugify  # Default Django slugify filter won't work with Unicode special chars
 import random
 if VERSION[0] == 2:  # Starting from Django 2.0 reverse is located in django.urls
     from django.urls import reverse
@@ -100,7 +101,7 @@ class Post(SystemInfo):
         return self.title
 
     def get_abs_url(self):
-        return reverse("get_post", kwargs={"post_id": self.id, "blog_name": self.source_blog.name})
+        return reverse("get_post", kwargs={"post_id": self.id, "slug": self.slug, "blog_name": self.source_blog.name})
 
     def repost_to_blog(self, blog, publisher):
         """Repost to another blog - create a new BlogPost instance referencing the post and the new blog."""
@@ -124,6 +125,15 @@ class Post(SystemInfo):
             rating = Rating(post=self, author=author, points=delta)
             rating.save()
 
+    def save(self, *args, **kwargs):
+        """Calculate Post.slug based on title before saving."""
+        if self.title:
+            self.slug = slugify(self.title,
+                                max_length=Post._meta.get_field('slug').max_length,
+                                word_boundary=True,
+                                save_order=True)
+        super(Post, self).save(*args, **kwargs)
+
 
 class Comment(SystemInfo):
     """A comment to a post, can have child comments."""
@@ -131,6 +141,7 @@ class Comment(SystemInfo):
         ('PN', 'Pending'),
         ('AP', 'Approved'),
         ('RJ', 'Rejected'),
+        ('HD', 'Hidden'),
     )
     parent_comment = models.ForeignKey('Comment',
                                        verbose_name='parent comment',

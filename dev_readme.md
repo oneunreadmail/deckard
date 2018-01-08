@@ -70,3 +70,10 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 6. Youtube embedding
  * In settings.py in TEMPLATES section replace `environment` to ```"environment": "deckard.jinja2.environment"```
  * Delete root jinja2.py, not needed anymore
+
+7. Middleware and context processors
+ * add ```'context_processors': [
+                'deckard.context_processors.custom_context',
+            ]``` to settings.py -> TEMPLATES -> OPTIONS (only for jinja2)
+ * add ```'deckard.middleware.UserIsContributorMiddleware',``` to settings.py -> MIDDLEWARE
+
