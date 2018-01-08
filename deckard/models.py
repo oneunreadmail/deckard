@@ -141,6 +141,7 @@ class Comment(SystemInfo):
         ('PN', 'Pending'),
         ('AP', 'Approved'),
         ('RJ', 'Rejected'),
+        ('HD', 'Hidden'),
     )
     parent_comment = models.ForeignKey('Comment',
                                        verbose_name='parent comment',

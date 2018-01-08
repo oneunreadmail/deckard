@@ -76,7 +76,7 @@ class CommentCreateForm(forms.Form):
         comment = Comment(
             text=self.cleaned_data["text"],
             post=get_object_or_404(Post, id=self.post_id),
-            status="Pending",
+            status="PN",
             parent_comment=parent_comment,
             author=self.user,
         )
