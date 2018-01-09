@@ -1,7 +1,6 @@
 {% set url_post = url('get_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) %}
 {% set url_post_edit = url('edit_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) %}
-{% set url_post_delete = url('change_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) + "?action=delete" %}
-{% set url_post_publish = url('change_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) + "?action=publish" %}
+{% set url_post_change = url('change_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) %}
 
 <div class="card {% if blogpost.pinned %}border border-primary{% endif %}">
     <div class="card-body dkr-post row" data-post-id="{{ blogpost.post.id }}">

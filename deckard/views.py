@@ -1,12 +1,14 @@
+from django.utils import timezone
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models import Sum
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, Http404
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.http import Http404, HttpResponseNotAllowed, HttpResponseBadRequest
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Blog, BlogPost, Comment, Rating
 from .forms import PostCreateForm, CommentCreateForm
-from django.db.models import Sum
-from django.contrib.auth.decorators import login_required
 
 
 def contrib_required(view):
@@ -270,19 +272,29 @@ def add_comment(request, post_id, slug, blog_name):
     )
 
 
+@contrib_required
 def change_post(request, post_id, blog_name, **kwargs):
-    blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
-    post = blogpost.post
-    action = request.GET.get("action")
-    if action == "publish" and post.hidden:
-        post.hidden = False
-        post.save()
-    elif action == "delete" and not post.hidden:
-        post.hidden = True
-        post.save()
+    if request.method == "POST":
+        blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
+        action = request.POST.get("action")
+        if action == "publish":
+            blogpost.published_date = timezone.now()
+            blogpost.save()
+        elif action == "toggle":
+            if blogpost.hidden:
+                blogpost.hidden = False
+            else:
+                blogpost.hidden = True
+            blogpost.save()
+        elif action == "delete":
+            blogpost.deleted = True
+            blogpost.save()
+        else:
+            raise HttpResponseBadRequest("Incorrect change action")
+        return JsonResponse({'action': action,
+                             'post_is_hidden': blogpost.hidden})
     else:
-        raise Http404("Incorrect change action")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), post.get_abs_url())
+        raise HttpResponseNotAllowed(request.method + " HTTP method is not allowed")
 
 
 @contrib_required

@@ -94,8 +94,6 @@ class Post(SystemInfo):
                                     on_delete=models.CASCADE,
                                     null=True,
                                     blank=True)
-    hidden = models.BooleanField(verbose_name='hidden',
-                                 default=False)
 
     def __str__(self):
         return self.title
@@ -267,6 +265,10 @@ class BlogPost(models.Model):
                                   blank=True)
     pinned = models.BooleanField(default=False,
                                  blank=True)
+    hidden = models.BooleanField(verbose_name='hidden',
+                                 default=False)
+    deleted = models.BooleanField(verbose_name='deleted',
+                                  default=False)
 
 
 class Rating(SystemInfo):

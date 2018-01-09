@@ -3,7 +3,7 @@ $(function(){
     $('.dkr-plus, .dkr-minus').on('click', function(e){
          e.preventDefault();
          $.ajax({
-             url: $(this).attr('data-link'),
+             url: $(this).data('link'),
              success: $.proxy(function(newRating){
              var parent = $(this).parents('.dkr-vertical-rating').eq(0);
                 oldRating = parent.find('.dkr-rating').eq(0).text();
@@ -29,21 +29,50 @@ $(document).on('show.bs.modal','#repostModal', function (e) {
 $(function(){
     // Repost functionality
     $('#modalRepostButton').on('click', function(e){
-        var repostBlogs = {"repost_blogs":[]}
+        var repostBlogs = {'repost_blogs':[]};
         $("#formControlSelectBlogs>option:checked").each(function()
         {
             repostBlogs["repost_blogs"].push($(this).val());
         });
-        repostBlogs["csrfmiddlewaretoken"] = $('#csrf').val();
+        //repostBlogs["csrfmiddlewaretoken"] = $('#csrf').val();
         var link = $('#modalRepostButton').data('link');
         var goto = $(this).data('go-to');
         $.ajax({
-            type: "POST",
+            type: 'POST',
             url: link,
             data: repostBlogs,
             success: function(response) {
                 console.log('Success: ' + response);
                 window.location = goto;
+            }
+        });
+    });
+});
+
+$(function(){
+    // Change post (hide, delete, publish)
+    $('.dkr-change-post-link').on('click', function(e){
+        var action = $(this).data('action');
+        var link = $(this).data('link');
+        var newval = $(this).data('newval');
+        $.ajax({
+            type: 'POST',
+            url: link,
+            context: this,
+            data: {'action': action},
+            success: function(response) {
+                if (response['action'] == 'toggle') {
+                    if (response['post_is_hidden']) {
+                        $(this).html('Показать пост');
+                    }
+                    else {
+                        $(this).html('Скрыть пост');
+                    }
+                }
+                else {
+                    $(this).html(newval);
+                }
+                console.log('Post changed successfully');
             }
         });
     });
