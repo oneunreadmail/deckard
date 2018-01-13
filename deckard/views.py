@@ -68,19 +68,18 @@ def blog_posts(request, blog_name):
     blogs = Blog.objects.all()
 
     post_ratings = {}
-    comment_ratings = {}
+    post_comments_count = {}
     for blogpost in blogposts:
         post_ratings[blogpost.post.id] = get_rating(blogpost.post, request.user)  # Get rating of the post
-        for comment in blogpost.post.posts_comments.all():  # Get ratings of all post's comments
-            comment_ratings[comment.id] = get_rating(comment, request.user)
+        post_comments_count[blogpost.post.id] = blogpost.post.posts_comments.count()
 
     context = {
         "user_is_contributor": bool(blog.contributors.filter(id=request.user.id)),
         "user": request.user,
         "blog": blog,
         "blogposts": blogposts,
-        "post_ratings": post_ratings,
-        "comment_ratings": comment_ratings,
+        "post_ratings": post_ratings,  # Rating of a post
+        "post_comments_count": post_comments_count,  # Total comment count for each post
         "blogs": blogs,  # For reposting
     }
     return render(request, 'deckard/blog_posts.html', context)
