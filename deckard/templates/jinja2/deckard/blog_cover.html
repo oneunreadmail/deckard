@@ -1,0 +1,25 @@
+{% if blog.cover_photo %}
+    {% set cover_style = "background-image: url(\"" ~ blog.cover_photo.url ~ "\");" %}
+{% else %}
+    {% set cover_style = "background-color: lightgrey;" %}
+{% endif %}
+<div style="{{ cover_style }}">
+    <div class="container p-2">
+        <div class="row">
+            <div class="col-2">
+                {% if blog.avatar %}
+                <a href="{{ url('blog_posts', blog_name=blog.name) }}">
+                    <img class="dkr-avatar align-middle" src="{{ blog.avatar.url }}">
+                </a>
+                {% endif %}
+            </div>
+            <div class="col">
+                <h4 class="card-title"><a href="{{ url('blog_posts', blog_name=blog.name) }}" >{{ blog.title }}</a></h4>
+                <h6 class="text-muted">{{ blog.subtitle }}</h6>
+                {% if user_is_contributor %}
+                    <a href="{{ url('add_new_post', blog_name=blog.name) }}">Написать пост</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -9,8 +9,8 @@
     //border: 1px solid black;
 }
 
-.dkr-post-footer-link {
-    margin: 0px 15px;
+.dkr-post-footer-link, .dkr-comment-footer-text {
+    margin-right: 15px;
     vertical-align: middle;
     display: inline-block;
 }
@@ -74,4 +74,14 @@
 .dkr-avatar {
     max-width: 200px;
     height: auto;
+    padding: 20px;
+}
+
+a {
+    text-decoration: underline;
+    color: CornflowerBlue;
+}
+
+.dkr-blog-cover {
+
 }

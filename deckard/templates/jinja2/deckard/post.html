@@ -60,13 +60,15 @@
             {% if post_type == "expanded" %}
                 <p class="card-text">{{ blogpost.post.text | youtube | expanded | safe }}</p>
             {% elif post_type == "collapsed" %}
-                <p class="card-text">{{ blogpost.post.text | youtube | collapsed(url('get_post', post_id=blogpost.post.id, slug=blogpost.post.slug, blog_name=blog.name)) | safe }}</p>
+                <p class="card-text">{{ blogpost.post.text | youtube | collapsed(url_post) | safe }}</p>
             {% else %}
                 error: post_type should be either collapsed or expanded
             {% endif %}
 
-            {% if blogpost.post.source_blog.name != blog.name %}
-                <p><i>Stolen from blog {{ blogpost.post.source_blog.name }}</i></p>
+            {% if blogpost.post.source_blog and blogpost.post.source_blog.name != blog.name %}
+                <p><i>
+                    Кросспост из блога <a href="{{ url('blog_posts', blog_name=blogpost.post.source_blog.name) }}">{{ blogpost.post.source_blog.title }}</a>
+                </i></p>
             {% endif %}
             {% if post_type == "expanded" %}
                 <div class="row">
@@ -74,8 +76,10 @@
                         {% include "deckard/sharing/panel.html" %}
                     </div>
                 </div>
-            {% elif post_type != "expanded" %}
-                <a href="{{ url_post }}">{{ comments_count }} {{ comments_noun }}</a>
+            {% else %}
+                <div class="dkr-post-footer-link">
+                    <a href="{{ url_post }}">{{ comments_count }} {{ comments_noun }}</a>
+                </div>
             {% endif %}
         </div>
         {% if user.is_contributor %}
@@ -85,3 +89,5 @@
         {% endif %}
     </div>
 </div>
+
+<!--kwargs={"post_id": blogpost.post.id, "blog_name": blog.name})-->

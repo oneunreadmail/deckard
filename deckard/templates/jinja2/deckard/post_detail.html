@@ -1,5 +1,11 @@
 {% extends "deckard/base.html" %}
 
+{% block cover %}
+    <div class="container-fluid mb-3" style="padding: 0;">
+        {% include "deckard/blog_cover.html" %}
+    </div>
+{% endblock %}
+
 {% block content %}
     {% with post_type = "expanded" %}
         {% include "deckard/post.html" %}

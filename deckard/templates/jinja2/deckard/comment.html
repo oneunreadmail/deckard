@@ -2,13 +2,13 @@
 {% set url_approve = url_toggle + "&action=approve" %}
 {% set url_reject = url_toggle + "&action=reject" %}
 {% set url_hide = url_toggle + "&action=hide" %}
-{% set hidden_text = "<i>Нло прилетело и написало это здесь</i>" | safe %}
+{% set hidden_text = "<i>НЛО прилетел и написал это здесь</i>" | safe %}
 
 <div class="card" id="c{{ comment.id }}">
     <div class="card-body">
         <div class="dkr-comment-body">
             <p class="card-text">
-                {% if comment.status == "Hidden" %}
+                {% if comment.status == "HD" %}
                     {{ hidden_text }}
                 {% else %}
                     {{ comment.text }}
@@ -46,19 +46,35 @@
                           class="fa fa-chevron-down dkr-minus {{ minus_class }}"></span>
                 </div>
             </div>
-            <span>Wrote {{ comment.author }} at {{ comment.created_date.strftime('%H:%M %d.%m.%Y') }}</span>
-            <span><a href="#" class="dkr-show-comment-reply-form">Ответить</a></span>
+            <div class="dkr-comment-footer-text">
+                <span>Написал {{ comment.author }} в {{ comment.created_date.strftime('%H:%M %d.%m.%Y') }}</span>
+            </div>
+             <div class="dkr-comment-footer-text">
+                <span><a href="#" class="dkr-show-comment-reply-form">Ответить</a></span>
+            </div>
             {% if request.user.is_contributor %}
-                <span>Status: {{ comment.status }}</span>
+                <div class="dkr-comment-footer-text">
+                    <span class="dkr-comment-footer-link">Статус: {{ comment.get_status_display() }}</span>
+                </div>
                 {% if comment.status == "PN" %}
-                    <span><a href="{{ url_approve }}">Approve</a></span>
-                    <span><a href="{{ url_reject }}">Reject</a></span>
+                <div class="dkr-comment-footer-text">
+                    <span><a class="dkr-comment-footer-link" href="{{ url_approve }}">Одобрить</a></span>
+                </div>
+                <div class="dkr-comment-footer-text">
+                    <span><a class="dkr-comment-footer-link" href="{{ url_reject }}">Отклонить</a></span>
+                </div>
                 {% elif comment.status == "AP" %}
-                    <span><a href="{{ url_hide }}">Hide</a></span>
+                 <div class="dkr-comment-footer-text">
+                    <span><a class="dkr-comment-footer-link" href="{{ url_hide }}">Скрыть</a></span>
+                </div>
                 {% elif comment.status == "HD" %}
-                    <span><a href="{{ url_approve }}">Reveal</a></span>
+                <div class="dkr-comment-footer-text">
+                    <span><a class="dkr-comment-footer-link" href="{{ url_approve }}">Показать</a></span>
+                </div>
                 {% elif comment.status == "RJ" %}
-                    <span><a href="{{ url_approve }}">Reapprove</a></span>
+                <div class="dkr-comment-footer-text">
+                    <span><a class="dkr-comment-footer-link" href="{{ url_approve }}">Всё-таки одобрить</a></span>
+                </div>
                 {% endif %}
             {% endif %}
         </div>
