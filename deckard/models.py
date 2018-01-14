@@ -94,8 +94,6 @@ class Post(SystemInfo):
                                     on_delete=models.CASCADE,
                                     null=True,
                                     blank=True)
-    hidden = models.BooleanField(verbose_name='hidden',
-                                 default=False)
 
     def __str__(self):
         return self.title
@@ -198,9 +196,17 @@ class Comment(SystemInfo):
 
 class Blog(models.Model):
     """Blog is a logical group of posts written by the same or different authors."""
-    avatar = models.ImageField(upload_to='uploads/blogs_avatars/',
+    # Cropped avatar image
+    avatar = models.ImageField(upload_to='uploads/blogs/avatars/',
                                null=True,
                                blank=True)
+    # Original image uploaded as a blog avatar
+    avatar_original = models.ImageField(upload_to='uploads/blogs/avatars/originals',
+                                        null=True,
+                                        blank=True)
+    cover_photo = models.ImageField(upload_to='uploads/blogs/cover_photos/',
+                                    null=True,
+                                    blank=True)
     name = models.CharField(verbose_name='name',
                             max_length=50,
                             unique=True)
@@ -232,14 +238,13 @@ class Blog(models.Model):
 
     def save(self, *args, **kwargs):
         if self.id:
-            old_avatar = Blog.objects.get(id=self.id).avatar
-            if old_avatar != self.avatar:
-                cropped_image_io = polygonize(self.avatar,
-                                              vertex_count=random.choice((5, 6, 7)),
+            old_avatar_original = Blog.objects.get(id=self.id).avatar_original
+            if old_avatar_original != self.avatar_original:
+                cropped_image_io = polygonize(self.avatar_original,
+                                              vertex_count=7,
                                               bbox_side_px=100)
-                temp_name = self.avatar.name
-                self.avatar.delete(save=False)
-                self.avatar.save(temp_name,
+                name = self.avatar_original.name
+                self.avatar.save(name.replace('originals/', ''),
                                  content=ContentFile(cropped_image_io.getvalue()),
                                  save=False)
 
@@ -267,6 +272,10 @@ class BlogPost(models.Model):
                                   blank=True)
     pinned = models.BooleanField(default=False,
                                  blank=True)
+    hidden = models.BooleanField(verbose_name='hidden',
+                                 default=False)
+    deleted = models.BooleanField(verbose_name='deleted',
+                                  default=False)
 
 
 class Rating(SystemInfo):

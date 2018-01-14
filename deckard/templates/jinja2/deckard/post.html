@@ -1,34 +1,21 @@
-{% set url_post = url('get_post', post_id=blogpost.post.id, slug=blogpost.post.slug, blog_name=blog.name) %}
+{% set url_post = url('get_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) %}
+{% set url_post_edit = url('edit_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) %}
+{% set url_post_change = url('change_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) %}
+
+{% if post_type != "expanded" %}
+    {% set comments_count = post_comments_count[blogpost.post.id] %}
+    {% set comments_noun = 'комментариев' %}
+    {% if comments_count == 1 %}
+        {% set comments_noun = 'комментарий' %}
+    {% elif comments_count in (2, 3, 4) %}
+        {% set comments_noun = 'комментария' %}
+    {% endif %}
+{% endif %}
 
 <div class="card {% if blogpost.pinned %}border border-primary{% endif %}">
-    <div class="card-body dkr-post" data-post-id="{{ blogpost.post.id }}">
-        <h4 class="card-title">{{ blogpost.post.title }}</h4>
-        {% if blogpost.published_date %}
-        <h6>{{ blogpost.published_date.strftime('%d.%m.%Y, %H:%M') }}</h6>
-        {% else %}
-        <h6>DRAFT</h6>
-        {% endif %}
-
-        {% if post_type == "expanded" %}
-            <p class="card-text">{{ blogpost.post.text | youtube | expanded | safe }}</p>
-        {% elif post_type == "collapsed" %}
-            <p class="card-text">{{ blogpost.post.text | youtube | collapsed(url('get_post', post_id=blogpost.post.id, slug=blogpost.post.slug, blog_name=blog.name)) | safe }}</p>
-        {% else %}
-            error: post_type should be either collapsed or expanded
-        {% endif %}
-
-        {% if blogpost.post.source_blog.name != blog.name %}
-        <p><i>Stolen from blog {{ blogpost.post.source_blog.name }}</i></p>
-        {% endif %}
-        {% if post_type == "expanded" %}
-        <div class="row">
-            <div class="col align-self-center">
-                {% include "deckard/sharing/panel.html" %}
-            </div>
-        </div>
-        {% endif %}
-        <div class="dkr-post-footer text-muted">
-            <div class="dkr-vertical-rating dkr-post-footer-icon">
+    <div class="card-body dkr-post row" data-post-id="{{ blogpost.post.id }}">
+        <div class="col-md-auto">
+            <div class="dkr-vertical-rating">
                 {% if not user.is_authenticated %}
                     {% set plus_class = 'dkr-disabled' %}
                     {% set minus_class = 'dkr-disabled' %}
@@ -55,26 +42,46 @@
                           class="fa fa-chevron-down dkr-minus {{ minus_class }}"></span>
                 </div>
             </div>
-            <div class="dkr-post-footer-link">
-                <a href="{{ url_post }}">Read moar</a>
-            </div>
-            {% if user_is_contributor %}
-            <div class="dkr-post-footer-link">
-                <a href="{{ url('edit_post', post_id=blogpost.post.id, slug=blogpost.post.slug, blog_name=blog.name) }}">Edit</a>
-            </div>
-            <div class="dkr-post-footer-link">
-                <a href="{{ url('delete_post', post_id=blogpost.post.id, slug=blogpost.post.slug, blog_name=blog.name) }}">Delete</a>
-            </div>
-            <div class="dkr-post-footer-icon">
-                <a href="#repostModal" data-toggle="modal" data-blog-name="{{ blog.name }}"
-                   data-post-id="{{ blogpost.post.id }}"
-                   data-link="{{ url('repost', post_id=blogpost.post.id, slug=blogpost.post.slug) }}">
-                    <span class=" fa fa-share-alt"></span>
-                </a>
-            </div>
+        </div>
+        <div class="col">
+            <h4 class="card-title">
+                {% if post_type == "expanded" %}
+                    {{ blogpost.post.title }}
+                {% else %}
+                    <a href="{{ url_post }}">{{ blogpost.post.title }}</a>
+                {% endif %}
+            </h4>
+            {% if blogpost.published_date %}
+                <h6>{{ blogpost.published_date.strftime('%d.%m.%Y, %H:%M') }}</h6>
+            {% else %}
+                <h6>DRAFT</h6>
+            {% endif %}
+
+            {% if post_type == "expanded" %}
+                <p class="card-text">{{ blogpost.post.text | youtube | expanded | safe }}</p>
+            {% elif post_type == "collapsed" %}
+                <p class="card-text">{{ blogpost.post.text | youtube | collapsed(url('get_post', post_id=blogpost.post.id, slug=blogpost.post.slug, blog_name=blog.name)) | safe }}</p>
+            {% else %}
+                error: post_type should be either collapsed or expanded
+            {% endif %}
+
+            {% if blogpost.post.source_blog.name != blog.name %}
+                <p><i>Stolen from blog {{ blogpost.post.source_blog.name }}</i></p>
+            {% endif %}
+            {% if post_type == "expanded" %}
+                <div class="row">
+                    <div class="col align-self-center">
+                        {% include "deckard/sharing/panel.html" %}
+                    </div>
+                </div>
+            {% elif post_type != "expanded" %}
+                <a href="{{ url_post }}">{{ comments_count }} {{ comments_noun }}</a>
             {% endif %}
         </div>
+        {% if user.is_contributor %}
+            <div class="col-md-auto">
+                {% include "deckard/post_contributor_panel.html" %}
+            </div>
+        {% endif %}
     </div>
 </div>
-
-<!--kwargs={"post_id": blogpost.post.id, "blog_name": blog.name})-->

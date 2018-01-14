@@ -1,0 +1,20 @@
+<div class="card">
+    <div class="card-body">
+        {% if not blogpost.published_date %}
+        <a href="#" class="dkr-change-post-link text-primary" data-link="{{ url_post_change }}" data-action="publish"
+           data-newval="Пост опубликован">Опубликовать пост</a><br/>
+        {% endif %}
+        <a href="#" class="dkr-change-post-link text-primary" data-link="{{ url_post_change }}" data-action="toggle">
+            {% if blogpost.hidden %}Показать{% else %}Скрыть{% endif %} пост
+        </a><br/>
+        {% if not blogpost.deleted %}
+        <a href="#" class="dkr-change-post-link text-primary" data-link="{{ url_post_change }}" data-action="delete"
+           data-newval="Пост удалён">Удалить пост</a><br/>
+        {% endif %}
+        <a class="text-primary" href="{{ url_post_edit }}">Редактировать пост</a><br/>
+        <a class="text-primary" href="#repostModal" data-toggle="modal" data-blog-name="{{ blog.name }}"
+           data-post-id="{{ blogpost.post.id }}"
+           data-link="{{ url('repost', post_id=blogpost.post.id, slug=blogpost.post.slug) }}">
+            Забрать в блог</a><br/>
+    </div>
+</div>

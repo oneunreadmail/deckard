@@ -1,12 +1,14 @@
+from django.utils import timezone
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models import Sum
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, Http404
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.http import Http404, HttpResponseNotAllowed, HttpResponseBadRequest
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Blog, BlogPost, Comment, Rating
 from .forms import PostCreateForm, CommentCreateForm
-from django.db.models import Sum
-from django.contrib.auth.decorators import login_required
 
 
 def contrib_required(view):
@@ -66,19 +68,18 @@ def blog_posts(request, blog_name):
     blogs = Blog.objects.all()
 
     post_ratings = {}
-    comment_ratings = {}
+    post_comments_count = {}
     for blogpost in blogposts:
         post_ratings[blogpost.post.id] = get_rating(blogpost.post, request.user)  # Get rating of the post
-        for comment in blogpost.post.posts_comments.all():  # Get ratings of all post's comments
-            comment_ratings[comment.id] = get_rating(comment, request.user)
+        post_comments_count[blogpost.post.id] = blogpost.post.posts_comments.count()
 
     context = {
         "user_is_contributor": bool(blog.contributors.filter(id=request.user.id)),
         "user": request.user,
         "blog": blog,
         "blogposts": blogposts,
-        "post_ratings": post_ratings,
-        "comment_ratings": comment_ratings,
+        "post_ratings": post_ratings,  # Rating of a post
+        "post_comments_count": post_comments_count,  # Total comment count for each post
         "blogs": blogs,  # For reposting
     }
     return render(request, 'deckard/blog_posts.html', context)
@@ -268,6 +269,31 @@ def add_comment(request, post_id, slug, blog_name):
     return HttpResponseRedirect(
         reverse("get_post", kwargs={"post_id": post_id, "slug": slug, "blog_name": blog_name})
     )
+
+
+@contrib_required
+def change_post(request, post_id, blog_name, **kwargs):
+    if request.method == "POST":
+        blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
+        action = request.POST.get("action")
+        if action == "publish":
+            blogpost.published_date = timezone.now()
+            blogpost.save()
+        elif action == "toggle":
+            if blogpost.hidden:
+                blogpost.hidden = False
+            else:
+                blogpost.hidden = True
+            blogpost.save()
+        elif action == "delete":
+            blogpost.deleted = True
+            blogpost.save()
+        else:
+            raise HttpResponseBadRequest("Incorrect change action")
+        return JsonResponse({'action': action,
+                             'post_is_hidden': blogpost.hidden})
+    else:
+        raise HttpResponseNotAllowed(request.method + " HTTP method is not allowed")
 
 
 @contrib_required
