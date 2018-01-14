@@ -101,6 +101,20 @@ class Post(SystemInfo):
     def get_abs_url(self):
         return reverse("get_post", kwargs={"post_id": self.id, "slug": self.slug, "blog_name": self.source_blog.name})
 
+    @classmethod
+    def create_new(cls, title, text, source_blog_name, pinned, author):
+        """Create new Post and BlogPost entries."""
+        source_blog = Blog.objects.get(name=source_blog_name)
+        post = cls(title=title, text=text, source_blog=source_blog, author=author)
+        post.save()
+        blogpost = BlogPost(blog=source_blog,
+                            post=post,
+                            published_date=timezone.now(),
+                            publisher=author,
+                            pinned=pinned)
+        blogpost.save()
+        return post
+
     def repost_to_blog(self, blog, publisher):
         """Repost to another blog - create a new BlogPost instance referencing the post and the new blog."""
         try:
@@ -136,10 +150,10 @@ class Post(SystemInfo):
 class Comment(SystemInfo):
     """A comment to a post, can have child comments."""
     COMMENT_STATUS = (
-        ('PN', 'Pending'),
-        ('AP', 'Approved'),
-        ('RJ', 'Rejected'),
-        ('HD', 'Hidden'),
+        ('PN', 'В ожидании'),
+        ('AP', 'Одобрен'),
+        ('RJ', 'Отклонён'),
+        ('HD', 'Скрыт'),
     )
     parent_comment = models.ForeignKey('Comment',
                                        verbose_name='parent comment',
