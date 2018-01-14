@@ -6,7 +6,7 @@
 {% set is_social = comment.author.socialaccount_set.first() %}
 {% if is_social %}
     {% set url_social_profile = comment.author.socialaccount_set.first().get_profile_url() %}
-    {% set author = ('<a href="' + url_social_profile + '">' + comment.author|string + '</a')|safe %}
+    {% set author = ('<a href="' + url_social_profile + '">' + comment.author|string + '</a>')|safe %}
 {% else %}
     {% set author = comment.author | string %}
 {% endif %}
