@@ -40,7 +40,6 @@ def blog_list(request):
     return render(request, 'deckard/blog_list.html', context)
 
 
-@contrib_required
 def blog_add_contributor(request, blog_name):
     """Add the contributor to the blog."""
     blog = get_object_or_404(Blog, name=blog_name)

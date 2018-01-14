@@ -2,7 +2,7 @@
 {% set url_approve = url_toggle + "&action=approve" %}
 {% set url_reject = url_toggle + "&action=reject" %}
 {% set url_hide = url_toggle + "&action=hide" %}
-{% set hidden_text = "<i>Нло прилетело и написало это здесь</i>" | safe %}
+{% set hidden_text = "<i>НЛО прилетел и написал это здесь</i>" | safe %}
 {% set is_social = comment.author.socialaccount_set.first() %}
 {% if is_social %}
     {% set url_social_profile = comment.author.socialaccount_set.first().get_profile_url() %}
@@ -10,7 +10,6 @@
 {% else %}
     {% set author = comment.author | string %}
 {% endif %}
-{% set hidden_text = "<i>НЛО прилетел и написал это здесь</i>" | safe %}
 
 <div class="card" id="c{{ comment.id }}">
     <div class="card-body">
@@ -55,7 +54,7 @@
                 </div>
             </div>
             <div class="dkr-comment-footer-text">
-                <span>Написал {{ comment.author }} в {{ comment.created_date.strftime('%H:%M %d.%m.%Y') }}</span>
+                <span>Написал {{ author }} в {{ comment.created_date.strftime('%H:%M %d.%m.%Y') }}</span>
             </div>
              <div class="dkr-comment-footer-text">
                 <span><a href="#" class="dkr-show-comment-reply-form">Ответить</a></span>
