@@ -32,12 +32,12 @@ class Command(BaseCommand):
                 print("There was a problem creating the user: {}. Error: {}.".format(username, sys.exc_info()[1]))
 
     def _create_blogs(self, blogs):
-        for name, authors in blogs:
+        for name, authors, title, subtitle in blogs:
             try:
                 print("Creating blog {}.".format(name))
                 users = [User.objects.get(username=author) for author in authors]
                 persons = [Person.objects.get(user=user) for user in users]
-                blog = Blog(name=name)
+                blog = Blog(name=name, title=title, subtitle=subtitle)
                 blog.save()
                 for person in persons:
                     blog.contributors.add(person)
@@ -67,9 +67,9 @@ class Command(BaseCommand):
             ('katz', 'qwer1234', 'katz@example.com', "Maxim", "Katz"),
         ]
         blogs = [
-            ("putinvor", ["navalny"]),
-            ("lavochki", ["katz"]),
-            ("democracy", ["katz", "navalny"]),
+            ("putinvor", ["navalny"], "Навальный-2018", "Финальная битва между добром и нейтралитетом"),
+            ("lavochki", ["katz"], "Лавочный блог", "Сидеть — это ваша работа и наша забота"),
+            ("democracy", ["katz", "navalny"], "Демократию в массы", "...как и завещал нам дедушка Ленин"),
         ]
         posts = [
             ("putinvor", "Калининград - супер!", """Калининград прекрасен. Меня тут ещё и по городу провели — пара тысяч экскурсоводов.
