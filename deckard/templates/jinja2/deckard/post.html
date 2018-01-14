@@ -1,7 +1,16 @@
 {% set url_post = url('get_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) %}
 {% set url_post_edit = url('edit_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) %}
-{% set url_post_delete = url('change_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) + "?action=delete" %}
-{% set url_post_publish = url('change_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) + "?action=publish" %}
+{% set url_post_change = url('change_post', post_id=blogpost.post.id, blog_name=blog.name, slug=blogpost.post.slug) %}
+
+{% if post_type != "expanded" %}
+    {% set comments_count = post_comments_count[blogpost.post.id] %}
+    {% set comments_noun = 'комментариев' %}
+    {% if comments_count == 1 %}
+        {% set comments_noun = 'комментарий' %}
+    {% elif comments_count in (2, 3, 4) %}
+        {% set comments_noun = 'комментария' %}
+    {% endif %}
+{% endif %}
 
 <div class="card {% if blogpost.pinned %}border border-primary{% endif %}">
     <div class="card-body dkr-post row" data-post-id="{{ blogpost.post.id }}">
@@ -65,6 +74,8 @@
                         {% include "deckard/sharing/panel.html" %}
                     </div>
                 </div>
+            {% elif post_type != "expanded" %}
+                <a href="{{ url_post }}">{{ comments_count }} {{ comments_noun }}</a>
             {% endif %}
         </div>
         {% if user.is_contributor %}
