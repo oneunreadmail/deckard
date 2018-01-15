@@ -7,9 +7,9 @@
     <div class="nav navbar-nav navbar-right">
         <span>
             {% if user.is_authenticated %}
-                Привет, {{ user.username }}&nbsp;|&nbsp;<a href="/accounts/logout">До свидания</a>
+                Привет, {{ user.username }}&nbsp;|&nbsp;<a href="/accounts/logout?next={{ request.path }}">До свидания</a>
             {% else %}
-                Не знаем, кто вы&nbsp;|&nbsp;<a href="/accounts/login">Представиться</a>
+                Не знаем, кто вы&nbsp;|&nbsp;<a href="/accounts/login?next={{ request.path }}">Представиться</a>
             {% endif %}
         </span>
     </div>
