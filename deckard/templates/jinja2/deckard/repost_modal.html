@@ -3,16 +3,16 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="repostModalLabel">Spread the word!</h3>
+                <h3 id="repostModalLabel">Распространить</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label for="formControlSelectBlogs">Choose the blogs to repost to:</label>
+                        <label for="formControlSelectBlogs">Выберите блоги:</label>
                         <select multiple class="form-control" id="formControlSelectBlogs">
                             {% for blog in blogs %}
-                            <option name="blog_name" value="{{ blog.name }}">{{ blog.name }}</option>
+                            <option name="blog_name" value="{{ blog.name }}">{{ blog.title }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -21,9 +21,9 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" id="modalRepostButton" data-link="#"
-                        data-go-to="{{ url('blog_list') }}">Repost
+                        data-go-to="{{ url('blog_list') }}">Сделать репост
                 </button>
-                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
             </div>
         </div>
     </div>

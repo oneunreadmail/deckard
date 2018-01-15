@@ -12,7 +12,6 @@ from .forms import PostCreateForm, CommentCreateForm
 
 
 def contrib_required(view):
-
     def internal(request, *args, **kwargs):
         if request.user.is_contributor:
             return view(request, *args, **kwargs)
@@ -41,7 +40,6 @@ def blog_list(request):
     return render(request, 'deckard/blog_list.html', context)
 
 
-@contrib_required
 def blog_add_contributor(request, blog_name):
     """Add the contributor to the blog."""
     blog = get_object_or_404(Blog, name=blog_name)
@@ -61,7 +59,7 @@ def blog_posts(request, blog_name):
     """List of all posts in the current blog."""
     print(request.user.is_contributor)
     blog = get_object_or_404(Blog, name=blog_name)
-    blogposts_all = BlogPost.objects.filter(blog=blog).order_by("-pinned", "-published_date")
+    blogposts_all = BlogPost.objects.filter(blog=blog, deleted=False).order_by("-pinned", "-published_date")
     paginator = Paginator(blogposts_all, 2)
     page = request.GET.get('page')
     blogposts = paginator.get_page(page)
@@ -89,7 +87,11 @@ def get_post(request, post_id, blog_name, **kwargs):
     """Get a post and all its comments."""
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
 
-    post_url = blogpost.post.get_abs_url()
+    post_canonical_url = blogpost.post.get_abs_url()
+    if blogpost.post.source_blog:
+        post_url = post_canonical_url.replace(blogpost.post.source_blog.name, blog_name)
+    else:
+        post_url = post_canonical_url
     if request.path.split("#")[0] != post_url:
         return HttpResponsePermanentRedirect(post_url)  # Redirect to URL which includes post_id AND slug
 
@@ -159,12 +161,9 @@ def get_rating(rated_object, user):
 @contrib_required
 def add_new_post(request, blog_name):
     """Create a new post in a blog."""
-    blog_names = tuple((blog.name, blog.name) for blog in Blog.objects.all())
     form = PostCreateForm(request.POST or None,
-                          blog_names=blog_names,
                           blog_name=blog_name,
-                          user=request.user,
-                          )
+                          user=request.user)
     if form.is_valid():
         post = form.save()
         messages.success(request, "Success!")
@@ -195,9 +194,8 @@ def edit_post(request, post_id, slug, blog_name):
         raise Http404("Not enough rights")
 
     # ok let's proceed
-    blog_names = tuple((blog.name, blog.name) for blog in Blog.objects.all())
     form = PostCreateForm(request.POST or None,
-                          blog_names=blog_names,
+                          blog_name=blog_name,
                           user=request.user,
                           blogpost=blogpost,
                           )
@@ -214,18 +212,6 @@ def edit_post(request, post_id, slug, blog_name):
         "user": request.user,
     }
     return render(request, 'deckard/create_update_post.html', context)
-
-
-@contrib_required
-def delete_post(request, post_id, slug, blog_name):
-    blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
-    if blogpost.post.source_blog.name != blogpost.blog.name:
-        return HttpResponseRedirect(
-            reverse("delete_post", kwargs={"post_id": post_id, "blog_name": blogpost.post.source_blog.name})
-        )
-    blogpost.post.delete()
-    messages.success(request, "Post successfully deleted!")
-    return redirect("blog_list")
 
 
 @login_required

@@ -65,6 +65,7 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
  * change domain name in /admin -> Sites to `localhost:8000`
  * add social applications in /admin -> Social applications using keys and tokens provided
  * only enter site as http://localhost:8000 (127.0.0.1 won't work with fb authenification)
+ * VK has smth with profile links. Edit 8th line in python3.6/site-packages/allauth/socialaccount/providers/vk/provider.py: `return self.account.extra_data.get('link') or "https://vk.com/id{}".format(self.account.extra_data.get('uid'))`
  * should be it
 
 6. Youtube embedding
@@ -76,4 +77,3 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
                 'deckard.context_processors.custom_context',
             ]``` to settings.py -> TEMPLATES -> OPTIONS (only for jinja2)
  * add ```'deckard.middleware.UserIsContributorMiddleware',``` to settings.py -> MIDDLEWARE
-
