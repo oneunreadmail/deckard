@@ -19,23 +19,23 @@ $(function(){
       });
 });
 
-$(document).on('show.bs.modal','#repostModal', function (e) {
+$(document).on('show.bs.modal','#dkr-repost-modal', function (e) {
     // Pass info about the post to the repost modal window
     var modal = $(this);
     var link = $(e.relatedTarget).data('link');
-    $(e.currentTarget).find('#modalRepostButton').data('link', link);
+    $(e.currentTarget).find('#dkr-btn-repost').data('link', link);
 })
 
 $(function(){
     // Repost functionality
-    $('#modalRepostButton').on('click', function(e){
+    $('#dkr-btn-repost').on('click', function(e){
         var repostBlogs = {'repost_blogs':[]};
-        $("#formControlSelectBlogs>option:checked").each(function()
+        $("#dkr-ctrl-select-blogs>option:checked").each(function()
         {
             repostBlogs["repost_blogs"].push($(this).val());
         });
         //repostBlogs["csrfmiddlewaretoken"] = $('#csrf').val();
-        var link = $('#modalRepostButton').data('link');
+        var link = $('#dkr-btn-repost').data('link');
         var goto = $(this).data('go-to');
         $.ajax({
             type: 'POST',

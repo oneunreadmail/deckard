@@ -189,3 +189,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = "/blog/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "/blog/"
+
+ACCOUNT_LOGOUT_ON_GET = True  # No prompt when signing out

@@ -1,5 +1,6 @@
 $(document).ready(function(){
     console.log("I'm ready!");
+    $('#dkr-login-link').popover();
 });
 
 // https://docs.djangoproject.com/en/2.0/ref/csrf/

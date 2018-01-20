@@ -7,9 +7,15 @@
     <div class="nav navbar-nav navbar-right">
         <span>
             {% if user.is_authenticated %}
-                Привет, {{ user.username }}&nbsp;|&nbsp;<a href="/accounts/logout?next={{ request.path }}">До свидания</a>
+                Привет, {{ user.username }}&nbsp;|&nbsp;<a
+                href="/accounts/logout?next={{ request.path }}">До свидания</a>
             {% else %}
-                Не знаем, кто вы&nbsp;|&nbsp;<a href="/accounts/login?next={{ request.path }}">Представиться</a>
+                Не знаем, кто вы&nbsp;|&nbsp;<a id="dkr-login-link" data-html="true" data-toggle="popover"
+                                                data-placement="auto"
+                                                title="Выберите способ авторизации" data-trigger="focus"
+                                                data-content="<ul><li><a href='/accounts/vk/login?next={{ request.path }}'>VK</a></li><li>
+                                                <a href='/accounts/facebook/login?next={{ request.path }}'>Facebook</a></li></ul>"
+                                                href="#">Представиться</a>
             {% endif %}
         </span>
     </div>
