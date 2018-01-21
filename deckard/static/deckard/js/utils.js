@@ -32,3 +32,18 @@ $.ajaxSetup({
         }
     }
 });
+
+$(function(){
+    // Logout (POST request)
+    $('#dkr-logout-link').on('click', function(e){
+        var link = $(this).data('link');
+        var goto = $(this).data('go-to');
+        $.ajax({
+            type: 'POST',
+            url: link,
+            success: function(response) {
+                window.location = goto;
+            }
+        });
+    });
+});
