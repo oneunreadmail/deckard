@@ -1,5 +1,6 @@
 $(document).ready(function(){
     console.log("I'm ready!");
+    $('#dkr-login-link').popover();
 });
 
 // https://docs.djangoproject.com/en/2.0/ref/csrf/
@@ -30,4 +31,19 @@ $.ajaxSetup({
             xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
         }
     }
+});
+
+$(function(){
+    // Logout (POST request)
+    $('#dkr-logout-link').on('click', function(e){
+        var link = $(this).data('link');
+        var goto = $(this).data('go-to');
+        $.ajax({
+            type: 'POST',
+            url: link,
+            success: function(response) {
+                window.location = goto;
+            }
+        });
+    });
 });

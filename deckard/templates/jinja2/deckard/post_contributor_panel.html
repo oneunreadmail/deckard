@@ -12,7 +12,7 @@
            data-newval="Пост удалён">Удалить пост</a><br/>
         {% endif %}
         <a href="{{ url_post_edit }}">Редактировать пост</a><br/>
-        <a href="#repostModal" data-toggle="modal" data-blog-name="{{ blog.name }}"
+        <a href="#dkr-repost-modal" data-toggle="modal" data-blog-name="{{ blog.name }}"
            data-post-id="{{ blogpost.post.id }}"
            data-link="{{ url('repost', post_id=blogpost.post.id, slug=blogpost.post.slug) }}">
             Забрать в блог</a><br/>
