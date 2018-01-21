@@ -8,11 +8,13 @@ $(function(){
              var parent = $(this).parents('.dkr-vertical-rating').eq(0);
                 oldRating = parent.find('.dkr-rating').eq(0).text();
                 if (newRating != oldRating) {
-                    parent.find('.dkr-active').eq(0).removeClass('dkr-active');
-                    $(this).toggleClass('dkr-active', (newRating != oldRating) && (newRating != 0));
+                    if (parent.find('.dkr-active').eq(0).hasClass('dkr-active')) {
+                        parent.find('.dkr-active').eq(0).removeClass('dkr-active');
+                    }
+                    else {
+                        $(this).toggleClass('dkr-active');
+                    }
                     parent.find('.dkr-rating').eq(0).text(newRating);
-                    parent.find('.dkr-rating').toggleClass('dkr-positive', (newRating > oldRating) && (newRating != 0));
-                    parent.find('.dkr-rating').toggleClass('dkr-negative', (newRating < oldRating) && (newRating != 0));
                 }
              }, this)
          })

@@ -20,14 +20,12 @@
                     {% set plus_class = 'dkr-disabled' %}
                     {% set minus_class = 'dkr-disabled' %}
                     {% else %}
-                        {% set user_rating = post_ratings[blogpost.post.id][0] %}
+                        {% set user_rating = post_ratings[blogpost.post.id]['user_rating'] %}
                         {% if user_rating > 0 %}
                             {% set plus_class = 'dkr-active' %}
-                            {% set total_rating_class = 'dkr-positive' %}
                         {% endif %}
                         {% if user_rating < 0 %}
                             {% set minus_class = 'dkr-active' %}
-                            {% set total_rating_class = 'dkr-negative' %}
                         {% endif %}
                 {% endif %}
                 <div class="dkr-vertical-rating-element">
@@ -35,7 +33,7 @@
                           class="fa fa-chevron-up dkr-plus {{ plus_class }}"></span>
                 </div>
                 <div class="dkr-vertical-rating-element">
-                    <font class="dkr-rating {{ total_rating_class }}">{{ post_ratings[blogpost.post.id][0] }}</font>
+                    <font class="dkr-rating">{{ post_ratings[blogpost.post.id]['total_rating'] }}</font>
                 </div>
                 <div class="dkr-vertical-rating-element">
                     <span data-link="{{ url('rate_post', post_id=blogpost.post.id, slug=blogpost.post.slug, rating_sign='minus') }}"

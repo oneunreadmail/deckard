@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.urls import reverse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -138,24 +138,22 @@ def get_post(request, post_id, blog_name, **kwargs):
 
 
 def get_rating(rated_object, user):
-    """Get the post's or comment's total rating and the user rating as a tuple (TOTAL_RT, USER_RT)."""
-
-    user_points = 0
+    """Get the post's or comment's total rating and the user rating as a dictionary."""
     if isinstance(rated_object, Comment):
         total_rating = rated_object.comments_ratings.aggregate(Sum('points'))['points__sum'] or 0
     else:
         total_rating = rated_object.posts_ratings.aggregate(Sum('points'))['points__sum'] or 0
 
+    user_rating = 0
     if user.is_authenticated:
         if isinstance(rated_object, Comment):
-            user_rating = Rating.objects.filter(comment=rated_object, author=user)
+            user_rating_obj = Rating.objects.filter(comment=rated_object, author=user)
         else:
-            user_rating = Rating.objects.filter(post=rated_object, author=user)
-        if user_rating:
-            user_points = user_rating.first().points
+            user_rating_obj = Rating.objects.filter(post=rated_object, author=user)
+        if user_rating_obj:
+            user_rating = user_rating_obj.first().points
 
-    rating = (total_rating, user_points)
-    return rating
+    return {"total_rating": total_rating, "user_rating": user_rating}
 
 
 @contrib_required

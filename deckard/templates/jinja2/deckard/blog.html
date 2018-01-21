@@ -10,24 +10,21 @@
         <div class="row">
             <div class="col-2">
                 {% if blog.avatar %}
-                    <img class="dkr-avatar" src="{{ blog.avatar.url }}">
+                <img class="dkr-avatar" src="{{ blog.avatar.url }}">
                 {% endif %}
             </div>
             <div class="col-10">
                 <h4 class="card-title"><a href="{{ url_blog }}">{{ blog.title }}</a></h4>
                 <h6 class="text-muted">{{ blog.subtitle }}</h6>
-                Блог ведут: {{ contributors | join(', ') }}.<br><br>
-                {% if blog.name in user_blog_names %}
-                    <h6 class="card-text">Вы — автор</h6>
-                    <p class="card-text small">
-                        <a href="{{ url_stop_contrib }}">Не хочу быть автором</a>
-                    </p>
+                {% if contributors %}
+                Блог ведут: {{ contributors | join(', ') }}.<br/>
                 {% else %}
-                    <h6 class=" card-title">
-                        <a href="{{ url_became_contrib  }}">Стать автором</a>
-                    </h6>
+                У блога пока нет авторов.
                 {% endif %}
-        </div>
+                {% if blog.name in user_blog_names %}
+                <h6 class="card-text">Вы — автор</h6>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
