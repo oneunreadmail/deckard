@@ -1,3 +1,7 @@
+# Custom
+cain/local_settings.py
+.idea/
+
 # Databases
 *.sqlite3
 
