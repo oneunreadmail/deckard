@@ -14,35 +14,13 @@ import os
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 
-def get_env_variable(var_name):
-    """ Get the environment variable or return exception """
-    try:
-        return os.environ[var_name]
-    except KeyError:
-        error_msg = "Set the %s environment variable" % var_name
-        raise ImproperlyConfigured(error_msg)
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ENV_ROLE = get_env_variable('ENV_ROLE')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
+DEBUG = False
+TEMPLATE_DEBUG = False
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = get_env_variable('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-if ENV_ROLE == 'development':
-    DEBUG = True
-    TEMPLATE_DEBUG = True
-else:
-    DEBUG = False
-    TEMPLATE_DEBUG = False
-
-PSQL_PASSWORD = get_env_variable('PSQL_PASSWORD')
-
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "local.mundep.com", "mundep.com", "46.101.193.241"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 SITE_ID = 1
 
@@ -113,27 +91,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cain.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
-DATABASES = {
-    'sqlite': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
-
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django_db',
-        'USER': 'django_deckard',
-        'PASSWORD': PSQL_PASSWORD,
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -182,7 +139,7 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn")
-#MEDIA_ROOT = os.path.join(BASE_DIR, "media_cdn")
+# MEDIA_ROOT = os.path.join(BASE_DIR, "media_cdn")
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -190,4 +147,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = "/blog/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "/blog/"
 
-ACCOUNT_LOGOUT_ON_GET = True  # No prompt when signing out
+from .local_settings import *
+
+# local_settings.py:
+# SECRET_KEY = 'some_secret_sequence_of_symbols'
+# DATABASES = {...}
+# ALLOWED_HOSTS = [...]
+# DEBUG = TRUE (or False)
