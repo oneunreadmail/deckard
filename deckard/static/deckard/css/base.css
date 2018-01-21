@@ -82,6 +82,6 @@ a {
     color: CornflowerBlue;
 }
 
-.dkr-blog-cover {
-
+a.dkr-dotted-link {
+    text-decoration: underline dotted;
 }

@@ -10,7 +10,8 @@
                 Привет, {{ user.username }}&nbsp;|&nbsp;<a
                 href="/accounts/logout?next={{ request.path }}">До свидания</a>
             {% else %}
-                Не знаем, кто вы&nbsp;|&nbsp;<a id="dkr-login-link" data-html="true" data-toggle="popover"
+                Не знаем, кто вы&nbsp;|&nbsp;<a id="dkr-login-link" class="dkr-dotted-link" data-html="true"
+                                                data-toggle="popover"
                                                 data-placement="auto"
                                                 title="Выберите способ авторизации" data-trigger="focus"
                                                 data-content="<ul><li><a href='/accounts/vk/login?next={{ request.path }}'>VK</a></li><li>
