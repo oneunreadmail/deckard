@@ -31,14 +31,12 @@
                     {% set plus_class = 'dkr-disabled' %}
                     {% set minus_class = 'dkr-disabled' %}
                     {% else %}
-                        {% set user_rating = comment_ratings[comment.id][0] %}
+                        {% set user_rating = comment_ratings[comment.id]['user_rating'] %}
                         {% if user_rating > 0 %}
                             {% set plus_class = 'dkr-active' %}
-                            {% set total_rating_class = 'dkr-positive' %}
                         {% endif %}
                         {% if user_rating < 0 %}
                             {% set minus_class = 'dkr-active' %}
-                            {% set total_rating_class = 'dkr-negative' %}
                         {% endif %}
                 {% endif %}
                 <div class="dkr-vertical-rating-element">
@@ -46,7 +44,7 @@
                           class="fa fa-chevron-up dkr-plus {{ plus_class }}"></span>
                 </div>
                 <div class="dkr-vertical-rating-element">
-                    <font class="dkr-rating {{ total_rating_class }}">{{ comment_ratings[comment.id][0] }}</font>
+                    <font class="dkr-rating">{{ comment_ratings[comment.id]['total_rating'] }}</font>
                 </div>
                 <div class="dkr-vertical-rating-element">
                     <span data-link="{{ url('rate_comment', comment_id=comment.id, rating_sign='minus') }}"
@@ -57,7 +55,7 @@
                 <span>Написал {{ author }} в {{ comment.created_date.strftime('%H:%M %d.%m.%Y') }}</span>
             </div>
              <div class="dkr-comment-footer-text">
-                <span><a href="#" class="dkr-show-comment-reply-form">Ответить</a></span>
+                <span><a href="#" class="dkr-show-comment-reply-form dkr-ajax-link">Ответить</a></span>
             </div>
             {% if request.user.is_contributor %}
                 <div class="dkr-comment-footer-text">

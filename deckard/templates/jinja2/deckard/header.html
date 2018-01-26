@@ -6,12 +6,12 @@
     </div>
     <div class="nav navbar-nav navbar-right">
         <span>
-            {% if user.is_authenticated %}
+            {% if user and user.is_authenticated %}
                 Здравствуйте, {{ user.username }}&nbsp;|&nbsp;<a id="dkr-logout-link" href="#"
                                                                  data-go-to="{{ request.path }}"
                                                                  data-link="/accounts/logout/">До свидания</a>
             {% else %}
-                Не знаем, кто вы | <a id="dkr-login-link" class="dkr-dotted-link" data-html="true"
+                Не знаем, кто вы | <a id="dkr-login-link" class="dkr-ajax-link" data-html="true"
                                       data-toggle="popover"
                                       data-placement="auto"
                                       title="Выберите способ авторизации" data-trigger="focus"
