@@ -1,3 +1,7 @@
+* {
+    font-family: "PT Serif", "Times New Roman", Georgia, serif;
+}
+
 .dkr-post-footer {
     //border: 1px solid black;
 }
@@ -82,3 +86,4 @@ a.dkr-ajax-link {
     text-decoration: none;
     border-bottom: 1px dashed;
 }
+
