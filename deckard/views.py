@@ -1,5 +1,5 @@
 from django.utils import timezone
-from django.urls import reverse
+from .basic import reverse
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.db.models import Sum
 from django.contrib import messages
@@ -9,6 +9,7 @@ from django.http import Http404, HttpResponseNotAllowed, HttpResponseBadRequest
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Blog, BlogPost, Comment, Rating
 from .forms import PostCreateForm, CommentCreateForm
+from .settings import POSTS_PER_PAGE, MAX_COMMENT_SHIFT
 
 
 def contrib_required(view):
@@ -40,7 +41,8 @@ def blog_list(request):
     return render(request, 'deckard/blog_list.html', context)
 
 
-def blog_add_contributor(request, blog_name):
+def blog_add_contributor(request):
+    blog_name = request.blog_name
     """Add the contributor to the blog."""
     blog = get_object_or_404(Blog, name=blog_name)
     blog.add_contributor(request.user)
@@ -48,19 +50,21 @@ def blog_add_contributor(request, blog_name):
 
 
 @contrib_required
-def blog_remove_contributor(request, blog_name):
+def blog_remove_contributor(request):
+    blog_name = request.blog_name
     """Remove the contributor from the blog."""
     blog = get_object_or_404(Blog, name=blog_name)
     blog.remove_contributor(request.user)
     return redirect('blog_list')
 
 
-def blog_posts(request, blog_name):
+def blog_posts(request):
+    blog_name = request.blog_name
     """List of all posts in the current blog."""
     print(request.user.is_contributor)
     blog = get_object_or_404(Blog, name=blog_name)
     blogposts_all = BlogPost.objects.filter(blog=blog, deleted=False).order_by("-pinned", "-published_date")
-    paginator = Paginator(blogposts_all, 2)
+    paginator = Paginator(blogposts_all, POSTS_PER_PAGE)
     page = request.GET.get('page')
     blogposts = paginator.get_page(page)
     blogs = Blog.objects.all()
@@ -83,7 +87,8 @@ def blog_posts(request, blog_name):
     return render(request, 'deckard/blog_posts.html', context)
 
 
-def get_post(request, post_id, blog_name, **kwargs):
+def get_post(request, post_id, **kwargs):
+    blog_name = request.blog_name
     """Get a post and all its comments."""
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
 
@@ -93,7 +98,8 @@ def get_post(request, post_id, blog_name, **kwargs):
     else:
         post_url = post_canonical_url
     if request.path.split("#")[0] != post_url:
-        return HttpResponsePermanentRedirect(post_url)  # Redirect to URL which includes post_id AND slug
+        # return HttpResponsePermanentRedirect(post_url)  # Redirect to URL which includes post_id AND slug
+        pass
 
     comments = Comment.objects.filter(post_id=post_id).order_by("position")
     comments_and_forms = [
@@ -133,6 +139,7 @@ def get_post(request, post_id, blog_name, **kwargs):
         "blogs": blogs,  # For reposting
         "form": form,
         "comments_and_forms": comments_and_forms,
+        "maxshift": MAX_COMMENT_SHIFT,
     }
     return render(request, 'deckard/post_detail.html', context)
 
@@ -157,7 +164,8 @@ def get_rating(rated_object, user):
 
 
 @contrib_required
-def add_new_post(request, blog_name):
+def add_new_post(request):
+    blog_name = request.blog_name
     """Create a new post in a blog."""
     form = PostCreateForm(request.POST or None,
                           blog_name=blog_name,
@@ -178,14 +186,15 @@ def add_new_post(request, blog_name):
 
 
 @contrib_required
-def edit_post(request, post_id, slug, blog_name):
-
+def edit_post(request, post_id, slug):
+    blog_name = request.blog_name
     # first we redirect to source blog in case someone tries to edit repost
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
     if blogpost.post.source_blog.name != blogpost.blog.name:
-        return HttpResponseRedirect(
-            reverse("edit_post", kwargs={"post_id": post_id, "slug": slug, "blog_name": blogpost.post.source_blog.name})
-        )
+        #return HttpResponseRedirect(
+        #    reverse("edit_post", kwargs={"post_id": post_id, "slug": slug, "blog_name": blogpost.post.source_blog.name})
+        #)
+        pass
 
     # second we check if user is contributor
     if request.user not in blogpost.blog.contributors.all():
@@ -240,7 +249,8 @@ def rate_comment(request, comment_id, rating_sign):
 
 
 @login_required
-def add_comment(request, post_id, slug, blog_name):
+def add_comment(request, post_id, slug):
+    blog_name = request.blog_name
     form = CommentCreateForm(request.POST or None,
                              post_id=post_id,
                              user=request.user,
@@ -256,7 +266,8 @@ def add_comment(request, post_id, slug, blog_name):
 
 
 @contrib_required
-def change_post(request, post_id, blog_name, **kwargs):
+def change_post(request, post_id, **kwargs):
+    blog_name = request.blog_name
     if request.method == "POST":
         blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
         action = request.POST.get("action")
@@ -281,7 +292,8 @@ def change_post(request, post_id, blog_name, **kwargs):
 
 
 @contrib_required
-def toggle_comment(request, post_id, slug, blog_name):
+def toggle_comment(request, post_id, slug):
+    blog_name = request.blog_name
     comment_id = request.GET.get("id")
     action = request.GET.get("action")
     comment = get_object_or_404(Comment, id=comment_id)

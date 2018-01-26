@@ -2,7 +2,6 @@
 {% for comment_and_form in comments_and_forms %}
     {% set comment = comment_and_form[0] %}
     {% set form = comment_and_form[1] %}
-    {% set maxshift = 2 %}
     {% set shift = comment.position|length - 1 %}
     {% if shift > maxshift %}{% set shift = maxshift %}{% endif %}
     {% set rshift = 12 - shift %}

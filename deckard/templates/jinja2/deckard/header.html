@@ -9,7 +9,7 @@
             {% if user and user.is_authenticated %}
                 Здравствуйте, {{ user.username }}&nbsp;|&nbsp;<a id="dkr-logout-link" href="#"
                                                                  data-go-to="{{ request.path }}"
-                                                                 data-link="/accounts/logout/">До свидания</a>
+                                                                 data-link="/accounts/logout/?next={{ request.path }}">До свидания</a>
             {% else %}
                 Не знаем, кто вы | <a id="dkr-login-link" class="dkr-ajax-link" data-html="true"
                                       data-toggle="popover"

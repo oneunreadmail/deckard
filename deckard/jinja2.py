@@ -1,6 +1,5 @@
 from django.contrib.staticfiles.storage import staticfiles_storage
-from django.urls import reverse
-from django.utils import translation
+from .basic import reverse
 from jinja2 import Environment
 from deckard.templatetags import filters
 
@@ -10,8 +9,7 @@ def reverse_upgrade(x, *args, **kwargs):
 
 
 def environment(**options):
-    env = Environment(extensions=['jinja2.ext.i18n'], **options)
-    env.install_gettext_translations(translation, newstyle=False)
+    env = Environment(**options)
     env.globals.update({
         'static': staticfiles_storage.url,
         'url': reverse_upgrade,
