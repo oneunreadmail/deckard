@@ -10,11 +10,7 @@ from django.core.files.base import ContentFile
 from django.dispatch import receiver
 from .custom.image_process import polygonize
 from slugify import slugify  # Default Django slugify filter won't work with Unicode special chars
-import random
-if VERSION[0] == 2:  # Starting from Django 2.0 reverse is located in django.urls
-    from django.urls import reverse
-else:
-    from django.core.urlresolvers import reverse
+from .basic import reverse
 
 
 class SystemInfo(models.Model):

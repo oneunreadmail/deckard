@@ -31,3 +31,19 @@ class UserIsContributorMiddleware:
             request.user.is_contributor = False
         else:
             request.user.is_contributor = True
+
+
+class HostToBlogNameMiddleware:
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        return response
+
+    def process_view(self, request, func, args, kwargs):
+        host = request.get_host()
+        parts = host.split(".")
+        request.blog_name = parts[0] if len(parts) > 2 else ""
+

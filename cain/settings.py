@@ -20,7 +20,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = False
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", ".mundep.com"]
+
+# For reversing urls
+SITE_DOMAIN = "mundep.com:8000"
+SITE_PREFIX = "http://"
 
 SITE_ID = 1
 
@@ -40,7 +44,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.vk',
-
 ]
 
 MIDDLEWARE = [
@@ -52,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'deckard.middleware.UserIsContributorMiddleware',
+    'deckard.middleware.HostToBlogNameMiddleware',
 ]
 
 ROOT_URLCONF = 'cain.urls'
@@ -146,6 +150,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = "/blog/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "/blog/"
+
+SESSION_COOKIE_DOMAIN = '.mundep.com'
 
 from .local_settings import *
 
