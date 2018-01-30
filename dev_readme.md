@@ -77,3 +77,16 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
                 'deckard.context_processors.custom_context',
             ]``` to settings.py -> TEMPLATES -> OPTIONS (only for jinja2)
  * add ```'deckard.middleware.UserIsContributorMiddleware',``` to settings.py -> MIDDLEWARE
+
+8. How to test subdomains locally:
+ * add to local_settings.py:
+    ```
+    ALLOWED_HOSTS = ["127.0.0.1", ".mundep.com"]
+    SESSION_COOKIE_DOMAIN = ".mundep.com"
+    ```
+ * add to hosts:
+    ```
+    127.0.0.1       mundep.com
+    127.0.0.1       blogname.mundep.com
+    ```
+    for each blogname
