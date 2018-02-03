@@ -17,4 +17,6 @@ def environment(**options):
     env.filters['youtube'] = filters.youtube
     env.filters['collapsed'] = filters.collapsed
     env.filters['expanded'] = filters.expanded
+    env.filters['markdown'] = filters.markdown
+    env.filters['addcss'] = filters.addcss
     return env

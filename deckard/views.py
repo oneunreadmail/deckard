@@ -38,7 +38,7 @@ def blog_list(request):
         "user_blog_names": request.user.blog_set.all().values_list("name", flat=True) if request.user.is_authenticated else [],
         "user": request.user,
     }
-    return render(request, 'deckard/blog_list.html', context)
+    return render(request, 'deckard/blog/list.html', context)
 
 
 def blog_add_contributor(request):
@@ -84,7 +84,7 @@ def blog_posts(request):
         "post_comments_count": post_comments_count,  # Total comment count for each post
         "blogs": blogs,  # For reposting
     }
-    return render(request, 'deckard/blog_posts.html', context)
+    return render(request, 'deckard/blog/posts.html', context)
 
 
 def get_post(request, post_id, **kwargs):
@@ -141,7 +141,7 @@ def get_post(request, post_id, **kwargs):
         "comments_and_forms": comments_and_forms,
         "maxshift": MAX_COMMENT_SHIFT,
     }
-    return render(request, 'deckard/post_detail.html', context)
+    return render(request, 'deckard/post/detail.html', context)
 
 
 def get_rating(rated_object, user):
@@ -165,8 +165,8 @@ def get_rating(rated_object, user):
 
 @contrib_required
 def add_new_post(request):
-    blog_name = request.blog_name
     """Create a new post in a blog."""
+    blog_name = request.blog_name
     form = PostCreateForm(request.POST or None,
                           blog_name=blog_name,
                           user=request.user)
@@ -181,12 +181,14 @@ def add_new_post(request):
         "form": form,
         "blog": get_object_or_404(Blog, name=blog_name),
         "user": request.user,
+        "action": "create",
     }
-    return render(request, 'deckard/create_update_post.html', context)
+    return render(request, 'deckard/post/form.html', context)
 
 
 @contrib_required
 def edit_post(request, post_id, slug):
+    """Edit an existing post."""
     blog_name = request.blog_name
     # first we redirect to source blog in case someone tries to edit repost
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
@@ -217,8 +219,9 @@ def edit_post(request, post_id, slug):
         "form": form,
         "blog": get_object_or_404(Blog, name=blog_name),
         "user": request.user,
+        "action": "update",
     }
-    return render(request, 'deckard/create_update_post.html', context)
+    return render(request, 'deckard/post/form.html', context)
 
 
 @login_required

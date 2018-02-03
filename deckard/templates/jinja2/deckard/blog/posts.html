@@ -2,7 +2,7 @@
 
 {% block cover %}
     <div class="container-fluid mb-3" style="padding: 0;">
-        {% include "deckard/blog_cover.html" %}
+        {% include "deckard/cover.html" %}
     </div>
 {% endblock %}
 
@@ -10,7 +10,7 @@
     {% for blogpost in blogposts %}
         {% if blogpost.published_date or user.is_contributor %}
             {% with post_type = "collapsed"%}
-                {% include "deckard/post.html" %}
+                {% include "deckard/post/post.html" %}
             {% endwith %}
             <br/>
         {% endif %}
@@ -50,5 +50,5 @@
         {% endif %}
     </ul>
 
-    {% include "deckard/repost_modal.html" %}
+    {% include "deckard/post/repost_modal.html" %}
 {% endblock %}

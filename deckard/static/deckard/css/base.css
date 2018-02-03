@@ -87,3 +87,18 @@ a.dkr-ajax-link {
     border-bottom: 1px dashed;
 }
 
+.dkr-margin-top {
+    margin-top: 20px;
+}
+
+.dkr-margin-bottom {
+    margin-bottom: 20px;
+}
+
+.dkr-padding-top {
+    padding-top: 10px;
+}
+
+.dkr-padding-bottom {
+    padding-bottom: 10px;
+}

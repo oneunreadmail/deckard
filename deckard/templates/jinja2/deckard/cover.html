@@ -1,0 +1,54 @@
+{% if blog and blog.cover_photo %}
+{% set cover_style = "background-image: url(\"" ~ blog.cover_photo.url ~ "\");" %}
+{% else %}
+{% set cover_style = "background-color: orange;" %}
+{% endif %}
+
+<div class="container-fluid dkr-margin-bottom dkr-padding-top dkr-padding-bottom" style="{{ cover_style }}">
+    <div class="row">
+        <div class="col">
+            <a href="{{ url('blog_list') }}">
+               <span class="fa-stack">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-home fa-stack-1x fa-inverse"></i>
+                </span>
+            </a>
+        </div>
+        <div class="col">
+            <span class="float-right">
+                {% if user and user.is_authenticated %}
+                    Здравствуйте, {{ user.username }}&nbsp;|&nbsp;<a id="dkr-logout-link" href="#"
+                                                                     data-go-to="{{ request.path }}"
+                                                                     data-link="/accounts/logout/?next={{ request.path }}">До свидания</a>
+                {% else %}
+                    Не знаем, кто вы | <a id="dkr-login-link" class="dkr-ajax-link" data-html="true"
+                                          data-toggle="popover"
+                                          data-placement="auto"
+                                          title="Выберите способ авторизации" data-trigger="focus"
+                                          data-content="<ul><li><a href='/accounts/vk/login?next={{ request.path }}'>VK</a></li><li>
+                                                    <a href='/accounts/facebook/login?next={{ request.path }}'>Facebook</a></li></ul>"
+                                          href="#">Представиться</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+    {% if blog %}
+    <div class="row">
+        <div class="col-2">
+            {% if blog.avatar %}
+            <a href="{{ url('blog_posts', blog_name=blog.name) }}">
+                <img class="dkr-avatar align-middle" src="{{ blog.avatar.url }}">
+            </a>
+            {% endif %}
+        </div>
+        <div class="col">
+            <h1 class="card-title text-sm"><a href="{{ url('blog_posts', blog_name=blog.name) }}">{{ blog.title }}</a>
+            </h1>
+            <h2 class="text-muted">{{ blog.subtitle }}</h2>
+            {% if user_is_contributor %}
+            <a href="{{ url('add_new_post', blog_name=blog.name) }}">Написать пост</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>

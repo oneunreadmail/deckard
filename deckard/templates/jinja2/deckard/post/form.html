@@ -1,0 +1,25 @@
+{% extends "deckard/base.html" %}
+
+{% block content %}
+<p class="lead">{% if action == "create" %}Написать{% else %}Изменить{% endif %} пост</p>
+<form method="POST" action="">
+    {{ form.non_field_errors() }}
+    <div class="form-group">
+        {{ form.post_title.errors }}
+        <label for="{{ form.post_title.id_for_label }}">Заголовок:</label>
+        {{ form.post_title | addcss("form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.post_text.errors }}
+        <label for="{{ form.post_text.id_for_label }}">Текст:</label>
+        {{ form.post_text }}
+    </div>
+    <div class="form-group">
+        {{ form.post_pinned.errors }}
+        <label for="{{ form.post_pinned.id_for_label }}">Прикрепить:</label>
+        {{ form.post_pinned }}
+    </div>
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    <input class="btn btn-primary" type="submit" value="Сохранить">
+</form>
+{% endblock %}
