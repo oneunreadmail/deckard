@@ -9,13 +9,14 @@
         <div class="col">
             <a href="{{ url('blog_list') }}">
                <span class="fa-stack">
-                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-square fa-stack-2x dkr-colored-icon"></i>
                     <i class="fa fa-home fa-stack-1x fa-inverse"></i>
                 </span>
             </a>
         </div>
         <div class="col">
-            <span class="float-right">
+            <div class="float-right" style="background-color: white;">
+            <span>
                 {% if user and user.is_authenticated %}
                     Здравствуйте, {{ user.username }}&nbsp;|&nbsp;<a id="dkr-logout-link" href="#"
                                                                      data-go-to="{{ request.path }}"
@@ -25,11 +26,22 @@
                                           data-toggle="popover"
                                           data-placement="auto"
                                           title="Выберите способ авторизации" data-trigger="focus"
-                                          data-content="<ul><li><a href='/accounts/vk/login?next={{ request.path }}'>VK</a></li><li>
-                                                    <a href='/accounts/facebook/login?next={{ request.path }}'>Facebook</a></li></ul>"
-                                          href="#">Представиться</a>
+                                          data-content="
+                                          <a class='dkr-icon-link' href='/accounts/vk/login?next={{ request.path }}'>
+                                          <span class='fa-stack'>
+                                             <i class='fa fa-square fa-stack-2x dkr-colored-icon'></i>
+                                             <i class='fa fa-vk fa-stack-1x fa-inverse'></i>
+                                          </span>
+                                          </a>
+                                          <a class='dkr-icon-link' href='/accounts/facebook/login?next={{ request.path }}'>
+                                          <span class='fa-stack'>
+                                             <i class='fa fa-square fa-stack-2x dkr-colored-icon'></i>
+                                             <i class='fa fa-facebook fa-stack-1x fa-inverse'></i>
+                                          </span>
+                                          </a>" href="#">Представиться</a>
                 {% endif %}
             </span>
+            </div>
         </div>
     </div>
     {% if blog %}
