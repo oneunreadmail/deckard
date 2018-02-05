@@ -1,6 +1,5 @@
 {% set blog = blog_and_names[0] %}
 {% set contributors = blog_and_names[1] %}
-
 {% set url_blog = url('blog_posts', blog_name=blog.name) %}
 {% set url_became_contrib = url('blog_add_contributor', blog_name=blog.name) %}
 {% set url_stop_contrib = url('blog_remove_contributor', blog_name=blog.name) %}

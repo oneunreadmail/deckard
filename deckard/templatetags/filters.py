@@ -6,7 +6,7 @@ import mistune
 register = template.Library()
 
 CUT_PATTERNS = [
-    r'{cut ([^\}]*)}',
+    r"{cut ([^\}]*)}",
 ]
 
 
@@ -16,12 +16,12 @@ def markdown(value):
     return md(value)
 
 
-@register.filter(name='times')
+@register.filter(name="times")
 def times(number):
     return range(int(number))
 
 
-@register.filter(name='youtube')
+@register.filter(name="youtube")
 def youtube(text):
     embed = """<br/><center>
     <iframe width="560" height="315" 
@@ -58,3 +58,10 @@ def expanded(text):
         if match:
             return text[:match.start()] + text[match.end():]
     return text
+
+
+@register.filter(name="addcss")
+def addcss(field, css):
+    class_old = field.field.widget.attrs.get("class", None)
+    class_new = class_old + ' ' + css if class_old else css
+    return field.as_widget(attrs={"class": class_new})

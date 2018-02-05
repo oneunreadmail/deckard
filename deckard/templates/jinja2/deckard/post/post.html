@@ -56,9 +56,9 @@
             {% endif %}
 
             {% if post_type == "expanded" %}
-                <p class="card-text">{{ blogpost.post.text | youtube | expanded | safe }}</p>
+                <p class="card-text">{{ blogpost.post.text | youtube | expanded | markdown | safe }}</p>
             {% elif post_type == "collapsed" %}
-                <p class="card-text">{{ blogpost.post.text | youtube | collapsed(url_post) | safe }}</p>
+                <p class="card-text">{{ blogpost.post.text | youtube | collapsed(url_post) | markdown | safe }}</p>
             {% else %}
                 error: post_type should be either collapsed or expanded
             {% endif %}
@@ -82,7 +82,7 @@
         </div>
         {% if user.is_contributor %}
             <div class="col-md-auto">
-                {% include "deckard/post_contributor_panel.html" %}
+                {% include "deckard/post/contributor_panel.html" %}
             </div>
         {% endif %}
     </div>
