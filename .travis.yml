@@ -3,6 +3,8 @@ services:
   - postgresql
 python:
   - 3.6
+env:
+  - DKRD_DB_HOST=127.0.0.1
 install:
   - pip install -r app/requirements.txt
 before_script:
