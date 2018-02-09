@@ -90,3 +90,5 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     127.0.0.1       blogname.mundep.com
     ```
     for each blogname
+
+9. To run in containers, simply use docker-compose up in root dir and route mundep.dev to 127.0.0.1 in your hosts file.

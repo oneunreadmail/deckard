@@ -17,14 +17,14 @@ from django.utils.translation import ugettext_lazy as _
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DEBUG = False
-TEMPLATE_DEBUG = False
-
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", ".mundep.com"]
+DEBUG = os.environ.get('DKRD_DEBUG', 'off') == 'on'
+TEMPLATE_DEBUG = DEBUG
+SECRET_KEY = os.environ.get('DKRD_SECRET_KEY', os.urandom(32))
+ALLOWED_HOSTS = ["." + host for host in os.environ.get('DKRD_ALLOWED_HOSTS', 'localhost').split(',')]
 
 # For reversing urls
-SITE_DOMAIN = "mundep.com:8000"
-SITE_PREFIX = "http://"
+SITE_DOMAIN = os.environ.get('DKRD_SITE_DOMAIN', "localhost")
+SITE_PREFIX = os.environ.get('DKRD_SITE_PREFIX', "http://")
 
 SITE_ID = 1
 
@@ -124,7 +124,7 @@ AUTHENTICATION_BACKENDS = (
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -151,9 +151,20 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = "/blog/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "/blog/"
 
-SESSION_COOKIE_DOMAIN = '.mundep.com'
+SESSION_COOKIE_DOMAIN = '.' + SITE_DOMAIN
 
-from .local_settings import *
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DKRD_DB_NAME', "postgres"),
+        'USER': os.environ.get('DKRD_DB_USER', "postgres"),
+        'PASSWORD': os.environ.get('DKRD_DB_PASSWORD', ""),
+        'HOST': os.environ.get('DKRD_DB_HOST', "db"),
+        'PORT': os.environ.get('DKRD_DB_PORT', "5432"),
+    }
+}
+
+#from .local_settings import *
 
 # local_settings.py:
 # SECRET_KEY = 'some_secret_sequence_of_symbols'
