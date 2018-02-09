@@ -6,7 +6,7 @@ python:
 install:
   - pip install -r app/requirements.txt
 before_script:
-  - python manage.py migrate
-  - python manage.py fill_db
+  - python app/manage.py migrate
+  - python app/manage.py fill_db
 script:
-  - python manage.py test
+  - python app/manage.py test
