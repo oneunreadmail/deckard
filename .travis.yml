@@ -1,20 +1,12 @@
 language: python
 services:
   - postgresql
-python:
-  - 3.6
-  - 3.5
 env:
   - DKRD_DB_HOST=127.0.0.1
-before_install:
-  - docker build -t angiriscouncil/cain .
 install:
-  - pip install -r app/requirements.txt
-before_script:
-  - python app/manage.py migrate
-  - python app/manage.py fill_db
+  - docker build -t angiriscouncil/cain:dev .
 script:
-  - python app/manage.py test
+  - docker run angiriscouncil/cain:dev /bin/sh -c "cd /home/docker/code/app; python manage.py migrate; "
 after_success:
   - if [ "$TRAVIS_BRANCH" != "master" ]; then
     docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
