@@ -138,20 +138,19 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
+#STATICFILES_DIRS = [
+#    os.path.join(BASE_DIR, "static"),
+#]
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn")
-# MEDIA_ROOT = os.path.join(BASE_DIR, "media_cdn")
+STATIC_ROOT = "/home/docker/static"
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/home/docker/media'
 
 LOGIN_REDIRECT_URL = "/blog/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "/blog/"
 
-SESSION_COOKIE_DOMAIN = '.' + SITE_DOMAIN
+SESSION_COOKIE_DOMAIN = '.' + SITE_DOMAIN.split(":", 1)[0]
 
 DATABASES = {
     'default': {
