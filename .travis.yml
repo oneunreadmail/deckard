@@ -6,7 +6,7 @@ env:
 install:
   - docker build -t angiriscouncil/cain:dev .
 script:
-  - docker run angiriscouncil/cain:dev /bin/sh -c "cd /home/docker/code/app; python3 manage.py migrate; python3 manage.py fill_db; python3 manage.py test"
+  - docker run -e DKRD_DB_HOST=127.0.0.1 angiriscouncil/cain:dev /bin/sh -c "cd /home/docker/code/app; python3 manage.py migrate; python3 manage.py fill_db; python3 manage.py test"
 after_success:
   - if [ "$TRAVIS_BRANCH" != "master" ]; then
     docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
