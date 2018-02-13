@@ -1,18 +1,6 @@
-language: python
-services:
-  - postgresql
-env:
-  - DKRD_DB_HOST=127.0.0.1
-install:
-  - docker build -t angiriscouncil/cain:dev .
 script:
-  - docker run -e DKRD_DB_HOST=127.0.0.1 angiriscouncil/cain:dev /bin/sh -c "cd /home/docker/code/app; python3 manage.py migrate; python3 manage.py fill_db; python3 manage.py test"
+  - docker-compose -f docker-compose.test.yml run web bash -c "deploy/wait-for-it.sh -h db -p 5432 -t 30 -- python3 app/manage.py test"
 after_success:
-  - if [ "$TRAVIS_BRANCH" != "master" ]; then
-    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-    docker push angiriscouncil/cain:dev;
-    fi
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-    docker push angiriscouncil/cain:master;
-    fi
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+  - if [ "$TRAVIS_BRANCH" != "master" ]; then docker build . -t angiriscouncil/cain:dev; docker push angiriscouncil/cain:dev; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then docker build . -t angiriscouncil/cain:master; docker push angiriscouncil/cain:master; fi

@@ -52,6 +52,6 @@ COPY . /home/docker/code/
 # install django, normally you would remove this step because your project would already
 # be installed in the code/app/ directory
 # RUN django-admin.py startproject website /home/docker/code/app/
-
+WORKDIR /home/docker/code/
 EXPOSE 80
 CMD ["supervisord", "-n"]

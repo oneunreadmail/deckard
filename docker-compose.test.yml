@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+  web:
+    environment:
+      - DKRD_DEBUG=on
+      - DKRD_ALLOWED_HOSTS=mundep.dev,localhost
+      - DKRD_SITE_DOMAIN=mundep.dev
+    build:
+      context: .
+    command: >
+      bash -c "deploy/wait-for-it.sh -h db -p 5432 -t 30 -- python3 app/manage.py test"
+    ports:
+      - "80:80"
+    depends_on:
+      - db
