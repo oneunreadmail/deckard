@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+  web:
+    environment:
+      - DKRD_DEBUG=on
+      - DKRD_ALLOWED_HOSTS=mundep.lc
+      - DKRD_SITE_DOMAIN=mundep.lc
+    build:
+      context: .
+    volumes:
+      - .:/home/docker/code
+    ports:
+      - "80:80"
+    depends_on:
+      - db

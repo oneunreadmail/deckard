@@ -13,10 +13,8 @@
 # limitations under the License.
 
 FROM ubuntu:16.04
-
-MAINTAINER Dockerfiles
-
-# Install required packages and remove the apt packages cache when done.
+MAINTAINER oneunreadmail
+ARG DKRD_COLLECTSTATIC=true
 
 RUN apt-get update && \
     apt-get upgrade -y && \     
@@ -49,9 +47,8 @@ RUN pip3 install -r /home/docker/code/app/requirements.txt
 # add (the rest of) our code
 COPY . /home/docker/code/
 
-# install django, normally you would remove this step because your project would already
-# be installed in the code/app/ directory
-# RUN django-admin.py startproject website /home/docker/code/app/
 WORKDIR /home/docker/code/
+RUN if [ "${DKRD_COLLECTSTATIC}" = "true" ]; then python3 app/manage.py collectstatic --noinput; fi
+
 EXPOSE 80
 CMD ["supervisord", "-n"]

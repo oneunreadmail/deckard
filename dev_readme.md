@@ -91,4 +91,10 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     ```
     for each blogname
 
-9. To run in containers, simply use docker-compose up in root dir and route mundep.dev to 127.0.0.1 in your hosts file.
+9. To run in containers, simply use `docker-compose -f docker-compose.MODE.yml up` in root dir — this launchs project in required mode.
+ * local — accepts mundep.lc, builds from ., DEBUG = True
+ * test — for CI tests in Travis
+ * dev — accepts mundep.dv, builds from repo with :dev tag, DEBUG = True
+ * prestable — accepts mundep.ps, builds from repo with :master tag, DEBUG = True
+ * stable — accepts mundep.com, builds from repo with :master tag, DEBUG = False
+If it's first run for db, before starting run `docker-compose -f docker-compose.MODE.yml run web bash -c 'python3 app/manage.py migrate; python3 app/manage.py fill_db; python3 app/manage.py collectstatic --noinput'`
