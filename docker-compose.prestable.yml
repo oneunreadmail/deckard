@@ -9,8 +9,6 @@ services:
       - DKRD_ALLOWED_HOSTS=mundep.ps
       - DKRD_SITE_DOMAIN=mundep.ps
     image: angiriscouncil/cain:master
-    volumes:
-      - .:/home/docker/code
     ports:
       - "80:80"
     depends_on:
