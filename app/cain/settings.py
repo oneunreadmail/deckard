@@ -11,20 +11,19 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-from django.core.exceptions import ImproperlyConfigured
-from django.utils.translation import ugettext_lazy as _
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DEBUG = os.environ.get('DKRD_DEBUG', 'off') == 'on'
+DEBUG = os.getenv('DKRD_DEBUG', 'off') == 'on'
 TEMPLATE_DEBUG = DEBUG
-SECRET_KEY = os.environ.get('DKRD_SECRET_KEY', os.urandom(32))
-ALLOWED_HOSTS = ["." + host for host in os.environ.get('DKRD_ALLOWED_HOSTS', 'localhost').split(',')]
+SECRET_KEY = os.getenv('DKRD_SECRET_KEY', os.urandom(32))
+ALLOWED_HOSTS = ["." + host for host in os.getenv('DKRD_ALLOWED_HOSTS', 'localhost').split(',')]
 
 # For reversing urls
-SITE_DOMAIN = os.environ.get('DKRD_SITE_DOMAIN', "localhost")
-SITE_PREFIX = os.environ.get('DKRD_SITE_PREFIX', "http://")
+SITE_DOMAIN = os.getenv('DKRD_SITE_DOMAIN', 'localhost:8000')
+SITE_PREFIX = os.getenv('DKRD_SITE_PREFIX', 'http://')
 
 SITE_ID = 1
 
@@ -62,13 +61,13 @@ ROOT_URLCONF = 'cain.urls'
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.jinja2.Jinja2",
-        "DIRS": [
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [
             os.path.join(BASE_DIR, 'deckard/templates/jinja2'),
         ],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "environment": "deckard.jinja2.environment",
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'environment': 'deckard.jinja2.environment',
             'context_processors': [
                 'deckard.context_processors.custom_context',
             ]
@@ -137,36 +136,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-
-#STATICFILES_DIRS = [
-#    os.path.join(BASE_DIR, "static"),
-#]
-
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_REDIRECT_URL = "/blog/"
-ACCOUNT_LOGOUT_REDIRECT_URL = "/blog/"
+LOGIN_REDIRECT_URL = '/blog/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/blog/'
 
 SESSION_COOKIE_DOMAIN = '.' + SITE_DOMAIN.split(":", 1)[0]
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DKRD_DB_NAME', "postgres"),
-        'USER': os.environ.get('DKRD_DB_USER', "postgres"),
-        'PASSWORD': os.environ.get('DKRD_DB_PASSWORD', ""),
-        'HOST': os.environ.get('DKRD_DB_HOST', "db"),
-        'PORT': os.environ.get('DKRD_DB_PORT', "5432"),
+        'NAME': os.getenv('DKRD_DB_NAME', 'postgres'),
+        'USER': os.getenv('DKRD_DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DKRD_DB_PASSWORD', ''),
+        'HOST': os.getenv('DKRD_DB_HOST', 'db'),
+        'PORT': os.getenv('DKRD_DB_PORT', '5432'),
     }
 }
-
-#from .local_settings import *
-
-# local_settings.py:
-# SECRET_KEY = 'some_secret_sequence_of_symbols'
-# DATABASES = {...}
-# ALLOWED_HOSTS = [...]
-# DEBUG = TRUE (or False)

@@ -17,30 +17,7 @@ After that run makemigrations and migrate commands.
 
 
 **Application**
-1. local_settings.py example for development:
-
-```
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django_db',
-        'USER': 'djangoadmin',
-        'PASSWORD': 'djangoadmin',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-}
-
-SECRET_KEY = 'some_secret_sequence_of_symbols'
-ALLOWED_HOSTS = ["127.0.0.1", ".mundep.com"]
-SESSION_COOKIE_DOMAIN = ".mundep.com"
-DEBUG = True
-
-STATICFILES_DIRS = [
-]
-```
-
-2. Social auth.
+1. Social auth.
  * follow django-allauth.readthedocs.io/en/latest/installation.html instruction
  * edit python3.6/site-packages/allauth/socialaccount/fields.py as described here: https://github.com/python-social-auth/social-app-django/pull/102/files
  * change domain name in /admin -> Sites to `localhost:8000` (`mundep.com:8000`)
@@ -48,7 +25,22 @@ STATICFILES_DIRS = [
  * only enter site as http://localhost:8000 (`mundep.com:8000`) (127.0.0.1 won't work with fb authenification)
  * VK has smth with profile links. Edit 8th line in python3.6/site-packages/allauth/socialaccount/providers/vk/provider.py: `return self.account.extra_data.get('link') or "https://vk.com/id{}".format(self.account.extra_data.get('uid'))`
 
-3. To run in containers, simply use `docker-compose -f docker-compose.MODE.yml up` in root dir — this launchs project in required mode.
+2. To run locally without using containers, specify the following environment variables:
+ * DKRD_DB_NAME
+ * DKRD_DB_USER
+ * DKRD_DB_PASSWORD
+ * DKRD_DB_HOST
+ * DKRD_DB_PORT
+
+ * DKRD_SITE_DOMAIN
+ * DKRD_SITE_PREFIX
+ * DKRD_ALLOWED_HOSTS
+ * DKRD_SECRET_KEY
+ * DKRD_DEBUG
+
+or check that defaults in app/cain/settings.py suffice.
+
+3. To run in containers, simply use `docker-compose -f docker-compose.MODE.yml up` in root dir — this launches project in required mode.
  * local — accepts mundep.lc, builds from ., DEBUG = True
  * test — for CI tests in Travis
  * dev — accepts mundep.dv, builds from repo with :dev tag, DEBUG = True
