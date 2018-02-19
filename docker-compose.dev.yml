@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+  web:
+    environment:
+      - DKRD_DEBUG=on
+      - DKRD_ALLOWED_HOSTS=mundep.dv
+      - DKRD_SITE_DOMAIN=mundep.dv
+    image: angiriscouncil/cain:dev
+    volumes:
+      - .:/home/docker/code
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+  watchtower:
+    image: v2tec/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json
+    command: --interval 30
