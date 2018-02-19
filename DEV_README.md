@@ -48,15 +48,7 @@ STATICFILES_DIRS = [
  * only enter site as http://localhost:8000 (`mundep.com:8000`) (127.0.0.1 won't work with fb authenification)
  * VK has smth with profile links. Edit 8th line in python3.6/site-packages/allauth/socialaccount/providers/vk/provider.py: `return self.account.extra_data.get('link') or "https://vk.com/id{}".format(self.account.extra_data.get('uid'))`
 
-3. How to test subdomains locally:
- * add to hosts:
-    ```
-    127.0.0.1       mundep.com
-    127.0.0.1       blogname.mundep.com
-    ```
-    for each blogname
-
-9. To run in containers, simply use `docker-compose -f docker-compose.MODE.yml up` in root dir — this launchs project in required mode.
+3. To run in containers, simply use `docker-compose -f docker-compose.MODE.yml up` in root dir — this launchs project in required mode.
  * local — accepts mundep.lc, builds from ., DEBUG = True
  * test — for CI tests in Travis
  * dev — accepts mundep.dv, builds from repo with :dev tag, DEBUG = True
