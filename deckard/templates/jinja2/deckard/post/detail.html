@@ -1,0 +1,12 @@
+{% extends "deckard/base.html" %}
+
+{% block content %}
+    {% with post_type = "expanded" %}
+        {% include "deckard/post/post.html" %}
+    {% endwith %}
+    {% include "deckard/comment/list.html" %}
+    {% with visible=True %}
+        {% include "deckard/comment/reply_form.html" %}
+    {% endwith %}
+    {% include "deckard/post/repost_modal.html" %}
+{% endblock %}

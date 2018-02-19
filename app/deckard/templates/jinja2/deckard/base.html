@@ -7,9 +7,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="{{ static('deckard/js/utils.js') }}"></script>
     <script src="{{ static('deckard/js/post.js') }}"></script>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
             integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
@@ -24,12 +27,7 @@
     <link rel="stylesheet" href="{{ static('deckard/css/base.css') }}"/>
 </head>
 <body>
-    <div class="container-fluid" style="padding: 0;">
-        {% include "deckard/header.html" %}
-    </div>
-    <div class="container-fluid mb-3" style="padding: 0;">
-        {% block cover %}{% endblock %}
-    </div>
+    {% include "deckard/cover.html" %}
     {% include "deckard/messages.html" %}
     <main role="main" class="container">
         <div>

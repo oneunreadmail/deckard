@@ -1,23 +1,12 @@
-from django.utils import timezone
 from django import forms
 from django.shortcuts import get_object_or_404
 from .models import Post, Comment
 
 
-class PostForm(forms.ModelForm):
-    class Meta:
-        model = Post
-        fields = [
-            "title",
-            "text",
-            "slug",
-        ]
-
-
 class PostCreateForm(forms.Form):
-    title = forms.CharField(label="Название", max_length=100)
-    text = forms.CharField(label="Текст", widget=forms.Textarea)
-    pinned = forms.BooleanField(label="Прикрепить", required=False)
+    post_title = forms.CharField(label="Название", max_length=100)
+    post_text = forms.CharField(label="Текст", widget=forms.Textarea, required=False)
+    post_pinned = forms.BooleanField(label="Прикрепить", required=False)
 
     def __init__(self, *args, **kwargs):
         self.blog_name = kwargs.pop("blog_name", None)
@@ -26,27 +15,27 @@ class PostCreateForm(forms.Form):
         if blogpost:  # Edit existing blogpost
             self.blogpost = blogpost
             initial = {
-                "title": blogpost.post.title,
-                "text": blogpost.post.text,
-                "pinned": blogpost.pinned,
+                "post_title": blogpost.post.title,
+                "post_text": blogpost.post.text,
+                "post_pinned": blogpost.pinned,
             }
             kwargs["initial"] = initial
         super(PostCreateForm, self).__init__(*args, **kwargs)
 
     def save(self):
         if not hasattr(self, "blogpost"):  # New post/blogpost
-            post = Post.create_new(title=self.cleaned_data["title"],
-                                   text=self.cleaned_data["text"],
+            post = Post.create_new(title=self.cleaned_data["post_title"],
+                                   text=self.cleaned_data["post_text"],
                                    author=self.user,
                                    source_blog_name=self.blog_name,
-                                   pinned=self.cleaned_data["pinned"])
+                                   pinned=self.cleaned_data["post_pinned"])
             return post
         else:
-            self.blogpost.post.title = self.cleaned_data["title"]
-            self.blogpost.post.text = self.cleaned_data["text"]
+            self.blogpost.post.title = self.cleaned_data["post_title"]
+            self.blogpost.post.text = self.cleaned_data["post_text"]
             self.blogpost.post.modified_by = self.user
             self.blogpost.post.save()
-            self.blogpost.pinned = self.cleaned_data["pinned"]
+            self.blogpost.pinned = self.cleaned_data["post_pinned"]
             self.blogpost.save()
             return self.blogpost.post
 

@@ -1,0 +1,12 @@
+{% extends "deckard/base.html" %}
+
+{% block content %}
+<div class="col-2">
+    <h1>Блоги</h1>
+</div>
+{% for blog_and_names in blogs_and_names_lists %}
+<div class="mb-3">
+    {% include "deckard/blog/blog.html" %}
+</div>
+{% endfor %}
+{% endblock %}

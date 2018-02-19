@@ -1,6 +1,9 @@
 $(document).ready(function(){
-    console.log("I'm ready!");
-    $('#dkr-login-link').popover();
+    console.log("I'm ready!");  // Debug info
+    if ($("#id_post_text").length) {
+        var simplemde = new SimpleMDE({element: $("id_post_text")[0]});  // Markdown support for text areas
+    }
+    $('#dkr-login-link').popover();  // Popover login window enabled
 });
 
 // https://docs.djangoproject.com/en/2.0/ref/csrf/
@@ -21,14 +24,14 @@ function getCookie(name) {
 }
 
 function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
+    // These HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 
 $.ajaxSetup({
     beforeSend: function(xhr, settings) {
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+            xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));  // Easier CSRF protection
         }
     }
 });
@@ -47,3 +50,6 @@ $(function(){
         });
     });
 });
+
+
+

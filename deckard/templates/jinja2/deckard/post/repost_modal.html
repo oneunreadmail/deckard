@@ -1,0 +1,30 @@
+<div class="modal fade" id="dkr-repost-modal" tabindex="-1" role="dialog" aria-labelledby="dkr-repost-modal-label"
+     aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="dkr-repost-modal-label">Распространить</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="dkr-ctrl-select-blogs">Выберите блоги:</label>
+                        <select multiple class="form-control" id="dkr-ctrl-select-blogs">
+                            {% for blog in blogs %}
+                            <option name="blog_name" value="{{ blog.name }}">{{ blog.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input id="csrf" type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="dkr-btn-repost" data-link="#"
+                        data-go-to="{{ url('blog_list') }}">Сделать репост
+                </button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
