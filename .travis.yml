@@ -1,5 +1,5 @@
 script:
-  - docker-compose -f docker-compose.test.yml run web bash -c "deploy/wait-for-it.sh -h db -p 5432 -t 30 -- && cd app && python manage.py test && cd .."
+  - docker-compose -f docker-compose.test.yml run web bash -c "deploy/wait-for-it.sh -h db -p 5432 -t 30 -- && cd app && python3 manage.py test && cd .."
 after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
   - if [ "$TRAVIS_BRANCH" == "dev" ]; then docker build . -t angiriscouncil/cain:dev; docker push angiriscouncil/cain:dev; fi
