@@ -1,5 +1,5 @@
 from django.test import TestCase
-from deckard.models import Post, Blog, BlogPost, Person, Rating
+from ..models import *
 from django.contrib import auth
 
 
@@ -46,3 +46,22 @@ class PostTestCase(TestCase):
         self.assertEqual(len(res2), 1)
         self.assertEqual(res1[0].points, 1)
         self.assertEqual(res2[0].points, -1)
+
+
+class CommentTestCase(TestCase):
+    def setUp(self):
+        post = Post.objects.create(title="Post", text="Text")
+        root_comment = Comment.objects.create(post=post)
+        Comment.objects.create(post=post, parent_comment=root_comment)
+
+    def test_first_comment_has_zero_position(self):
+        """First comment position is calculated as [0]."""
+        comments = Comment.objects.filter(post__title="Post", parent_comment__isnull=True)
+        self.assertEqual(len(comments), 1)
+        self.assertEqual(comments[0].position, [0])
+
+    def test_sub_comment_has_right_position(self):
+        """First child's to first comment position is calculated as [0, 0]."""
+        comments = Comment.objects.filter(post__title="Post", parent_comment__isnull=False)
+        self.assertEqual(len(comments), 1)
+        self.assertEqual(comments[0].position, [0, 0])
