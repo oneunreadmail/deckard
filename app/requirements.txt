@@ -19,3 +19,4 @@ requests-oauthlib==0.8.0
 urllib3==1.22
 python-slugify==1.2.4
 Unidecode==0.4.21
+django-cors-headers==2.1.0

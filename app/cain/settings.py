@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import re
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -23,6 +24,7 @@ ALLOWED_HOSTS = ["." + host for host in os.getenv('DKRD_ALLOWED_HOSTS', 'localho
 
 # For reversing urls
 SITE_DOMAIN = os.getenv('DKRD_SITE_DOMAIN', 'localhost:8000')
+SITE_DOMAIN_NO_PORT = SITE_DOMAIN.split(":", 1)[0]
 SITE_PREFIX = os.getenv('DKRD_SITE_PREFIX', 'http://')
 
 SITE_ID = 1
@@ -43,9 +45,11 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.vk',
+    'corsheaders',  # For cross-origin AJAX requests
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # For cross-origin AJAX requests
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -144,7 +148,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = '/blog/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/blog/'
 
-SESSION_COOKIE_DOMAIN = '.' + SITE_DOMAIN.split(":", 1)[0]
+SESSION_COOKIE_DOMAIN = '.' + SITE_DOMAIN_NO_PORT
+CSRF_COOKIE_DOMAIN = '.' + SITE_DOMAIN_NO_PORT  # Enables sharing csrf-tokens with subdomains
 
 DATABASES = {
     'default': {
@@ -156,3 +161,6 @@ DATABASES = {
         'PORT': os.getenv('DKRD_DB_PORT', '5432'),
     }
 }
+
+CORS_ORIGIN_REGEX_WHITELIST = (r'^(.*' + re.escape(SITE_DOMAIN) + ')$', )  # For cross-origin sub-domain AJAX requests
+CORS_ALLOW_CREDENTIALS = True  # For cross-domain cookies
