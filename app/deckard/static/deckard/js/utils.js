@@ -29,10 +29,15 @@ function csrfSafeMethod(method) {
 }
 
 $.ajaxSetup({
+    // Warning: there is no check for destination URL domain. Cookies and csrftoken header might possibly be sent to another domain.
+    xhrFields: {
+        withCredentials: true  // Allows sending cookies
+    },
     beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));  // Easier CSRF protection
+        if (!csrfSafeMethod(settings.type)) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));  // Easier CSRF protection, requires no template tag
         }
+
     }
 });
 
