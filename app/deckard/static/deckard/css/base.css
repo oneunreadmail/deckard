@@ -10,7 +10,6 @@
     display: inline-block;
     margin: 0px 5px;
     vertical-align: middle;
-    //border: 1px solid black;
 }
 
 .dkr-post-footer-link, .dkr-comment-footer-text {
@@ -101,4 +100,16 @@ a.dkr-ajax-link {
 
 .dkr-padding-bottom {
     padding-bottom: 10px;
+}
+
+a.dkr-icon-link {
+    text-decoration: none;
+}
+
+a .dkr-colored-icon {
+    color: DarkSlateGray;
+}
+
+a:hover .dkr-colored-icon {
+    color: Black;
 }
