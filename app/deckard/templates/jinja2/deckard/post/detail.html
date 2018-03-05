@@ -4,6 +4,7 @@
     {% with post_type = "expanded" %}
         {% include "deckard/post/post.html" %}
     {% endwith %}
+    <hr>
     {% include "deckard/comment/list.html" %}
     {% with visible=True %}
         {% include "deckard/comment/reply_form.html" %}

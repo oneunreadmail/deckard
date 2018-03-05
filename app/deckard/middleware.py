@@ -25,7 +25,8 @@ class UserIsContributorMiddleware:
 
     def process_view(self, request, func, args, kwargs):
         user = request.user
-        if ("post_id" in kwargs and not self.user_is_contrib_to_post(user, kwargs["post_id"])) or \
+        if user.is_anonymous or \
+           ("post_id" in kwargs and not self.user_is_contrib_to_post(user, kwargs["post_id"])) or \
            ("comment_id" in kwargs and not self.user_is_contrib_to_comment(user, kwargs["comment_id"])) or \
            ("blog_name" in kwargs and not self.user_is_contrib_to_blog(user, kwargs["blog_name"])):
             request.user.is_contributor = False

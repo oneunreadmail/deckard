@@ -1,7 +1,7 @@
 {% if blog and blog.cover_photo %}
 {% set cover_style = "background-image: url(\"" ~ blog.cover_photo.url ~ "\");" %}
 {% else %}
-{% set cover_style = "background-color: orange;" %}
+{% set cover_style = "background-color: LightGrey;" %}
 {% endif %}
 
 <div class="container-fluid dkr-margin-bottom dkr-padding-top dkr-padding-bottom" style="{{ cover_style }}">
@@ -15,7 +15,7 @@
             </a>
         </div>
         <div class="col">
-            <div class="float-right" style="background-color: white;">
+            <div class="float-right" style="background-color: LemonChiffon;">
             <span>
                 {% if user and user.is_authenticated %}
                     Здравствуйте, {{ user.username }}&nbsp;|&nbsp;<a id="dkr-logout-link" href="#"
@@ -45,21 +45,20 @@
         </div>
     </div>
     {% if blog %}
-    <div class="row">
-        <div class="col-2">
-            {% if blog.avatar %}
-            <a href="{{ url('blog_posts', blog_name=blog.name) }}">
-                <img class="dkr-avatar align-middle" src="{{ blog.avatar.url }}">
-            </a>
-            {% endif %}
-        </div>
-        <div class="col">
-            <h1 class="card-title text-sm"><a href="{{ url('blog_posts', blog_name=blog.name) }}">{{ blog.title }}</a>
-            </h1>
-            <h2 class="text-muted">{{ blog.subtitle }}</h2>
-            {% if user_is_contributor %}
-            <a href="{{ url('add_new_post', blog_name=blog.name) }}">Написать пост</a>
-            {% endif %}
+    {% set url_blog = url('blog_posts', blog_name=blog.name) %}
+    <div class="container">
+        <div class="row">
+            <div class="col-auto">
+                {% if blog.avatar %}
+                <img class="dkr-avatar" src="{{ blog.avatar.url }}">
+                {% endif %}
+            </div>
+            <div class="col-10">
+                <h4 class="card-title"><a href="{{ url_blog }}">{{ blog.title }}</a></h4>
+                {% if  blog.subtitle %}
+                    <h6 class="card-subtitle text-muted">{{ blog.subtitle }}</h6>
+                {% endif %}
+            </div>
         </div>
     </div>
     {% endif %}

@@ -6,8 +6,7 @@
     {% if shift > maxshift %}{% set shift = maxshift %}{% endif %}
     {% set rshift = 12 - shift %}
     <div class="row dkr-comment-block">
-        <div class="col-{{ shift }}"></div>
-        <div class="col-{{ rshift }}">
+        <div class="col comment-indent-{{ shift }}">
             {% include "deckard/comment/comment.html" %}
             {% include "deckard/comment/reply_form.html" %}
         </div>

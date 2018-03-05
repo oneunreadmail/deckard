@@ -7,6 +7,10 @@
 {% endblock %}
 
 {% block content %}
+    {% if user_is_contributor %}
+        <a href="{{ url('add_new_post', blog_name=blog.name) }}"
+           class="btn dkr-contributor-button" role="button">Написать пост</a>
+    {% endif %}
     {% for blogpost in blogposts %}
         {% if blogpost.published_date or user.is_contributor %}
             {% with post_type = "collapsed"%}

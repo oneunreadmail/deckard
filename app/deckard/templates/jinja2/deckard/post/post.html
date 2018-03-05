@@ -12,7 +12,7 @@
     {% endif %}
 {% endif %}
 
-<div class="card {% if blogpost.pinned %}border border-primary{% endif %}">
+<div class="card {% if blogpost.pinned %}dkr-post-card-pinned{% else %}border-0{% endif %}">
     <div class="card-body dkr-post row" data-post-id="{{ blogpost.post.id }}">
         <div class="col-md-auto">
             <div class="dkr-vertical-rating">
@@ -48,12 +48,15 @@
                 {% else %}
                     <a href="{{ url_post }}">{{ blogpost.post.title }}</a>
                 {% endif %}
+                {% if blogpost.pinned %}<span class="fa fa-star-o dkr-pinned-icon"></span>{% endif %}
             </h4>
-            {% if blogpost.published_date %}
-                <h6>{{ blogpost.published_date.strftime('%d.%m.%Y, %H:%M') }}</h6>
-            {% else %}
-                <h6>DRAFT</h6>
-            {% endif %}
+            <h6 class="card-subtitle">
+                {% if blogpost.published_date %}
+                    <p class="text-muted"> {{ blogpost.published_date.strftime('%d.%m.%Y, %H:%M') }}</p>
+                {% else %}
+                    <p>DRAFT</p>
+                {% endif %}
+            </h6>
 
             {% if post_type == "expanded" %}
                 <p class="card-text">{{ blogpost.post.text | youtube | expanded | markdown | safe }}</p>
@@ -68,23 +71,20 @@
                     Кросспост из блога <a href="{{ url('blog_posts', blog_name=blogpost.post.source_blog.name) }}">{{ blogpost.post.source_blog.title }}</a>
                 </i></p>
             {% endif %}
-            {% if post_type == "expanded" %}
-                <div class="row">
-                    <div class="col align-self-center">
-                        {% include "deckard/sharing/panel.html" %}
-                    </div>
-                </div>
-            {% else %}
+            {% if post_type != "expanded" %}
                 <div class="dkr-post-footer-link">
                     <a href="{{ url_post }}">{{ comments_count }} {{ comments_noun }}</a>
                 </div>
             {% endif %}
         </div>
-        {% if user.is_contributor %}
-            <div class="col-md-auto">
+        <div class="col-md-auto">
+            {% if user.is_contributor %}
                 {% include "deckard/post/contributor_panel.html" %}
-            </div>
-        {% endif %}
+            {% endif %}
+            {% if post_type == "expanded" %}
+                {% include "deckard/sharing/panel.html" %}
+            {% endif %}
+        </div>
     </div>
 </div>
 
