@@ -59,9 +59,8 @@ def blog_remove_contributor(request):
 
 
 def blog_posts(request):
-    blog_name = request.blog_name
     """List of all posts in the current blog."""
-    print(request.user.is_contributor)
+    blog_name = request.blog_name
     blog = get_object_or_404(Blog, name=blog_name)
     blogposts_all = BlogPost.objects.filter(blog=blog, deleted=False).order_by("-pinned", "-published_date")
     paginator = Paginator(blogposts_all, POSTS_PER_PAGE)
@@ -76,7 +75,6 @@ def blog_posts(request):
         post_comments_count[blogpost.post.id] = blogpost.post.posts_comments.count()
 
     context = {
-        "user_is_contributor": bool(blog.contributors.filter(id=request.user.id)),
         "user": request.user,
         "blog": blog,
         "blogposts": blogposts,
@@ -88,8 +86,8 @@ def blog_posts(request):
 
 
 def get_post(request, post_id, **kwargs):
-    blog_name = request.blog_name
     """Get a post and all its comments."""
+    blog_name = request.blog_name
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
 
     post_canonical_url = blogpost.post.get_abs_url()
@@ -130,7 +128,6 @@ def get_post(request, post_id, **kwargs):
                              )
 
     context = {
-        "user_is_contributor": bool(blogpost.blog.contributors.filter(id=request.user.id)),
         "user": request.user,
         "blog": blogpost.blog,
         "blogpost": blogpost,

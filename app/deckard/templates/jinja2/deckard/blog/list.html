@@ -3,6 +3,8 @@
 {% block content %}
 <h1>Блоги</h1>
 {% for blog_and_names in blogs_and_names_lists %}
-    {% include "deckard/blog/blog.html" %}
+    {% with blog_list_page = True %}
+        {% include "deckard/blog/blog.html" %}
+    {% endwith %}
 {% endfor %}
 {% endblock %}

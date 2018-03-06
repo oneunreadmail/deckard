@@ -1,31 +1,41 @@
+{% if blog_list_page %}
 {% set blog = blog_and_names[0] %}
 {% set contributors = blog_and_names[1] %}
+{% endif %}
 {% set url_blog = url('blog_posts', blog_name=blog.name) %}
 
+{% if blog_list_page %}
 <div class="card border-0">
     <div class="card-body">
         <div class="row">
+        {% endif %}
             <div class="col-auto">
                 {% if blog.avatar %}
                 <img class="dkr-avatar" src="{{ blog.avatar.url }}">
-                {% endif %}
-            </div>
-            <div class="col-10">
-                <h4 class="card-title"><a href="{{ url_blog }}">{{ blog.title }}</a></h4>
-                {% if  blog.subtitle %}
-                    <h6 class="card-subtitle text-muted">{{ blog.subtitle }}</h6>
-                {% endif %}
-
-                {% if contributors %}
-                Блог ведут: {{ contributors | join(', ') }}.<br/>
                 {% else %}
-                У блога пока нет авторов.
-                {% endif %}
-
-                {% if blog.name in user_blog_names %}
-                    <h6 class="card-text dkr-contributor-panel">Вы — автор</h6>
+                <img class="dkr-avatar" src="{{ static('deckard/images/default_avatar.jpg') }}">
                 {% endif %}
             </div>
+            <div class="col-auto">
+                <h4 class="card-title"><a href="{{ url_blog }}">{{ blog.title }}</a></h4>
+                {% if blog.subtitle %}
+                <h6 class="card-subtitle text-muted">{{ blog.subtitle }}</h6>
+                {% endif %}
+
+                {% if blog_list_page %}
+                    {% if contributors %}
+                        Блог ведут: {{ contributors | join(', ') }}.<br/>
+                    {% else %}
+                        У блога пока нет авторов.
+                    {% endif %}
+
+                    {% if blog.name in user_blog_names %}
+                        <h6 class="card-text dkr-contributor-panel">Вы — автор</h6>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% if blog_list_page %}
         </div>
     </div>
 </div>
+{% endif %}

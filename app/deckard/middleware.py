@@ -25,10 +25,15 @@ class UserIsContributorMiddleware:
 
     def process_view(self, request, func, args, kwargs):
         user = request.user
+        if hasattr(request, "blog_name"):  # Blogs
+            blog_name = request.blog_name
+        else:
+            blog_name = False
+        # print(blog_name)
         if user.is_anonymous or \
            ("post_id" in kwargs and not self.user_is_contrib_to_post(user, kwargs["post_id"])) or \
            ("comment_id" in kwargs and not self.user_is_contrib_to_comment(user, kwargs["comment_id"])) or \
-           ("blog_name" in kwargs and not self.user_is_contrib_to_blog(user, kwargs["blog_name"])):
+           (blog_name and not self.user_is_contrib_to_blog(user, blog_name)):
             request.user.is_contributor = False
         else:
             request.user.is_contributor = True

@@ -87,8 +87,8 @@ h6 { font-size: 1em;}
 
 /* Posts and comments --> */
 .dkr-btn-reply {
-    background-color: SKYBLUE;
-    margin: 10px 0px;
+    background-color: SkyBlue;
+    margin: 5px 0px;
     color: White;
 }
 
@@ -106,6 +106,9 @@ h6 { font-size: 1em;}
     margin-right: 15px;
     vertical-align: middle;
     display: inline-block;
+}
+
+.dkr-vertical-rating {
 }
 
 .dkr-vertical-rating-element {

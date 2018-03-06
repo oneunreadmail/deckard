@@ -1,12 +1,12 @@
 {% if blog and blog.cover_photo %}
 {% set cover_style = "background-image: url(\"" ~ blog.cover_photo.url ~ "\");" %}
 {% else %}
-{% set cover_style = "background-color: LightGrey;" %}
+{% set cover_style = "background-image: url(\"" ~ static('deckard/images/default_cover.jpg') ~ "\");" %}
 {% endif %}
 
 <div class="container-fluid dkr-margin-bottom dkr-padding-top dkr-padding-bottom" style="{{ cover_style }}">
     <div class="row">
-        <div class="col">
+        <div class="col-2">
             <a href="{{ url('blog_list') }}">
                <span class="fa-stack">
                     <i class="fa fa-square fa-stack-2x dkr-colored-icon"></i>
@@ -14,52 +14,21 @@
                 </span>
             </a>
         </div>
-        <div class="col">
+        {% if blog %}
+            {% include "deckard/blog/blog.html" %}
+        {% endif %}
+        <div class="col-auto">
             <div class="float-right" style="background-color: LemonChiffon;">
             <span>
                 {% if user and user.is_authenticated %}
-                    Здравствуйте, {{ user.username }}&nbsp;|&nbsp;<a id="dkr-logout-link" href="#"
-                                                                     data-go-to="{{ request.path }}"
-                                                                     data-link="/accounts/logout/?next={{ request.path }}">До свидания</a>
+                    {% include "deckard/logout_link.html" %}
                 {% else %}
-                    Не знаем, кто вы | <a id="dkr-login-link" class="dkr-ajax-link" data-html="true"
-                                          data-toggle="popover"
-                                          data-placement="auto"
-                                          title="Выберите способ авторизации" data-trigger="focus"
-                                          data-content="
-                                          <a class='dkr-icon-link' href='/accounts/vk/login?next={{ request.path }}'>
-                                          <span class='fa-stack'>
-                                             <i class='fa fa-square fa-stack-2x dkr-colored-icon'></i>
-                                             <i class='fa fa-vk fa-stack-1x fa-inverse'></i>
-                                          </span>
-                                          </a>
-                                          <a class='dkr-icon-link' href='/accounts/facebook/login?next={{ request.path }}'>
-                                          <span class='fa-stack'>
-                                             <i class='fa fa-square fa-stack-2x dkr-colored-icon'></i>
-                                             <i class='fa fa-facebook fa-stack-1x fa-inverse'></i>
-                                          </span>
-                                          </a>" href="#">Представиться</a>
+                    {% with not_logged_warning="Не знаем, кто вы. ", verb="Представиться" %}
+                        {% include "deckard/login_link.html" %}
+                    {% endwith %}
                 {% endif %}
             </span>
             </div>
         </div>
     </div>
-    {% if blog %}
-    {% set url_blog = url('blog_posts', blog_name=blog.name) %}
-    <div class="container">
-        <div class="row">
-            <div class="col-auto">
-                {% if blog.avatar %}
-                <img class="dkr-avatar" src="{{ blog.avatar.url }}">
-                {% endif %}
-            </div>
-            <div class="col-10">
-                <h4 class="card-title"><a href="{{ url_blog }}">{{ blog.title }}</a></h4>
-                {% if  blog.subtitle %}
-                    <h6 class="card-subtitle text-muted">{{ blog.subtitle }}</h6>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    {% endif %}
 </div>

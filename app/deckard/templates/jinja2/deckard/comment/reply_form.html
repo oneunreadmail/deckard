@@ -1,7 +1,9 @@
-<form class="dkr-reply-from" {% if visible %}{% else %}style="display: none;"{% endif %} method="POST"
+<form class="dkr-reply-form"
+      {% if visible %}{% else %}style="display: none;"{% endif %}
+      method="POST"
       action="{{ url('add_comment', blog_name=blog.name, post_id=blogpost.post.id, slug=blogpost.post.slug) }}">
     {{ form.text }}
     {{ form.parent_comment_id }}
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-    <input type="submit" value="Написать" class="btn dkr-btn-reply">
+    <input type="submit" value="Отправить" class="btn dkr-btn-reply">
 </form>

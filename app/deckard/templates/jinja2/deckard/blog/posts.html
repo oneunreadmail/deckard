@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-    {% if user_is_contributor %}
+    {% if user.is_contributor %}
         <a href="{{ url('add_new_post', blog_name=blog.name) }}"
            class="btn dkr-contributor-button" role="button">Написать пост</a>
     {% endif %}

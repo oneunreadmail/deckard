@@ -5,12 +5,14 @@
     {% set shift = comment.position|length - 1 %}
     {% if shift > maxshift %}{% set shift = maxshift %}{% endif %}
     {% set rshift = 12 - shift %}
-    <div class="row dkr-comment-block">
-        <div class="col comment-indent-{{ shift }}">
-            {% include "deckard/comment/comment.html" %}
-            {% include "deckard/comment/reply_form.html" %}
+    {% if comment.status == "AP" or comment.status == "HD" or user.is_contributor or comment.author == user %}
+        <div class="row dkr-comment-block">
+            <div class="col comment-indent-{{ shift }}">
+                {% include "deckard/comment/comment.html" %}
+                {% include "deckard/comment/reply_form.html" %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endfor %}
 </div>
 
