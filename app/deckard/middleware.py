@@ -25,15 +25,11 @@ class UserIsContributorMiddleware:
 
     def process_view(self, request, func, args, kwargs):
         user = request.user
-        if hasattr(request, "blog_name"):  # Blogs
-            blog_name = request.blog_name
-        else:
-            blog_name = False
-        # print(blog_name)
+        blog_name = request.blog_name or ""
         if user.is_anonymous or \
            ("post_id" in kwargs and not self.user_is_contrib_to_post(user, kwargs["post_id"])) or \
            ("comment_id" in kwargs and not self.user_is_contrib_to_comment(user, kwargs["comment_id"])) or \
-           (blog_name and not self.user_is_contrib_to_blog(user, blog_name)):
+           (blog_name != "" and not self.user_is_contrib_to_blog(user, request.blog_name)):
             request.user.is_contributor = False
         else:
             request.user.is_contributor = True
@@ -52,4 +48,3 @@ class HostToBlogNameMiddleware:
         host = request.get_host()
         parts = host.split(".")
         request.blog_name = parts[0] if len(parts) > 2 else ""
-
