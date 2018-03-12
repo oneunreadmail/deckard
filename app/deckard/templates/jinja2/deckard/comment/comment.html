@@ -2,7 +2,7 @@
 {% set url_approve = url_toggle + "&action=approve" %}
 {% set url_reject = url_toggle + "&action=reject" %}
 {% set url_hide = url_toggle + "&action=hide" %}
-{% set hidden_text = "<i>Комментарий скрыт</i>" | safe %}
+{% set hidden_text = "(Комментарий скрыт)" | safe %}
 {% set is_social = comment.author.socialaccount_set.first() %}
 {% if is_social %}
 {% set url_social_profile = comment.author.socialaccount_set.first().get_profile_url() %}
@@ -11,10 +11,15 @@
 {% set author = comment.author | string %}
 {% endif %}
 
-{% set draft_style = "background-image: url(\"" ~ static('deckard/images/draft.png') ~ "\");" %}
-<div class="card border-top-0 border-bottom-0 border-right-0 rounded-0" id="c{{ comment.id }}">
-    <div class="card-body row" {% if comment.status !="PN" %}{% else %}style="{{ draft_style }}"{% endif %}>
-        <div class="col-auto">
+{% if comment.status == "PN" %}
+    {% set comment_style = "background-image: url(\"" ~ static('deckard/images/draft.png') ~ "\");" %}
+{% elif comment.status == "RJ" %}
+    {% set comment_style = "background-image: url(\"" ~ static('deckard/images/rejected.png') ~ "\");" %}
+{% endif %}
+
+<div class="card border-0" id="c{{ comment.id }}">
+    <div class="card-body row dkr-comment-body" {% if comment_style %}style="{{ comment_style }}"{% endif %}>
+        <div class="col-auto dkr-col-rating">
             <div class="dkr-vertical-rating dkr-comment-footer-icon">
                 {% if not user.is_authenticated %}
                 {% set plus_class = 'dkr-disabled' %}
@@ -41,13 +46,20 @@
                 </div>
             </div>
         </div>
-        <div class="col-9">
+        <div class="col-9 dkr-comment-body-text">
+            {% if user.is_contributor and comment.status == "HD" %}
+            <div class="row">
+                <p class="card-text text-muted">
+                    {{ comment.text }}
+                </p>
+            </div>
+            {% endif %}
             <div class="row">
                 <p class="card-text">
                     {% if comment.status == "HD" %}
-                    {{ hidden_text }}
+                        <i>{{ hidden_text }}</i>
                     {% else %}
-                    {{ comment.text }}
+                        {{ comment.text }}
                     {% endif %}
                 </p>
             </div>

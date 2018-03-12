@@ -15,7 +15,7 @@
 {% set draft_style = "background-image: url(\"" ~ static('deckard/images/draft.png') ~ "\");" %}
 <div class="card {% if blogpost.pinned %}dkr-post-card-pinned{% else %}border-0{% endif %}"
     {% if blogpost.published_date %}{% else %}style="{{ draft_style }}"{% endif %}>
-    <div class="card-body dkr-post row" data-post-id="{{ blogpost.post.id }}">
+    <div class="card-body dkr-post {% if post_type == 'expanded' %}dkr-post-bottom-border{% endif %} row" data-post-id="{{ blogpost.post.id }}">
         <div class="col-md-auto">
             <div class="dkr-vertical-rating">
                 {% if user.is_anonymous %}
