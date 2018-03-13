@@ -6,8 +6,8 @@ services:
   web:
     environment:
       - DKRD_DEBUG=on
-      - DKRD_ALLOWED_HOSTS=mundep.dv
-      - DKRD_SITE_DOMAIN=mundep.dv
+      - DKRD_ALLOWED_HOSTS=mundep.win
+      - DKRD_SITE_DOMAIN=mundep.win
     image: angiriscouncil/cain:dev
     volumes:
       - .:/home/docker/code
