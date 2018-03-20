@@ -4,38 +4,30 @@
 {% endif %}
 {% set url_blog = url('blog_posts', blog_name=blog.name) %}
 
-{% if blog_list_page %}
-<div class="card border-0">
-    <div class="card-body">
-        <div class="row">
+<div class="d-inline-flex flex-row">
+    <div class="p-2">
+        {% if blog.avatar %}
+            <img class="dkr-avatar" src="{{ blog.avatar.url }}">
+        {% else %}
+            <img class="dkr-avatar" src="{{ static('deckard/images/default_avatar.jpg') }}">
         {% endif %}
-            <div class="col-auto">
-                {% if blog.avatar %}
-                <img class="dkr-avatar" src="{{ blog.avatar.url }}">
-                {% else %}
-                <img class="dkr-avatar" src="{{ static('deckard/images/default_avatar.jpg') }}">
-                {% endif %}
-            </div>
-            <div class="col-8">
-                <h4 class="card-title"><a href="{{ url_blog }}">{{ blog.title }}</a></h4>
-                {% if blog.subtitle %}
-                <h6 class="card-subtitle text-muted">{{ blog.subtitle }}</h6>
-                {% endif %}
+    </div>
+    <div class="pb-3 pl-2 align-self-center">
+        <h4 class="card-title"><a href="{{ url_blog }}">{{ blog.title }}</a></h4>
+        {% if blog.subtitle %}
+        <h6 class="card-subtitle text-muted">{{ blog.subtitle }}</h6>
+        {% endif %}
 
-                {% if blog_list_page %}
-                    {% if contributors %}
-                        Блог ведут: {{ contributors | join(', ') }}.<br/>
-                    {% else %}
-                        У блога пока нет авторов.
-                    {% endif %}
-
-                    {% if blog.name in user_blog_names %}
-                        <h6 class="card-text dkr-contributor-panel">Вы — автор</h6>
-                    {% endif %}
-                {% endif %}
-            </div>
         {% if blog_list_page %}
-        </div>
+            {% if contributors %}
+                Блог ведут: {{ contributors | join(', ') }}.<br/>
+            {% else %}
+                У блога пока нет авторов.
+            {% endif %}
+
+            {% if blog.name in user_blog_names %}
+                <h6 class="dkr-contributor-panel">Вы — автор</h6>
+            {% endif %}
+        {% endif %}
     </div>
 </div>
-{% endif %}
