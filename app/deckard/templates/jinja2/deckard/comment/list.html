@@ -1,4 +1,3 @@
-<div class="container">
 {% for comment_and_form in comments_and_forms %}
     {% set comment = comment_and_form[0] %}
     {% set form = comment_and_form[1] %}
@@ -6,14 +5,13 @@
     {% if shift > maxshift %}{% set shift = maxshift %}{% endif %}
     {% set rshift = 12 - shift %}
     {% if comment.status == "AP" or comment.status == "HD" or user.is_contributor or comment.author == user %}
-        <div class="row dkr-comment-block">
-            <div class="col comment-indent-{{ shift }}">
+        <div class="d-flex flex-column dkr-comment-block">
+            <div class="comment-indent-{{ shift }}">
                 {% include "deckard/comment/comment.html" %}
                 {% include "deckard/comment/reply_form.html" %}
             </div>
         </div>
     {% endif %}
 {% endfor %}
-</div>
 
 

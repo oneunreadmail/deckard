@@ -1,34 +1,25 @@
 {% if blog and blog.cover_photo %}
 {% set cover_style = "background-image: url(\"" ~ blog.cover_photo.url ~ "\");" %}
 {% else %}
-{% set cover_style = "background-image: url(\"" ~ static('deckard/images/default_cover.jpg') ~ "\");" %}
+{% set cover_style = "background-image: url(\"" ~ static('deckard/images/default_cover.png') ~ "\");" %}
 {% endif %}
 
-<div class="container-fluid dkr-margin-bottom dkr-padding-top dkr-padding-bottom" style="{{ cover_style }}">
-    <div class="row">
-        <div class="col-2">
-            <a href="{{ url('blog_list') }}">
-               <span class="fa-stack">
-                    <i class="fa fa-square fa-stack-2x dkr-colored-icon"></i>
-                    <i class="fa fa-home fa-stack-1x fa-inverse"></i>
-                </span>
-            </a>
-        </div>
-        {% if blog %}
-            {% include "deckard/blog/blog.html" %}
+<div class="mb-3 d-flex flex-row justify-content-around" style="{{ cover_style }}">
+  <div class="p-2 d-flex flex-row align-items-center">
+      {% if blog %}
+        <a href="{{ url('blog_list') }}"><span class="mr-3 fa fa-long-arrow-left fa-2x dkr-colored-icon"></span></a>
+        {% include "deckard/blog/blog.html" %}
+      {% endif %}
+  </div>
+  <div class="p-2">
+      <span>
+        {% if user and user.is_authenticated %}
+            {% include "deckard/logout_link.html" %}
+        {% else %}
+            {% with not_logged_warning="Не знаем, кто вы. ", verb="Представиться" %}
+                {% include "deckard/login_link.html" %}
+            {% endwith %}
         {% endif %}
-        <div class="col-auto">
-            <div class="float-right" style="background-color: LemonChiffon;">
-            <span>
-                {% if user and user.is_authenticated %}
-                    {% include "deckard/logout_link.html" %}
-                {% else %}
-                    {% with not_logged_warning="Не знаем, кто вы. ", verb="Представиться" %}
-                        {% include "deckard/login_link.html" %}
-                    {% endwith %}
-                {% endif %}
-            </span>
-            </div>
-        </div>
-    </div>
+    </span>
+  </div>
 </div>

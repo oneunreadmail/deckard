@@ -1,13 +1,16 @@
-{% set footer_style = "background-image: url(\"" ~ static('deckard/images/default_footer.jpg') ~ "\");" %}
-<nav class="navbar navbar-light dkr-margin-top" style="{{ footer_style }}">
-    <div class="nav navbar-nav navbar-left">
-    </div>
-    <div class="nav navbar-nav navbar-right">
+{% set footer_style = "background-image: url(\"" ~ static('deckard/images/default_footer.png') ~ "\");" %}
+<div class="mt-3 d-flex flex-row justify-content-around" style="{{ footer_style }}">
+  <div></div>
+  <div class="p-2 flex-column">
+      <div>
         <span class="text-right">
             <a href="mailto:admin@mundep.com?subject=Всё очень плохо">Связаться с разработчиками</a>
         </span>
+      </div>
+      <div>
         <span class="text-right text-muted">
             powered by d3ckrd v0.01
         </span>
-    </div>
-</nav>
+      </div>
+  </div>
+</div>
