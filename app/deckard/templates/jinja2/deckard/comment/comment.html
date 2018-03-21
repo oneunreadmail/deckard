@@ -54,7 +54,7 @@
             <div class="row">
                 <div>
                     <div class="dkr-comment-footer-text text-muted">
-                        <span>Написал {{ author }} в {{ comment.created_date.strftime('%H:%M, %d.%m.%Y') }}</span>
+                        <span>Написал{% if not comment.is_male %}а{% endif %} {{ author }} в {{ comment.created_date.strftime('%H:%M, %d.%m.%Y') }}</span>
                     </div>
                     {% if user.is_authenticated %}
                         <div class="dkr-comment-footer-text">

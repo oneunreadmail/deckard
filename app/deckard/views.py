@@ -87,6 +87,18 @@ def blog_posts(request):
 
 def get_post(request, post_id, **kwargs):
     """Get a post and all its comments."""
+
+    def append_sex(comment):
+        social = comment.author.socialaccount_set.first()
+        if social:
+            try:
+                comment.is_male = social.extra_data["gender"] != "female"  # facebook
+            except:
+                comment.is_male = social.extra_data["sex"] != 1  # vk
+        else:
+            comment.is_male = True
+        return comment
+
     blog_name = request.blog_name
     blogpost = get_object_or_404(BlogPost, blog__name=blog_name, post__id=post_id)
 
@@ -102,7 +114,7 @@ def get_post(request, post_id, **kwargs):
     comments = Comment.objects.filter(post_id=post_id).order_by("position")
     comments_and_forms = [
         (
-            comment,
+            append_sex(comment),
             CommentCreateForm(
                 request.POST or None,
                 post_id=post_id,
