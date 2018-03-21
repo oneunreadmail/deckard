@@ -3,12 +3,13 @@
 {% set url_reject = url_toggle + "&action=reject" %}
 {% set url_hide = url_toggle + "&action=hide" %}
 {% set hidden_text = "<i>Комментарий скрыт</i>" | safe %}
-{% set is_social = comment.author.socialaccount_set.first() %}
-{% if is_social %}
-{% set url_social_profile = comment.author.socialaccount_set.first().get_profile_url() %}
-{% set author = ('<a href="' + url_social_profile + '">' + comment.author|string + '</a>')|safe %}
+{% set socialaccount = comment.author.socialaccount_set.first() %}
+{% if socialaccount %}
+    {% set url_social_profile = socialaccount.get_profile_url() %}
+    {% set display_name = socialaccount.get_provider_account().to_str() %}
+    {% set author = ('<a href="' + url_social_profile + '">' + display_name + '</a>')|safe %}
 {% else %}
-{% set author = comment.author | string %}
+    {% set author = comment.author | string %}
 {% endif %}
 
 {% set draft_style = "background-image: url(\"" ~ static('deckard/images/draft.png') ~ "\");" %}
