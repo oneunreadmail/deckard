@@ -62,7 +62,7 @@
             </div>
             <div class="mt-auto">
                 <div class="text-muted">
-                    <span>Написал {{ author }} в {{ comment.created_date.strftime('%H:%M, %d.%m.%Y') }}</span>
+                    <span>Написал{% if not comment.is_male %}а{% endif %} {{ author }} в {{ comment.created_date.strftime('%H:%M, %d.%m.%Y') }}</span>
                     {% if user.is_authenticated %}
                         <span><a href="#" class="ml-2 dkr-show-comment-reply-form dkr-ajax-link">Ответить</a></span>
                     {% endif %}
