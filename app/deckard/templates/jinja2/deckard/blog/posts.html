@@ -1,24 +1,20 @@
 {% extends "deckard/base.html" %}
 
-{% block cover %}
-    <div class="container-fluid mb-3" style="padding: 0;">
-        {% include "deckard/cover.html" %}
-    </div>
-{% endblock %}
-
 {% block content %}
     {% if user.is_contributor %}
-        <a href="{{ url('add_new_post', blog_name=blog.name) }}"
-           class="btn dkr-contributor-button" role="button">Написать пост</a>
+        <div class="mb-3">
+            <a href="{{ url('add_new_post', blog_name=blog.name) }}">Новый пост</a>
+        </div>
     {% endif %}
+    <div class="d-flex flex-column">
     {% for blogpost in blogposts %}
         {% if blogpost.published_date or user.is_contributor %}
             {% with post_type = "collapsed"%}
                 {% include "deckard/post/post.html" %}
             {% endwith %}
-            <br/>
         {% endif %}
     {% endfor %}
+    </div>
 
     <ul class="pagination">
         {% if blogposts.has_previous() %}

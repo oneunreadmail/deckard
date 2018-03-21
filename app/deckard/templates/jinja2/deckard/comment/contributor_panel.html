@@ -1,27 +1,14 @@
-<div class="card border-0 dkr-contributor-panel">
-    <div class="card-body">
-        <div class="dkr-comment-footer-text">
-            <span class="dkr-comment-footer-link">{{ comment.get_status_display() }}</span>
-        </div>
+<div class="pl-2 pr-2 pt-1 pb-1 m-1 dkr-contributor-panel">
+    <div class="d-flex flex-column">
+        {% if comment.status == "PN" or comment.status == "RJ" %}
+            <a class="dkr-comment-footer-link" href="{{ url_approve }}">Одобрить</a>
+        {% endif %}
         {% if comment.status == "PN" %}
-        <div class="dkr-comment-footer-text">
-            <span><a class="dkr-comment-footer-link" href="{{ url_approve }}">Одобрить</a></span>
-        </div>
-        <div class="dkr-comment-footer-text">
-            <span><a class="dkr-comment-footer-link" href="{{ url_reject }}">Отклонить</a></span>
-        </div>
+            <a class="dkr-comment-footer-link" href="{{ url_reject }}">Отклонить</a>
         {% elif comment.status == "AP" %}
-        <div class="dkr-comment-footer-text">
-            <span><a class="dkr-comment-footer-link" href="{{ url_hide }}">Скрыть</a></span>
-        </div>
+            <a class="dkr-comment-footer-link" href="{{ url_hide }}">Скрыть</a>
         {% elif comment.status == "HD" %}
-        <div class="dkr-comment-footer-text">
-            <span><a class="dkr-comment-footer-link" href="{{ url_approve }}">Показать</a></span>
-        </div>
-        {% elif comment.status == "RJ" %}
-        <div class="dkr-comment-footer-text">
-            <span><a class="dkr-comment-footer-link" href="{{ url_approve }}">Всё-таки одобрить</a></span>
-        </div>
+            <a class="dkr-comment-footer-link" href="{{ url_approve }}">Показать</a>
         {% endif %}
     </div>
 </div>

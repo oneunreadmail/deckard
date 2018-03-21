@@ -4,7 +4,6 @@
     {% with post_type = "expanded" %}
         {% include "deckard/post/post.html" %}
     {% endwith %}
-    <hr>
     {% include "deckard/comment/list.html" %}
 
     {% if user.is_authenticated %}
