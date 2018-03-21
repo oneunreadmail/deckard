@@ -5,7 +5,7 @@ $(function(){
          $.ajax({
              url: $(this).data('link'),
              success: $.proxy(function(newRating){
-             var parent = $(this).parents('.dkr-vertical-rating').eq(0);
+                var parent = $(this).parents('.dkr-col-rating').eq(0);
                 oldRating = parent.find('.dkr-rating').eq(0).text();
                 if (newRating != oldRating) {
                     if (parent.find('.dkr-active').eq(0).hasClass('dkr-active')) {

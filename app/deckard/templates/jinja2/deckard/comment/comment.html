@@ -12,15 +12,15 @@
 {% endif %}
 
 {% if comment.status == "PN" %}
-    {% set comment_style = "background-image: url(\"" ~ static('deckard/images/draft.png') ~ "\");" %}
+{% set comment_style = "background-image: url(\"" ~ static('deckard/images/draft.png') ~ "\");" %}
 {% elif comment.status == "RJ" %}
-    {% set comment_style = "background-image: url(\"" ~ static('deckard/images/rejected.png') ~ "\");" %}
+{% set comment_style = "background-image: url(\"" ~ static('deckard/images/rejected.png') ~ "\");" %}
 {% endif %}
 
-<div class="card border-0" id="c{{ comment.id }}">
-    <div class="mt-1 mb-1 p-2 d-flex flex-row card-body dkr-comment-body" {% if comment_style %}style="{{ comment_style }}"{% endif %}>
-        <div class="dkr-col-rating align-self-end">
-            <div class="dkr-vertical-rating dkr-comment-footer-icon">
+<div id="c{{ comment.id }}">
+    <div class="mt-1 mb-1 p-2 d-flex flex-row" {% if comment_style %}style="{{ comment_style }}" {% endif %}>
+        <div class="pr-1 dkr-col-rating align-self-end">
+            <div class="pr-1 d-flex flex-column align-items-center">
                 {% if not user.is_authenticated %}
                 {% set plus_class = 'dkr-disabled' %}
                 {% set minus_class = 'dkr-disabled' %}
@@ -33,20 +33,17 @@
                 {% set minus_class = 'dkr-active' %}
                 {% endif %}
                 {% endif %}
-                <div class="dkr-vertical-rating-element">
-            <span data-link="{{ url('rate_comment', comment_id=comment.id, rating_sign='plus') }}"
-                  class="fa fa-chevron-up dkr-plus {{ plus_class }}"></span>
-                </div>
-                <div class="dkr-vertical-rating-element">
-                    <font class="dkr-rating">{{ comment_ratings[comment.id]['total_rating'] }}</font>
-                </div>
-                <div class="dkr-vertical-rating-element">
-            <span data-link="{{ url('rate_comment', comment_id=comment.id, rating_sign='minus') }}"
-                  class="fa fa-chevron-down dkr-minus {{ minus_class }}"></span>
-                </div>
+                <span
+                    data-link="{{ url('rate_comment', comment_id=comment.id, rating_sign='plus') }}"
+                    class="fa fa-chevron-up dkr-plus dkr-comment-rating-icon {{ plus_class }}">
+                </span>
+                <font class="dkr-rating">{{ comment_ratings[comment.id]['total_rating'] }}</font>
+                <span data-link="{{ url('rate_comment', comment_id=comment.id, rating_sign='minus') }}"
+                      class="fa fa-chevron-down dkr-minus dkr-comment-rating-icon {{ minus_class }}">
+                </span>
             </div>
         </div>
-        <div class="d-flex flex-column dkr-comment-body-text">
+        <div class="ml-2 d-flex flex-column">
             {% if user.is_contributor and comment.status == "HD" %}
             <div>
                 <p class="card-text text-muted">
@@ -57,30 +54,25 @@
             <div>
                 <p class="card-text">
                     {% if comment.status == "HD" %}
-                        <i>{{ hidden_text }}</i>
+                    <i>{{ hidden_text }}</i>
                     {% else %}
-                        {{ comment.text }}
+                    {{ comment.text }}
                     {% endif %}
                 </p>
             </div>
             <div class="mt-auto">
-                <div>
-                    <div class="dkr-comment-footer-text text-muted">
-                        <span>Написал {{ author }} в {{ comment.created_date.strftime('%H:%M, %d.%m.%Y') }}</span>
-                    </div>
+                <div class="text-muted">
+                    <span>Написал {{ author }} в {{ comment.created_date.strftime('%H:%M, %d.%m.%Y') }}</span>
                     {% if user.is_authenticated %}
-                        <div class="dkr-comment-footer-text">
-                            <span><a href="#" class="dkr-show-comment-reply-form dkr-ajax-link">Ответить</a></span>
-                        </div>
+                        <span><a href="#" class="ml-2 dkr-show-comment-reply-form dkr-ajax-link">Ответить</a></span>
                     {% endif %}
                 </div>
             </div>
         </div>
         <div class="ml-auto">
             {% if user.is_contributor %}
-                {% include "deckard/comment/contributor_panel.html" %}
+            {% include "deckard/comment/contributor_panel.html" %}
             {% endif %}
         </div>
     </div>
-
 </div>

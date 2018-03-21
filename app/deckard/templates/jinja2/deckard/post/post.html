@@ -15,9 +15,9 @@
 {% set draft_style = "background-image: url(\"" ~ static('deckard/images/draft.png') ~ "\");" %}
 <div class="p-2 mt-2 mb-2 card {% if blogpost.pinned %}dkr-post-card-pinned{% else %}border-0{% endif %}"
     {% if blogpost.published_date %}{% else %}style="{{ draft_style }}"{% endif %}>
-    <div class="d-flex flex-row card-body dkr-post data-post-id="{{ blogpost.post.id }}">
+    <div class="d-flex flex-row data-post-id="{{ blogpost.post.id }}">
         <div class="pr-3 pl-1">
-            <div class="dkr-vertical-rating">
+            <div class="pr-1 d-flex flex-column align-items-center">
                 {% if user.is_anonymous %}
                     {% set plus_class = 'dkr-disabled' %}
                     {% set minus_class = 'dkr-disabled' %}
@@ -30,17 +30,14 @@
                             {% set minus_class = 'dkr-active' %}
                         {% endif %}
                 {% endif %}
-                <div class="dkr-vertical-rating-element">
-                    <span data-link="{{ url('rate_post', post_id=blogpost.post.id, slug=blogpost.post.slug, rating_sign='plus') }}"
-                          class="fa fa-chevron-up dkr-plus {{ plus_class }}"></span>
-                </div>
-                <div class="dkr-vertical-rating-element">
-                    <font class="dkr-rating">{{ post_ratings[blogpost.post.id]['total_rating'] }}</font>
-                </div>
-                <div class="dkr-vertical-rating-element">
-                    <span data-link="{{ url('rate_post', post_id=blogpost.post.id, slug=blogpost.post.slug, rating_sign='minus') }}"
-                          class="fa fa-chevron-down dkr-minus {{ minus_class }}"></span>
-                </div>
+                <span
+                    data-link="{{ url('rate_post', post_id=blogpost.post.id, slug=blogpost.post.slug, rating_sign='plus') }}"
+                    class="fa fa-chevron-up dkr-plus dkr-post-rating-icon {{ plus_class }}">
+                </span>
+                <font class="dkr-rating">{{ post_ratings[blogpost.post.id]['total_rating'] }}</font>
+                <span data-link="{{ url('rate_post', post_id=blogpost.post.id, slug=blogpost.post.slug, rating_sign='minus') }}"
+                      class="fa fa-chevron-down dkr-minus dkr-post-rating-icon {{ minus_class }}">
+                </span>
             </div>
         </div>
         <div>

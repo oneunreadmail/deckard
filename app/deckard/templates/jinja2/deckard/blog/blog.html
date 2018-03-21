@@ -7,15 +7,15 @@
 <div class="d-inline-flex flex-row">
     <div class="p-2">
         {% if blog.avatar %}
-            <img class="dkr-avatar" src="{{ blog.avatar.url }}">
+            <img src="{{ blog.avatar.url }}">
         {% else %}
-            <img class="dkr-avatar" src="{{ static('deckard/images/default_avatar.jpg') }}">
+            <img src="{{ static('deckard/images/default_avatar.jpg') }}">
         {% endif %}
     </div>
     <div class="pb-3 pl-2 align-self-center">
-        <h4 class="card-title"><a href="{{ url_blog }}">{{ blog.title }}</a></h4>
+        <h4><a href="{{ url_blog }}">{{ blog.title }}</a></h4>
         {% if blog.subtitle %}
-        <h6 class="card-subtitle text-muted">{{ blog.subtitle }}</h6>
+        <h6 class="text-muted">{{ blog.subtitle }}</h6>
         {% endif %}
 
         {% if blog_list_page %}
