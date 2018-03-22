@@ -1,0 +1,18 @@
+{{ not_logged_warning }}<a class="dkr-login-link dkr-ajax-link"
+                           data-html="true"
+                           data-toggle="popover"
+                           data-placement="auto"
+                           data-trigger="focus"
+                           data-title="Выберите способ авторизации"
+                           data-content="<a class='dkr-icon-link' href='/accounts/vk/login?next={{ request.path }}'>
+                                      <span class='fa-stack'>
+                                         <i class='fa fa-square fa-stack-2x dkr-colored-icon'></i>
+                                         <i class='fa fa-vk fa-stack-1x fa-inverse'></i>
+                                      </span>
+                                      </a>
+                                      <a class='dkr-icon-link' href='/accounts/facebook/login?next={{ request.path }}'>
+                                      <span class='fa-stack'>
+                                         <i class='fa fa-square fa-stack-2x dkr-colored-icon'></i>
+                                         <i class='fa fa-facebook fa-stack-1x fa-inverse'></i>
+                                      </span>
+                                    </a>" href="#">{{ verb }}</a>

@@ -41,7 +41,9 @@ class PostCreateForm(forms.Form):
 
 
 class CommentCreateForm(forms.Form):
-    text = forms.CharField(label="text", widget=forms.Textarea(attrs={"class": "form-control", "rows": "2"}))
+    text = forms.CharField(label="text",
+                           widget=forms.Textarea(attrs={"class": "form-control",
+                                                        "rows": "2"}))
     parent_comment_id = forms.CharField(
         label="parent_comment_id",
         widget=forms.HiddenInput(),

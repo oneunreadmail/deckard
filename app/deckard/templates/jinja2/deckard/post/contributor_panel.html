@@ -1,20 +1,20 @@
-<div class="card">
-    <div class="card-body">
+<div class="pl-2 pr-2 pt-1 pb-1 m-1 dkr-contributor-panel">
+    <div class="d-flex flex-column align-items-start justify-content-center">
         {% if not blogpost.published_date %}
         <a href="#" class="dkr-change-post-link" data-link="{{ url_post_change }}" data-action="publish"
-           data-newval="Пост опубликован">Опубликовать пост</a><br/>
+           data-newval="Пост опубликован">Опубликовать пост</a>
         {% endif %}
         <a href="#" class="dkr-change-post-link" data-link="{{ url_post_change }}" data-action="toggle">
             {% if blogpost.hidden %}Показать{% else %}Скрыть{% endif %} пост
-        </a><br/>
+        </a>
         {% if not blogpost.deleted %}
         <a href="#" class="dkr-change-post-link" data-link="{{ url_post_change }}" data-action="delete"
-           data-newval="Пост удалён">Удалить пост</a><br/>
+           data-newval="Пост удалён">Удалить пост</a>
         {% endif %}
-        <a href="{{ url_post_edit }}">Редактировать пост</a><br/>
+        <a href="{{ url_post_edit }}">Редактировать пост</a>
         <a href="#dkr-repost-modal" data-toggle="modal" data-blog-name="{{ blog.name }}"
            data-post-id="{{ blogpost.post.id }}"
            data-link="{{ url('repost', post_id=blogpost.post.id, slug=blogpost.post.slug) }}">
-            Забрать в блог</a><br/>
+            Забрать в блог</a>
     </div>
 </div>

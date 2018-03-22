@@ -2,6 +2,7 @@
 cain/local_settings.py
 .idea/
 media/
+local_setup.sh
 
 # Databases
 *.sqlite3

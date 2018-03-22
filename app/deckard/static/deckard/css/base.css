@@ -2,81 +2,7 @@
     font-family: "PT Serif", "Times New Roman", Georgia, serif;
 }
 
-.dkr-post-footer {
-    //border: 1px solid black;
-}
-
-.dkr-post-footer-icon, .dkr-comment-footer-icon {
-    display: inline-block;
-    margin: 0px 5px;
-    vertical-align: middle;
-    //border: 1px solid black;
-}
-
-.dkr-post-footer-link, .dkr-comment-footer-text {
-    margin-right: 15px;
-    vertical-align: middle;
-    display: inline-block;
-}
-
-.dkr-comment-body {
-    margin: 10px;
-    max-width: 80%;
-    vertical-align: middle;
-    display: inline-block;
-}
-
-.dkr-comment-footer > span{
-    vertical-align: middle;
-    align: right;
-    margin: 0px 10px;
-}
-
-.dkr-vertical-rating.dkr-comment-footer-icon
-{
-    align: left;
-    //border: 1px solid black;
-}
-
-.dkr-vertical-rating {
-    //border: 1px solid black;
-}
-
-.dkr-vertical-rating-element {
-    display: block;
-    text-align: center;
-}
-
-.dkr-rating {
-    margin: auto;
-    color: black;
-}
-
-.dkr-plus.dkr-active, .dkr-plus:active, .dkr-rating.dkr-positive {
-    color: Green;
-}
-
-.dkr-minus.dkr-active, .dkr-minus:active, .dkr-rating.dkr-negative {
-    color: Red;
-}
-
-.dkr-plus:hover, .dkr-minus:hover {
-    color: DimGray;
-    cursor: pointer;
-}
-
-.dkr-disabled {
-    color: LightGray;
-    pointer-events: none;
-    cursor: default;
-}
-
-.dkr-avatar {
-    max-width: 200px;
-    height: auto;
-    padding: 20px;
-}
-
+/* Links and clickable icons --> */
 a {
     text-decoration: underline;
     color: CornflowerBlue;
@@ -87,18 +13,136 @@ a.dkr-ajax-link {
     border-bottom: 1px dashed;
 }
 
-.dkr-margin-top {
-    margin-top: 20px;
+a.dkr-icon-link {
+    text-decoration: none;
 }
 
-.dkr-margin-bottom {
-    margin-bottom: 20px;
+a .dkr-colored-icon {
+    color: Grey;
 }
 
-.dkr-padding-top {
-    padding-top: 10px;
+a:hover .dkr-colored-icon {
+    color: Black;
+}
+/* <-- Links and clickable icons */
+
+/* Headers --> */
+h1 { font-size: 1.9em;}
+h2 { font-size: 1.2em;}
+h3 { font-size: 1.2em;}
+h4 { font-size: 1.2em;}
+h5 { font-size: 1.1em;}
+h6 { font-size: 1em;}
+/* <-- Headers */
+
+/* Pinned --> */
+.dkr-post-card-pinned {
+    background-color: LightYellow;
+    border-color: Gold;
 }
 
-.dkr-padding-bottom {
-    padding-bottom: 10px;
+.dkr-pinned-icon {
+    color: Gold;
+    font-size: 0.9em;
 }
+/* <-- Pinned */
+
+/* Contributor-visible controls --> */
+.dkr-contributor-panel {
+    background-color: LemonChiffon;
+}
+/* <-- Contributor-visible controls */
+
+/* Posts and comments --> */
+.dkr-plus {
+    margin-bottom: 2px; /* Visual indent */
+}
+
+.dkr-plus.dkr-active, .dkr-plus:active {
+    color: LimeGreen; /* Rating + */
+}
+
+.dkr-minus.dkr-active, .dkr-minus:active {
+    color: Crimson; /* Rating - */
+}
+
+.dkr-plus:hover, .dkr-minus:hover { /* Rating +, - on hover */
+    color: DimGray;
+    cursor: pointer;
+}
+
+.dkr-col-rating {
+    border-right: 1px solid LightGrey; /* Border between comment rating and comment body */
+}
+
+.dkr-comment-rating-icon {
+    font-size: 0.9em; /* Smaller rating icons for comments */
+}
+
+.dkr-post-rating-icon {
+    font-size: 1em; /* Larger rating icons for posts */
+}
+
+.dkr-disabled { /* Disabled rating icons */
+    color: LightGray;
+    pointer-events: none;
+    cursor: default;
+}
+
+/* <-- Posts and comments */
+
+/* Indent --> */
+.comment-indent-1 {
+    padding-left: 28px;
+}
+
+.comment-indent-2 {
+    padding-left: 56px;
+}
+
+.comment-indent-3 {
+    padding-left: 84px;
+}
+
+.comment-indent-4 {
+    padding-left: 112px;
+}
+
+.comment-indent-5 {
+    padding-left: 140px;
+}
+
+.comment-indent-6 {
+    padding-left: 168px;
+}
+
+.comment-indent-7 {
+    padding-left: 196px;
+}
+
+.comment-indent-8 {
+    padding-left: 196px;
+}
+
+.comment-indent-9 {
+    padding-left: 224px;
+}
+
+.comment-indent-10 {
+    padding-left: 252px;
+}
+
+.comment-indent-11 {
+    padding-left: 280px;
+}
+
+.comment-indent-12 {
+    padding-left: 308px;
+}
+/* <-- Indent */
+
+/* Misc --> */
+.ya-share2__badge {
+    margin: 2px;
+}
+/* <-- Misc */

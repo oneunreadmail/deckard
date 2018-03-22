@@ -3,7 +3,8 @@ $(document).ready(function(){
     if ($("#id_post_text").length) {
         var simplemde = new SimpleMDE({element: $("id_post_text")[0]});  // Markdown support for text areas
     }
-    $('#dkr-login-link').popover();  // Popover login window enabled
+    $('.dkr-login-link').popover();  // Popover login window enabled
+    $('.dkr-login-link').on('click', function(e) {e.preventDefault(); return true;});  // Prevent scrolling to the top
 });
 
 // https://docs.djangoproject.com/en/2.0/ref/csrf/
@@ -55,6 +56,4 @@ $(function(){
         });
     });
 });
-
-
 

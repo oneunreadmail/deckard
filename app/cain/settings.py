@@ -57,8 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'deckard.middleware.UserIsContributorMiddleware',
     'deckard.middleware.HostToBlogNameMiddleware',
+    'deckard.middleware.UserIsContributorMiddleware',
 ]
 
 ROOT_URLCONF = 'cain.urls'

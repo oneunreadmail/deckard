@@ -5,8 +5,16 @@
         {% include "deckard/post/post.html" %}
     {% endwith %}
     {% include "deckard/comment/list.html" %}
-    {% with visible=True %}
-        {% include "deckard/comment/reply_form.html" %}
-    {% endwith %}
-    {% include "deckard/post/repost_modal.html" %}
+
+    {% if user.is_authenticated %}
+        {% with visible=True %}
+            {% include "deckard/comment/reply_form.html" %}
+        {% endwith %}
+    {% else %}
+        {% with not_logged_warning="Чтобы оставить комментарий, ", verb="представьтесь." %}
+            {% include "deckard/login_link.html" %}
+        {% endwith %}
+    {% endif %}
+
+{% include "deckard/post/repost_modal.html" %}
 {% endblock %}
