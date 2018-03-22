@@ -34,6 +34,7 @@ RUN apt-get update && \
 RUN pip3 install uwsgi
 
 # setup all the configfiles
+RUN mkdir -p /var/log/uwsgi
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 COPY nginx-app.conf /etc/nginx/sites-available/default
 COPY supervisor-app.conf /etc/supervisor/conf.d/
