@@ -44,6 +44,9 @@ COPY supervisor-app.conf /etc/supervisor/conf.d/
 COPY app/requirements.txt /home/docker/code/app/
 RUN pip3 install -r /home/docker/code/app/requirements.txt
 
+# temporary vk fix, delete after django-allauth release
+RUN pip3 install git+https://github.com/pennersr/django-allauth.git@master
+
 # add (the rest of) our code
 COPY . /home/docker/code/
 
