@@ -1,4 +1,4 @@
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs, urlunparse, urlencode
 import re
 from django import template
 import mistune
@@ -65,3 +65,12 @@ def addcss(field, css):
     class_old = field.field.widget.attrs.get("class", None)
     class_new = class_old + ' ' + css if class_old else css
     return field.as_widget(attrs={"class": class_new})
+
+
+@register.filter(name='urlencode')
+def urlencode(uri, **query):
+    parts = list(urlparse(uri))
+    q = parse_qs(parts[4])
+    q.update(query)
+    parts[4] = urlencode(q)
+    return urlunparse(parts)

@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^post/' + POST_SLUG_RE + r'/repost/$', views.repost, name='repost'),
     url(r'^post/' + POST_SLUG_RE + r'/rate/(?P<rating_sign>plus|minus)/$', views.rate_post, name='rate_post'),
     url(r'^comment/' + COMMENT_RE + r'/rate/(?P<rating_sign>plus|minus)/$', views.rate_comment, name='rate_comment'),
+    url(r'^redir/', views.redir, name='redir'),
 ]

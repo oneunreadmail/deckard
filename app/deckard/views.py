@@ -327,3 +327,9 @@ def toggle_comment(request, post_id, slug):
         })
 
     return HttpResponseRedirect("{}#c{}".format(url, comment_id))
+
+
+def redir(request):
+    if request.GET.get("url"):
+        return HttpResponseRedirect(request.GET.get("url"))
+    raise Http404("Redirect error")
