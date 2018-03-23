@@ -16,7 +16,7 @@
 <div class="p-2 mt-2 mb-2 card {% if blogpost.pinned %}dkr-post-card-pinned{% else %}border-0{% endif %}"
     {% if blogpost.published_date %}{% else %}style="{{ draft_style }}"{% endif %}>
     <div class="d-flex flex-row data-post-id="{{ blogpost.post.id }}">
-        <div class="pr-3 pl-1">
+        <div class="pr-3 pl-1 dkr-col-rating dkr-post-rating">
             <div class="pr-1 d-flex flex-column align-items-center">
                 {% if user.is_anonymous %}
                     {% set plus_class = 'dkr-disabled' %}

@@ -71,7 +71,7 @@ h6 { font-size: 1em;}
     cursor: pointer;
 }
 
-.dkr-col-rating {
+.dkr-col-rating.dkr-comment-rating {
     border-right: 1px solid LightGrey; /* Border between comment rating and comment body */
 }
 
