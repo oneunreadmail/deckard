@@ -61,6 +61,8 @@ def blog_remove_contributor(request):
 def blog_posts(request):
     """List of all posts in the current blog."""
     blog_name = request.blog_name
+    if not blog_name:
+        return redirect('blog_list')
     blog = get_object_or_404(Blog, name=blog_name)
     blogposts_all = BlogPost.objects.filter(blog=blog, deleted=False).order_by("-pinned", "-published_date")
     paginator = Paginator(blogposts_all, POSTS_PER_PAGE)
