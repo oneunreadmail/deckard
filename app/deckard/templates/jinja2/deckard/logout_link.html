@@ -1,3 +1,4 @@
-Здравствуйте, {{ user.socialaccount_set.first().get_provider_account().to_str() }}&nbsp;|&nbsp;<a id="dkr-logout-link" href="#"
-                                                 data-go-to="{{ request.path }}"
-                                                 data-link="/accounts/logout/?next={{ request.path }}">До свидания</a>
+<span>Здравствуйте, {{ user.socialaccount_set.first().get_provider_account().to_str() }}.</span>
+<a class="align-self-end" id="dkr-logout-link" href="#"
+   data-go-to="{{ request.path }}"
+   data-link="/accounts/logout/?next={{ request.path }}">До свидания</a>

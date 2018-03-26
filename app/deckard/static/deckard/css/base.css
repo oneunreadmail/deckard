@@ -18,11 +18,15 @@ a.dkr-icon-link {
 }
 
 a .dkr-colored-icon {
-    color: Grey;
+    color: DimGray;
 }
 
 a:hover .dkr-colored-icon {
     color: Black;
+}
+
+.dkr-greetings-block {
+    max-width: 50vw;
 }
 /* <-- Links and clickable icons */
 
@@ -46,6 +50,16 @@ h6 { font-size: 1em;}
     font-size: 0.9em;
 }
 /* <-- Pinned */
+
+/* Blogs --> */
+.dkr-avatar img {
+    max-width: 30vw; /* Percent of the viewport's width */
+    max-height: 100px;
+    height: auto;
+    width: auto;
+}
+
+/* <-- Blogs */
 
 /* Contributor-visible controls --> */
 .dkr-contributor-panel {
@@ -144,5 +158,9 @@ h6 { font-size: 1em;}
 /* Misc --> */
 .ya-share2__badge {
     margin: 2px;
+}
+
+.dkr-word-break {
+    word-break: break-all;
 }
 /* <-- Misc */

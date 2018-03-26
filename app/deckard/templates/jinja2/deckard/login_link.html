@@ -1,18 +1,21 @@
-{{ not_logged_warning }}<a class="dkr-login-link dkr-ajax-link"
-                           data-html="true"
-                           data-toggle="popover"
-                           data-placement="auto"
-                           data-trigger="focus"
-                           data-title="Выберите способ авторизации"
-                           data-content="<a class='dkr-icon-link' href='{{ prefix }}{{ domain }}/accounts/vk/login?next=/redir%3Furl={{ request.build_absolute_uri() }}'>
-                                      <span class='fa-stack'>
-                                         <i class='fa fa-square fa-stack-2x dkr-colored-icon'></i>
-                                         <i class='fa fa-vk fa-stack-1x fa-inverse'></i>
-                                      </span>
-                                      </a>
-                                      <a class='dkr-icon-link' href='{{ prefix }}{{ domain }}/accounts/facebook/login?next=/redir%3Furl={{ request.build_absolute_uri() }}'>
-                                      <span class='fa-stack'>
-                                         <i class='fa fa-square fa-stack-2x dkr-colored-icon'></i>
-                                         <i class='fa fa-facebook fa-stack-1x fa-inverse'></i>
-                                      </span>
-                                    </a>" href="#">{{ verb }}</a>
+<p class="dkr-word-break">
+    {{ not_logged_warning }}<br/>
+    <a class="dkr-login-link dkr-ajax-link dkr-word-break self-align-end"
+       data-html="true"
+       data-toggle="popover"
+       data-placement="auto"
+       data-trigger="focus"
+       data-title="Выберите способ авторизации"
+       data-content="<a class='dkr-icon-link' href='{{ prefix }}{{ domain }}/accounts/vk/login?next=/redir%3Furl={{ request.build_absolute_uri() }}'>
+                      <span class='fa-stack'>
+                         <i class='fa fa-square fa-stack-2x dkr-colored-icon'></i>
+                         <i class='fa fa-vk fa-stack-1x fa-inverse'></i>
+                      </span>
+                      </a>
+                      <a class='dkr-icon-link' href='{{ prefix }}{{ domain }}/accounts/facebook/login?next=/redir%3Furl={{ request.build_absolute_uri() }}'>
+                      <span class='fa-stack'>
+                         <i class='fa fa-square fa-stack-2x dkr-colored-icon'></i>
+                         <i class='fa fa-facebook fa-stack-1x fa-inverse'></i>
+                      </span>
+                    </a>" href="#">{{ verb }}</a>
+</p>

@@ -4,15 +4,17 @@
 {% set cover_style = "background-image: url(\"" ~ static('deckard/images/default_cover.png') ~ "\");" %}
 {% endif %}
 
-<div class="mb-3 d-flex flex-row justify-content-around" style="{{ cover_style }}">
-  <div class="p-2 d-flex flex-row align-items-center">
-      {% if blog %}
-        <a href="{{ url('blog_list') }}"><span class="mr-3 fa fa-long-arrow-left fa-2x dkr-colored-icon"></span></a>
-        {% include "deckard/blog/blog.html" %}
-      {% endif %}
-  </div>
-  <div class="p-2">
-      <span>
+<div class="mb-3 d-flex flex-row justify-content-around flex-wrap" style="{{ cover_style }}">
+    <div class="p-2 d-flex flex-row align-items-center">
+        {% if blog %}
+            <a href="{{ url('blog_list') }}">
+                <span class="m-2 fa fa-long-arrow-left fa-2x dkr-colored-icon"></span>
+            </a>
+            {% include "deckard/blog/blog.html" %}
+        {% endif %}
+    </div>
+    <div class="p-2 dkr-greetings-block">
+      <span class="d-flex flex-column" >
         {% if user and user.is_authenticated %}
             {% include "deckard/logout_link.html" %}
         {% else %}
@@ -20,6 +22,6 @@
                 {% include "deckard/login_link.html" %}
             {% endwith %}
         {% endif %}
-    </span>
-  </div>
+      </span>
+    </div>
 </div>
