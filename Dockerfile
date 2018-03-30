@@ -16,9 +16,6 @@ FROM ubuntu:16.04
 MAINTAINER oneunreadmail
 ARG DKRD_COLLECTSTATIC=true
 
-RUN locale-gen en_US.UTF-8
-ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
-
 RUN apt-get update && \
     apt-get upgrade -y && \     
     apt-get install -y \
@@ -30,9 +27,13 @@ RUN apt-get update && \
     python3-pip \
     nginx \
     supervisor \
-    sqlite3 && \
+    sqlite3 \
+    locales && \
     pip3 install -U pip setuptools && \
+    locale-gen en_US.UTF-8 && \
     rm -rf /var/lib/apt/lists/*
+
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # install uwsgi now because it takes a little while
 RUN pip3 install uwsgi
