@@ -3,12 +3,16 @@ version: '3'
 services:
   db:
     image: postgres
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
   web:
     environment:
       - DKRD_DEBUG=on
       - DKRD_ALLOWED_HOSTS=mundep.ps
       - DKRD_SITE_DOMAIN=mundep.ps
     image: angiriscouncil/cain:master
+    volumes:
+      - ./media:/home/docker/code/app/media
     ports:
       - "80:80"
     depends_on:
