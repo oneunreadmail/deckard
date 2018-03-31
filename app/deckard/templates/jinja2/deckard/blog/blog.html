@@ -4,16 +4,16 @@
 {% endif %}
 {% set url_blog = url('blog_posts', blog_name=blog.name) %}
 
-<div class="d-inline-flex flex-row">
-    <div class="p-2">
+<div class="d-inline-flex flex-row flex-wrap justify-content-center">
+    <div class="p-1 dkr-avatar d-flex flex-column justify-content-center">
         {% if blog.avatar %}
             <img src="{{ blog.avatar.url }}">
         {% else %}
             <img src="{{ static('deckard/images/default_avatar.jpg') }}">
         {% endif %}
     </div>
-    <div class="pb-3 pl-2 align-self-center">
-        <h4><a href="{{ url_blog }}">{{ blog.title }}</a></h4>
+    <div class="pl-2 d-flex flex-column justify-content-center">
+        <h4><a href="{{ url_blog }}" class="dkr-word-break">{{ blog.title }}</a></h4>
         {% if blog.subtitle %}
         <h6 class="text-muted">{{ blog.subtitle }}</h6>
         {% endif %}
