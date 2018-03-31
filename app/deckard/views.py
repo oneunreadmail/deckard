@@ -74,7 +74,7 @@ def blog_posts(request):
     post_comments_count = {}
     for blogpost in blogposts:
         post_ratings[blogpost.post.id] = get_rating(blogpost.post, request.user)  # Get rating of the post
-        post_comments_count[blogpost.post.id] = blogpost.post.posts_comments.count()
+        post_comments_count[blogpost.post.id] = blogpost.post.posts_comments.filter(status="AP").count()
 
     context = {
         "user": request.user,
